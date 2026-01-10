@@ -49,15 +49,11 @@ const ServiceRow: React.FC<{ service: Service }> = ({ service }) => {
   return (
     <motion.div variants={rowVariants}>
       <div className="flex items-center justify-between gap-4 p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl">
-        <div className="flex items-center gap-4 flex-grow min-w-0">
-          {service.icon && <span className="text-2xl flex-shrink-0">{service.icon}</span>}
-          <div className="flex-grow">
-            <p className="font-medium text-white whitespace-normal">
-              {mainName}
-              {note && <span className="text-xs text-white/60 ml-1">{note}</span>}
-            </p>
-          </div>
-        </div>
+        {service.icon && <span className="text-2xl flex-shrink-0">{service.icon}</span>}
+        <p className="flex-grow text-left font-medium text-white whitespace-normal min-w-0">
+          {mainName}
+          {note && <span className="text-xs text-white/60 ml-1">{note}</span>}
+        </p>
         <span className="font-bold text-purple-400 whitespace-nowrap flex-shrink-0 ml-4">{service.price.toLocaleString('ru-RU')} ₽</span>
       </div>
     </motion.div>
