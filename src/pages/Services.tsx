@@ -4,8 +4,7 @@ import { PageKey } from '../App';
 import { mainServices, localCleaningServices } from '../data/services';
 import type { Service } from '../types/services';
 import ScaleButton from '../components/ScaleButton';
-import ServicesHeader from '../components/ServicesHeader'; // Import the new header
-import SparklesIcon from '../components/SparklesIcon'; // SparklesIcon is not directly used in Services.tsx anymore
+import ServicesHeader from '../components/ServicesHeader';
 
 interface ServicesProps {
   onNavigate: (pageKey: PageKey) => void;
