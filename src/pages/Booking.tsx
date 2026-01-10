@@ -6,6 +6,7 @@ import { getTelegramWebApp } from '../utils/telegram';
 import { getAllBrands, getModelsByBrand } from '../data/carBrands';
 import { PageKey } from '../App';
 import type { Service } from '../types/services';
+import ScaleButton from '../components/ScaleButton';
 
 interface BookingProps {
   onNavigate: (pageKey: PageKey) => void;
@@ -29,7 +30,7 @@ const ServiceRadioOption: React.FC<{
 }> = ({ service, isSelected, onSelect }) => (
   <div
     onClick={onSelect}
-    className={`p-4 rounded-2xl border cursor-pointer soft-press
+    className={`p-4 rounded-2xl border cursor-pointer
       ${isSelected 
         ? 'bg-gradient-to-br from-accent-primary/20 to-bg-dark-secondary border-glass-border-selected shadow-glow-sm scale-105' 
         : 'bg-glass border-glass-border hover:border-accent-primary/50 opacity-70 hover:opacity-100'
@@ -66,7 +67,7 @@ const ServiceCheckboxOption: React.FC<{
 }> = ({ service, isSelected, onToggle, quantity, onQuantityChange }) => (
   <div
     onClick={onToggle}
-    className={`p-4 rounded-2xl border cursor-pointer soft-press
+    className={`p-4 rounded-2xl border cursor-pointer
       ${isSelected 
         ? 'bg-gradient-to-br from-accent-primary/20 to-bg-dark-secondary border-glass-border-selected shadow-glow-sm scale-105' 
         : 'bg-glass border-glass-border hover:border-accent-primary/50 opacity-70 hover:opacity-100'
@@ -97,7 +98,7 @@ const ServiceCheckboxOption: React.FC<{
         <button 
           type="button" 
           onClick={(e) => { e.stopPropagation(); onQuantityChange(-1); }} 
-          className="w-10 h-10 rounded-full bg-glass border border-glass-border text-text-primary text-xl font-bold hover:border-accent-secondary soft-press"
+          className="w-10 h-10 rounded-full bg-glass border border-glass-border text-text-primary text-xl font-bold hover:border-accent-secondary"
         >
           -
         </button>
@@ -105,7 +106,7 @@ const ServiceCheckboxOption: React.FC<{
         <button 
           type="button" 
           onClick={(e) => { e.stopPropagation(); onQuantityChange(1); }} 
-          className="w-10 h-10 rounded-full bg-glass border border-glass-border text-text-primary text-xl font-bold hover:border-accent-primary soft-press"
+          className="w-10 h-10 rounded-full bg-glass border border-glass-border text-text-primary text-xl font-bold hover:border-accent-primary"
         >
           +
         </button>
@@ -422,12 +423,13 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
             <div className="space-y-4">
               <h4 className="text-lg font-semibold text-text-primary">Основные комплексы</h4>
               {mainServices.flatMap(cat => cat.services).map(service => (
-                <ServiceRadioOption
-                  key={service.id}
-                  service={service}
-                  isSelected={formData.services.includes(service.id)}
-                  onSelect={() => handleMainServiceChange(service.id)}
-                />
+                <ScaleButton key={service.id}>
+                  <ServiceRadioOption
+                    service={service}
+                    isSelected={formData.services.includes(service.id)}
+                    onSelect={() => handleMainServiceChange(service.id)}
+                  />
+                </ScaleButton>
               ))}
             </div>
 
@@ -450,14 +452,15 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
               <h4 className="text-lg font-semibold text-text-primary">Локальная химчистка</h4>
               <div className="grid grid-cols-1 gap-4">
                 {localCleaningServices.flatMap(cat => cat.services).map(service => (
+                  <ScaleButton key={service.id}>
                     <ServiceCheckboxOption
-                      key={service.id}
                       service={service}
                       isSelected={formData.services.includes(service.id)}
                       onToggle={() => handleLocalServiceToggle(service.id)}
                       quantity={quantities[service.id] || 1}
                       onQuantityChange={(delta) => handleQuantityChange(service.id, delta)}
                     />
+                  </ScaleButton>
                 ))}
               </div>
             </div>

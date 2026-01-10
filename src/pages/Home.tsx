@@ -1,6 +1,7 @@
 import { hapticFeedback } from '../utils/telegram';
 import { PageKey } from '../App';
-import './Home.css'; // Import the new CSS for responsive styles
+import ScaleButton from '../components/ScaleButton'; // Import new component
+import './Home.css';
 
 interface HomeProps {
   onNavigate: (pageKey: PageKey) => void;
@@ -27,15 +28,17 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
 
       {/* Main Action - Fixed Size */}
       <div className="flex-shrink-0 w-full max-w-sm mx-auto">
-        <button
-          onClick={() => handleNavigation('Booking')}
-          className="w-full h-16 bg-[linear-gradient(90deg,#3b82f6_0%,#8b5cf6_100%)] text-white font-bold uppercase rounded-2xl soft-press"
-          style={{
-            boxShadow: '0 10px 25px rgba(139, 92, 246, 0.4)'
-          }}
-        >
-          Записаться онлайн
-        </button>
+        <ScaleButton>
+          <button
+            onClick={() => handleNavigation('Booking')}
+            className="w-full h-16 bg-[linear-gradient(90deg,#3b82f6_0%,#8b5cf6_100%)] text-white font-bold uppercase rounded-2xl"
+            style={{
+              boxShadow: '0 10px 25px rgba(139, 92, 246, 0.4)'
+            }}
+          >
+            Записаться онлайн
+          </button>
+        </ScaleButton>
       </div>
       
       {/* Spacer 2 (Small) */}
@@ -44,24 +47,30 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
       {/* Menu Group - Fixed Size */}
       <div className="flex-shrink-0 w-full max-w-sm mx-auto">
         <div className="w-full flex flex-col secondary-menu-container">
-          <button
-            onClick={() => handleNavigation('Services')}
-            className="w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-[20px] font-bold text-white flex items-center justify-center soft-press secondary-menu-button"
-          >
-            Услуги и цены
-          </button>
-          <button
-            onClick={() => handleNavigation('Works')}
-            className="w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-[20px] font-bold text-white flex items-center justify-center soft-press secondary-menu-button"
-          >
-            Наши работы
-          </button>
-           <button
+          <ScaleButton>
+            <button
+              onClick={() => handleNavigation('Services')}
+              className="w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-[20px] font-bold text-white flex items-center justify-center secondary-menu-button"
+            >
+              Услуги и цены
+            </button>
+          </ScaleButton>
+          <ScaleButton>
+            <button
+              onClick={() => handleNavigation('Works')}
+              className="w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-[20px] font-bold text-white flex items-center justify-center secondary-menu-button"
+            >
+              Наши работы
+            </button>
+          </ScaleButton>
+          <ScaleButton>
+            <button
               onClick={() => handleNavigation('Contacts')}
-              className="w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-[20px] font-bold text-white flex items-center justify-center soft-press secondary-menu-button"
+              className="w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-[20px] font-bold text-white flex items-center justify-center secondary-menu-button"
             >
               Контакты
             </button>
+          </ScaleButton>
         </div>
       </div>
     </div>
