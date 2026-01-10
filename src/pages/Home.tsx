@@ -24,7 +24,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
       </div>
 
       {/* Spacer 1 (Large) */}
-      <div className="flex-1"></div>
+      <div className="flex-[0.8]"></div>
 
       {/* Main Action - Fixed Size */}
       <div className="flex-shrink-0 w-full max-w-sm mx-auto">
@@ -42,7 +42,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
       </div>
       
       {/* Spacer 2 (Small) */}
-      <div className="flex-[0.5]"></div>
+      <div className="flex-[0.3]"></div>
 
       {/* Menu Group - Fixed Size */}
       <div className="flex-shrink-0 w-full max-w-sm mx-auto">
