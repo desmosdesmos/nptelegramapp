@@ -53,23 +53,20 @@ const ServiceCheckboxOption: React.FC<{
   quantity: number;
   onQuantityChange: (delta: number) => void;
 }> = ({ service, isSelected, onToggle, quantity, onQuantityChange }) => (
-  <label
+  <div
+    onClick={onToggle}
     className={`block p-4 rounded-lg border cursor-pointer transition-all ${
       isSelected
         ? 'bg-primary/20 border-primary backdrop-filter backdrop-blur-sm'
         : 'bg-dark-secondary border-dark-tertiary hover:border-primary/50'
     }`}
   >
-    <div className="flex items-center">
-      <input
-        type="checkbox"
-        name="service"
-        value={service.id}
-        checked={isSelected}
-        onChange={onToggle}
-        className="w-5 h-5 text-primary focus:ring-primary rounded"
-      />
-      <div className="flex-1 ml-3">
+    <div className="flex items-start">
+      <div className="w-5 h-5 flex-shrink-0 border-2 rounded mt-1 flex items-center justify-center mr-3 border-primary">
+        {isSelected && <div className="w-3 h-3 rounded-full bg-primary" />}
+      </div>
+      
+      <div className="flex-1">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             {service.icon && <span>{service.icon}</span>}
@@ -85,12 +82,12 @@ const ServiceCheckboxOption: React.FC<{
     </div>
     {service.needsQuantity && isSelected && (
       <div className="mt-3 flex items-center justify-center gap-4">
-        <button type="button" onClick={(e) => { e.preventDefault(); onQuantityChange(-1); }} className="w-8 h-8 rounded-full bg-dark-tertiary text-white text-lg">-</button>
+        <button type="button" onClick={(e) => { e.stopPropagation(); onQuantityChange(-1); }} className="w-8 h-8 rounded-full bg-dark-tertiary text-white text-lg">-</button>
         <span className="text-lg font-semibold w-8 text-center">{quantity}</span>
-        <button type="button" onClick={(e) => { e.preventDefault(); onQuantityChange(1); }} className="w-8 h-8 rounded-full bg-dark-tertiary text-white text-lg">+</button>
+        <button type="button" onClick={(e) => { e.stopPropagation(); onQuantityChange(1); }} className="w-8 h-8 rounded-full bg-dark-tertiary text-white text-lg">+</button>
       </div>
     )}
-  </label>
+  </div>
 );
 
 const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
