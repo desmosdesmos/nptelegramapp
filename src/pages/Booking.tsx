@@ -463,17 +463,16 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
             {/* Локальная химчистка */}
             <div className="mt-6">
               <h4 className="text-lg font-semibold text-gray-300 border-b border-gray-600 pb-2 mb-3">Локальная химчистка</h4>
-              <div>
+              <div className="grid grid-cols-1 gap-3">
               {localCleaningServices.flatMap(cat => cat.services).map(service => (
-                <div key={service.id} className="mb-3">
                   <ServiceCheckboxOption
+                    key={service.id}
                     service={service}
                     isSelected={formData.services.includes(service.id)}
                     onToggle={() => handleLocalServiceToggle(service.id)}
                     quantity={quantities[service.id] || 1}
                     onQuantityChange={(delta) => handleQuantityChange(service.id, delta)}
                   />
-                </div>
               ))}
               </div>
             </div>
