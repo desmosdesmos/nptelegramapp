@@ -45,8 +45,8 @@ function App() {
       </ContentArea>
 
       {/* Floating Navigation Dock */}
-      <nav className="fixed bottom-5 left-4 right-4 z-50 h-[80px]">
-        <div className="w-full h-full mx-auto max-w-lg bg-glass/80 backdrop-blur-xl border border-glass-border rounded-2xl shadow-lg">
+      <nav className="fixed bottom-[30px] left-4 right-4 z-50 h-[80px]">
+        <div className="w-full h-full mx-auto max-w-lg bg-[rgba(20,20,20,0.5)] backdrop-blur-[30px] rounded-[30px] border-t border-[rgba(255,255,255,0.15)] shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
           <div className="flex justify-around items-center h-full">
             {navButtons.map(({ key, label, icon }) => (
               <button

@@ -14,7 +14,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
 
   return (
     // 1. Container Structure
-    <div className="w-full min-h-full flex flex-col justify-start items-center text-center px-4 pt-[80px] pb-[160px] fade-in">
+    <div className="w-full min-h-full flex flex-col justify-start items-center text-center px-4 pt-[80px] pb-[220px] gap-5 fade-in">
       <div className="w-full max-w-md">
         
         {/* 2. Hero Section */}
