@@ -9,7 +9,7 @@ interface ScaleButtonProps {
 const ScaleButton: React.FC<ScaleButtonProps> = ({ children }) => {
   return (
     <motion.div
-      whileTap={{ scale: 0.95 }}
+      whileTap={{ scale: 0.96 }}
       transition={{ type: "spring", stiffness: 400, damping: 17 }}
     >
       {children}
