@@ -41,16 +41,24 @@ const ServiceRow: React.FC<{ service: Service }> = ({ service }) => {
     animate: { x: 0, opacity: 1 },
   };
 
+  const name = service.name;
+  const noteIndex = name.indexOf('(');
+  const mainName = noteIndex > -1 ? name.substring(0, noteIndex) : name;
+  const note = noteIndex > -1 ? name.substring(noteIndex) : '';
+
   return (
     <motion.div variants={rowVariants}>
-      <div className="flex items-center justify-between p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl">
-        <div className="flex items-center gap-4 flex-grow overflow-hidden">
+      <div className="flex items-center justify-between gap-4 p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl">
+        <div className="flex items-center gap-4 flex-grow min-w-0">
           {service.icon && <span className="text-2xl flex-shrink-0">{service.icon}</span>}
-          <span className="font-medium text-white whitespace-nowrap overflow-hidden text-ellipsis">{service.name.split('(')[0]}
-            {service.name.includes('(') && <span className="text-sm opacity-60 ml-1">({service.name.split('(')[1]}</span>}
-          </span>
+          <div className="flex-grow">
+            <p className="font-medium text-white whitespace-normal">
+              {mainName}
+              {note && <span className="text-xs text-white/60 ml-1">{note}</span>}
+            </p>
+          </div>
         </div>
-        <span className="font-bold text-purple-400 whitespace-nowrap flex-shrink-0 ml-4">{service.price.toLocaleString('ru-RU')} ₽</span>
+        <span className="font-bold text-purple-400 whitespace-nowrap flex-shrink-0">{service.price.toLocaleString('ru-RU')} ₽</span>
       </div>
     </motion.div>
   );
