@@ -29,7 +29,7 @@ const ServiceRadioOption: React.FC<{
 }> = ({ service, isSelected, onSelect }) => (
   <div
     onClick={onSelect}
-    className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300
+    className={`p-4 rounded-2xl border cursor-pointer soft-press
       ${isSelected 
         ? 'bg-gradient-to-br from-accent-primary/20 to-bg-dark-secondary border-glass-border-selected shadow-glow-sm scale-105' 
         : 'bg-glass border-glass-border hover:border-accent-primary/50 opacity-70 hover:opacity-100'
@@ -66,7 +66,7 @@ const ServiceCheckboxOption: React.FC<{
 }> = ({ service, isSelected, onToggle, quantity, onQuantityChange }) => (
   <div
     onClick={onToggle}
-    className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300
+    className={`p-4 rounded-2xl border cursor-pointer soft-press
       ${isSelected 
         ? 'bg-gradient-to-br from-accent-primary/20 to-bg-dark-secondary border-glass-border-selected shadow-glow-sm scale-105' 
         : 'bg-glass border-glass-border hover:border-accent-primary/50 opacity-70 hover:opacity-100'
@@ -97,7 +97,7 @@ const ServiceCheckboxOption: React.FC<{
         <button 
           type="button" 
           onClick={(e) => { e.stopPropagation(); onQuantityChange(-1); }} 
-          className="w-10 h-10 rounded-full bg-glass border border-glass-border text-text-primary text-xl font-bold hover:border-accent-secondary active:scale-95"
+          className="w-10 h-10 rounded-full bg-glass border border-glass-border text-text-primary text-xl font-bold hover:border-accent-secondary soft-press"
         >
           -
         </button>
@@ -105,7 +105,7 @@ const ServiceCheckboxOption: React.FC<{
         <button 
           type="button" 
           onClick={(e) => { e.stopPropagation(); onQuantityChange(1); }} 
-          className="w-10 h-10 rounded-full bg-glass border border-glass-border text-text-primary text-xl font-bold hover:border-accent-primary active:scale-95"
+          className="w-10 h-10 rounded-full bg-glass border border-glass-border text-text-primary text-xl font-bold hover:border-accent-primary soft-press"
         >
           +
         </button>

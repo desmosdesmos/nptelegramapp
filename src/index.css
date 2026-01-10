@@ -39,3 +39,20 @@
 /* Assuming a custom class or direct style for the dock for 35px */
 /* You might need to add a custom class for the dock with a custom border-radius */
 /* e.g. .rounded-dock { border-radius: var(--dock-border-radius) !important; } */
+
+@layer components {
+  .soft-press {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  .soft-press:active {
+    transform: scale(0.96);
+    opacity: 0.8;
+  }
+  /* Apply a more subtle hover for mobile-first, but keep it for desktop */
+  @media (hover: hover) {
+    .soft-press:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(76, 29, 149, 0.4);
+    }
+  }
+}

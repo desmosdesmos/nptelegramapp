@@ -66,7 +66,7 @@ const Contacts = () => {
                     <h3 className="font-semibold text-lg text-text-primary">{item.title}</h3>
                     <p className="text-text-secondary">{item.value}</p>
                     {item.action && (
-                       <button onClick={item.action} className="text-accent-primary font-semibold text-sm hover:text-accent-secondary transition-colors">
+                       <button onClick={item.action} className="text-accent-primary font-semibold text-sm hover:text-accent-secondary soft-press">
                         {item.actionLabel}
                       </button>
                     )}
@@ -80,14 +80,14 @@ const Contacts = () => {
           <div className="space-y-4 pt-4">
             <button
               onClick={handleTelegramChannelClick}
-              className="w-full bg-gradient-to-r from-accent-primary to-accent-secondary text-white font-bold py-4 px-6 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-glow active:scale-98 text-lg"
+              className="w-full bg-gradient-to-r from-accent-primary to-accent-secondary text-white font-bold py-4 px-6 rounded-full text-lg soft-press"
             >
               Наш Telegram канал
             </button>
             
             <button
               onClick={handleYandexMapsClick}
-              className="w-full bg-glass backdrop-blur-xl border border-glass-border text-text-primary font-semibold py-3 px-5 rounded-2xl transition-all duration-300 hover:border-accent-primary/50 hover:scale-105 active:scale-98"
+              className="w-full bg-glass backdrop-blur-xl border border-glass-border text-text-primary font-semibold py-3 px-5 rounded-2xl soft-press"
             >
               Мы на Яндекс Картах
             </button>

@@ -95,7 +95,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
         <div className="mt-12">
           <button
             onClick={handleBooking}
-            className="w-full bg-gradient-to-r from-accent-primary to-accent-secondary text-white font-bold py-4 px-6 rounded-full transition-all duration-300 transform hover:scale-[1.03] hover:shadow-glow active:scale-[0.98] text-lg"
+            className="w-full bg-gradient-to-r from-accent-primary to-accent-secondary text-white font-bold py-4 px-6 rounded-full text-lg soft-press"
           >
             Записаться онлайн
           </button>

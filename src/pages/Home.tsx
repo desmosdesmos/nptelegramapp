@@ -31,7 +31,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         <div className="mb-8">
           <button
             onClick={() => handleNavigation('Booking')}
-            className="w-full h-16 bg-[linear-gradient(90deg,#3b82f6_0%,#8b5cf6_100%)] text-white font-bold uppercase rounded-2xl transition-all duration-300 transform hover:scale-105 active:scale-98"
+            className="w-full h-16 bg-[linear-gradient(90deg,#3b82f6_0%,#8b5cf6_100%)] text-white font-bold uppercase rounded-2xl soft-press"
             style={{
               boxShadow: '0 10px 25px rgba(139, 92, 246, 0.4)'
             }}
@@ -44,19 +44,19 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         <div className="w-full space-y-3">
           <button
             onClick={() => handleNavigation('Services')}
-            className="w-full h-[60px] bg-white/5 backdrop-blur-md border border-white/10 rounded-[20px] font-bold text-white flex items-center justify-center transition-all duration-300 hover:border-white/30 active:scale-95"
+            className="w-full h-[60px] bg-white/5 backdrop-blur-md border border-white/10 rounded-[20px] font-bold text-white flex items-center justify-center soft-press"
           >
             Услуги и цены
           </button>
           <button
             onClick={() => handleNavigation('Works')}
-            className="w-full h-[60px] bg-white/5 backdrop-blur-md border border-white/10 rounded-[20px] font-bold text-white flex items-center justify-center transition-all duration-300 hover:border-white/30 active:scale-95"
+            className="w-full h-[60px] bg-white/5 backdrop-blur-md border border-white/10 rounded-[20px] font-bold text-white flex items-center justify-center soft-press"
           >
             Наши работы
           </button>
            <button
               onClick={() => handleNavigation('Contacts')}
-              className="w-full h-[60px] bg-white/5 backdrop-blur-md border border-white/10 rounded-[20px] font-bold text-white flex items-center justify-center transition-all duration-300 hover:border-white/30 active:scale-95"
+              className="w-full h-[60px] bg-white/5 backdrop-blur-md border border-white/10 rounded-[20px] font-bold text-white flex items-center justify-center soft-press"
             >
               Контакты
             </button>

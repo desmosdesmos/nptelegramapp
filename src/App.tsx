@@ -52,14 +52,14 @@ function App() {
               <button
                 key={key}
                 onClick={() => setCurrentPage(key)}
-                className={`flex flex-col items-center justify-center text-center w-16 h-16 rounded-lg transition-all duration-300
+                className={`soft-press flex flex-col items-center justify-center text-center w-16 h-16 rounded-lg
                   ${ currentPage === key 
                     ? 'text-accent-primary' 
                     : 'text-text-secondary hover:text-text-primary'
                   }`
                 }
               >
-                <span className={`text-2xl mb-1 transition-all duration-300 ${currentPage === key ? 'scale-110' : 'scale-100'}`}>{icon}</span>
+                <span className={`text-2xl mb-1 ${currentPage === key ? 'scale-110' : 'scale-100'}`}>{icon}</span>
                 <span className="text-xs font-medium">{label}</span>
                 {currentPage === key && (
                   <div className="w-1.5 h-1.5 mt-1.5 rounded-full bg-accent-primary"></div>
