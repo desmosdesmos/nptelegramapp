@@ -54,7 +54,7 @@ const ServiceCheckboxOption: React.FC<{
   onQuantityChange: (delta: number) => void;
 }> = ({ service, isSelected, onToggle, quantity, onQuantityChange }) => (
   <label
-    className={`block p-4 rounded-lg border cursor-pointer transition-all ${
+    className={`block p-4 rounded-lg border cursor-pointer transition-all mb-3 ${
       isSelected
         ? 'bg-primary/20 border-primary backdrop-filter backdrop-blur-sm'
         : 'bg-dark-secondary border-dark-tertiary hover:border-primary/50'
@@ -461,20 +461,18 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
             )}
             
             {/* Локальная химчистка */}
-            <div className="mt-6 space-y-3">
-              <h4 className="text-lg font-semibold text-gray-300 border-b border-gray-600 pb-2">Локальная химчистка</h4>
-              <div className="space-y-3 mt-3">
-                {localCleaningServices.flatMap(cat => cat.services).map(service => (
-                  <ServiceCheckboxOption
-                    key={service.id}
-                    service={service}
-                    isSelected={formData.services.includes(service.id)}
-                    onToggle={() => handleLocalServiceToggle(service.id)}
-                    quantity={quantities[service.id] || 1}
-                    onQuantityChange={(delta) => handleQuantityChange(service.id, delta)}
-                  />
-                ))}
-              </div>
+            <div className="mt-6">
+              <h4 className="text-lg font-semibold text-gray-300 border-b border-gray-600 pb-2 mb-3">Локальная химчистка</h4>
+              {localCleaningServices.flatMap(cat => cat.services).map(service => (
+                <ServiceCheckboxOption
+                  key={service.id}
+                  service={service}
+                  isSelected={formData.services.includes(service.id)}
+                  onToggle={() => handleLocalServiceToggle(service.id)}
+                  quantity={quantities[service.id] || 1}
+                  onQuantityChange={(delta) => handleQuantityChange(service.id, delta)}
+                />
+              ))}
             </div>
             {errors.services && <p className="text-red-500 text-sm mt-1">{errors.services}</p>}
           </div>
