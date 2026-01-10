@@ -47,7 +47,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         <ScaleButton>
           <div 
             onClick={() => handleNavigation('Services')}
-            className="relative flex flex-col items-center justify-center p-4 aspect-square bg-glass-card-bg backdrop-blur-md border border-glass-card-border rounded-2xl cursor-pointer"
+            className=""
           >
             <span className="absolute text-[6rem] opacity-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">🫧</span>
             <p className="relative z-10 font-bold text-white text-lg self-start justify-self-end mt-auto">Услуги</p>
