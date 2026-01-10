@@ -9,10 +9,10 @@ interface ServicesHeaderProps {
 
 const ServicesHeader: React.FC<ServicesHeaderProps> = ({ text, icon }) => {
   return (
-    <header className="flex flex-col items-start pt-6 pb-3 px-4"> {/* pt-24px, pb-12px, px-16px */}
+    <header className="flex flex-col items-start pt-8 pb-4 px-4"> {/* pt-32px, pb-16px, px-16px */}
       {/* The "Badge" Subtitle */}
-      <div className="inline-flex items-center gap-2 py-2 px-4 rounded-full backdrop-blur-md
-        bg-[rgba(34,211,238,0.08)] border border-[rgba(34,211,238,0.3)]">
+      <div className="inline-flex items-center gap-[6px] py-2 px-4 rounded-full backdrop-blur-md
+        bg-cyan-400/10 border border-cyan-400/30">
         {icon || <SparklesIcon className="w-4 h-4 text-cyan-400" />}
         <span className="text-cyan-400 text-xs font-bold uppercase tracking-wider">{text}</span>
       </div>

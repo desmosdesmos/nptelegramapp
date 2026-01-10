@@ -65,7 +65,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
   return (
     <div className="bg-transparent" style={{ paddingBottom: '180px' }}>
       <div className="max-w-2xl mx-auto">
-        <h2 className="text-4xl font-bold mb-10 text-center text-white">Услуги и цены</h2> {/* Replaced by standard h2 */}
+        {/* Main page title is gone */}
         
         <motion.div 
           variants={containerVariants}
