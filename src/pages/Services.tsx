@@ -7,15 +7,15 @@ interface ServicesProps {
   onNavigate: (pageKey: PageKey) => void;
 }
 
-// Компонент для отображения одной услуги
+// Redesigned ServiceItem for the local cleaning list
 const ServiceItem: React.FC<{ service: Service }> = ({ service }) => (
-  <div className="flex items-center justify-between p-3 bg-dark rounded-lg">
-    <div className="flex items-center gap-2">
-      {service.icon && <span>{service.icon}</span>}
-      <span>{service.name}</span>
-      {service.unitLabel && <span className="text-sm text-gray-400">{service.unitLabel}</span>}
+  <div className="flex items-center justify-between p-4 bg-glass border border-glass-border rounded-lg">
+    <div className="flex items-center gap-3">
+      {service.icon && <span className="text-xl">{service.icon}</span>}
+      <span className="text-text-primary">{service.name}</span>
+      {service.unitLabel && <span className="text-sm text-text-secondary">{service.unitLabel}</span>}
     </div>
-    <span className="text-primary font-semibold">
+    <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-accent-primary to-accent-secondary">
       {service.price.toLocaleString('ru-RU')} ₽
     </span>
   </div>
@@ -29,73 +29,75 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="min-h-screen bg-dark px-4 py-6 pb-24 fade-in">
+    <div className="min-h-screen px-4 py-8 pb-32 fade-in">
       <div className="max-w-2xl mx-auto">
-        <h2 className="text-2xl font-bold mb-6 text-center">Услуги и цены</h2>
+        <h2 className="text-3xl font-bold mb-8 text-center text-text-primary">Услуги и цены</h2>
 
-        {/* Основные услуги */}
-        <div className="space-y-6">
-          <h3 className="text-xl font-semibold text-center text-primary border-b-2 border-primary/50 pb-2 mb-4">
-            Основные комплексы
-          </h3>
-          {mainServices.map(category =>
-            category.services.map(service => (
-              <div key={service.id} className="bg-dark-secondary rounded-xl p-6 border-2 border-primary/50 shadow-lg">
-                <h4 className="text-xl font-semibold mb-3 flex items-center gap-3">
-                  {service.icon} {service.name}
-                </h4>
-                {service.description && <p className="text-sm text-gray-400 mb-4" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
-                
-                <div className="flex items-baseline gap-3 mb-4">
-                  <span className="text-3xl font-bold text-primary">
-                    {service.price.toLocaleString('ru-RU')} ₽
-                  </span>
-                </div>
+        <div className="space-y-12">
+          {/* Основные услуги */}
+          <div>
+            <h3 className="text-2xl font-bold text-center text-text-primary pb-4 mb-6">
+              Основные комплексы
+            </h3>
+            <div className="space-y-8">
+              {mainServices.map(category =>
+                category.services.map(service => (
+                  <div key={service.id} className="bg-glass backdrop-blur-xl rounded-2xl p-6 border border-glass-border shadow-glow-sm">
+                    <h4 className="text-2xl font-semibold mb-3 flex items-center gap-3 text-text-primary">
+                      {service.icon} {service.name}
+                    </h4>
+                    {service.description && <p className="text-base text-text-secondary mb-6" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
+                    
+                    <div className="flex items-baseline gap-3 mb-6">
+                      <span className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-accent-primary to-accent-secondary">
+                        {service.price.toLocaleString('ru-RU')} ₽
+                      </span>
+                    </div>
 
-                {service.additionalOptions && (
-                  <div className="space-y-2">
-                    <p className="text-sm text-gray-300 font-medium">Дополнительно:</p>
-                    {service.additionalOptions.map(option => (
-                      <div key={option.id} className="flex items-center justify-between p-3 bg-dark rounded-lg">
-                        <div className="flex items-center gap-2">
-                          {option.icon && <span>{option.icon}</span>}
-                          <span>{option.name}</span>
-                        </div>
-                        <span className="text-primary font-semibold">
-                          +{option.price.toLocaleString('ru-RU')} ₽
-                        </span>
+                    {service.additionalOptions && (
+                      <div className="space-y-3 pt-4 border-t border-glass-border">
+                        <p className="text-sm text-text-secondary font-medium">Дополнительно:</p>
+                        {service.additionalOptions.map(option => (
+                          <div key={option.id} className="flex items-center justify-between p-3 bg-bg-dark-secondary/50 rounded-lg">
+                            <div className="flex items-center gap-2">
+                              {option.icon && <span>{option.icon}</span>}
+                              <span className="text-text-primary">{option.name}</span>
+                            </div>
+                            <span className="font-semibold text-accent-primary">
+                              +{option.price.toLocaleString('ru-RU')} ₽
+                            </span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    )}
                   </div>
-                )}
-              </div>
-            ))
-          )}
-        </div>
+                ))
+              )}
+            </div>
+          </div>
 
-        {/* Химчистка отдельных зон */}
-        <div className="mt-10">
-          <h3 className="text-xl font-semibold text-center text-gray-300 border-b border-gray-600 pb-2 mb-4">
-            Локальная химчистка
-          </h3>
-          {localCleaningServices.map(category => (
-            <div key={category.id} className="bg-dark-secondary rounded-xl p-6 border border-dark-tertiary mt-4">
+          {/* Химчистка отдельных зон */}
+          <div className="pt-8">
+            <h3 className="text-2xl font-bold text-center text-text-primary pb-4 mb-6">
+              Локальная химчистка
+            </h3>
+            <div className="bg-glass backdrop-blur-xl rounded-2xl p-6 border border-glass-border">
               <div className="space-y-3">
-                {category.services.map(service => (
+                {localCleaningServices.flatMap(cat => cat.services).map(service => (
                   <ServiceItem key={service.id} service={service} />
                 ))}
               </div>
             </div>
-          ))}
+          </div>
         </div>
 
         {/* Кнопка записи */}
-        <div className="mt-8">
+        <div className="mt-12">
           <button
             onClick={handleBooking}
-            className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full bg-gradient-to-r from-accent-primary to-accent-secondary text-white font-bold py-4 px-6 rounded-full transition-all duration-300 transform hover:scale-[1.03] hover:shadow-glow active:scale-[0.98] text-lg"
           >
-            Записаться
+            Записаться онлайн
           </button>
         </div>
       </div>

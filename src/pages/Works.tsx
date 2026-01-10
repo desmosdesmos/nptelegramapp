@@ -17,52 +17,52 @@ const Works = () => {
   };
 
   return (
-    <div className="min-h-screen bg-dark px-4 py-6 pb-24 fade-in">
+    <div className="min-h-screen px-4 py-8 pb-32 fade-in">
       <div className="max-w-2xl mx-auto">
-        <h2 className="text-2xl font-bold mb-6 text-center">Наши работы</h2>
+        <h2 className="text-3xl font-bold mb-8 text-center text-text-primary">Наши работы</h2>
 
-        <div className="space-y-6">
-          {works.map((work, index) => (
-            <div
-              key={work.id}
-              className="bg-dark-secondary rounded-xl overflow-hidden border border-dark-tertiary cursor-pointer transform transition-all hover:scale-[1.02]"
-              onClick={() => handleWorkClick(index)}
-            >
-              {/* Изображение */}
-              <div className="relative aspect-video bg-dark-tertiary">
-                <img
-                  src={showBefore && selectedWork === index ? work.beforeImage : work.afterImage}
-                  alt={`${work.carBrand} ${work.carModel || ''} - ${work.problem}`}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-                {/* Индикатор до/после */}
-                {selectedWork === index && (
-                  <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium">
-                    {showBefore ? 'До' : 'После'}
-                  </div>
-                )}
+        {works.length > 0 ? (
+          <div className="space-y-8">
+            {works.map((work, index) => (
+              <div
+                key={work.id}
+                className="bg-glass backdrop-blur-xl border border-glass-border rounded-2xl cursor-pointer transition-all duration-300 shadow-lg hover:shadow-glow hover:border-accent-primary/50"
+                onClick={() => handleWorkClick(index)}
+              >
+                {/* Изображение */}
+                <div className="relative aspect-video">
+                  <img
+                    src={showBefore && selectedWork === index ? work.beforeImage : work.afterImage}
+                    alt={`${work.carBrand} ${work.carModel || ''} - ${work.problem}`}
+                    className="w-full h-full object-cover rounded-t-2xl"
+                    loading="lazy"
+                  />
+                  {/* Индикатор до/после */}
+                  {selectedWork === index && (
+                    <div className="absolute top-4 right-4 bg-glass/80 backdrop-blur-lg px-4 py-1.5 rounded-full text-sm font-medium border border-glass-border text-text-primary">
+                      {showBefore ? 'До' : 'После'}
+                    </div>
+                  )}
+                </div>
+
+                {/* Информация */}
+                <div className="p-5">
+                  <h3 className="font-semibold text-xl mb-1 text-text-primary">
+                    {work.carBrand} {work.carModel && work.carModel}
+                  </h3>
+                  <p className="text-base text-text-secondary">{work.problem}</p>
+                  {selectedWork === index && (
+                    <p className="text-sm text-accent-primary mt-3 font-medium">
+                      Нажмите, чтобы переключить фото
+                    </p>
+                  )}
+                </div>
               </div>
-
-              {/* Информация */}
-              <div className="p-4">
-                <h3 className="font-semibold text-lg mb-1">
-                  {work.carBrand} {work.carModel && work.carModel}
-                </h3>
-                <p className="text-sm text-gray-400">{work.problem}</p>
-                {selectedWork === index && (
-                  <p className="text-xs text-primary mt-2">
-                    Нажмите, чтобы переключить фото
-                  </p>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {works.length === 0 && (
-          <div className="text-center py-12 text-gray-400">
-            <p>Примеры работ скоро появятся</p>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-16 bg-glass backdrop-blur-xl rounded-2xl border border-glass-border">
+            <p className="text-text-secondary">Примеры работ скоро появятся</p>
           </div>
         )}
       </div>

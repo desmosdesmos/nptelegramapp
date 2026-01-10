@@ -19,27 +19,26 @@ const ServiceRadioOption: React.FC<{
 }> = ({ service, isSelected, onSelect }) => (
   <div
     onClick={onSelect}
-    className={`block p-4 rounded-lg border cursor-pointer transition-all ${
-      isSelected
-        ? 'bg-primary/20 border-primary'
-        : 'bg-dark-secondary border-dark-tertiary hover:border-primary/50'
-    }`}
+    className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300
+      bg-glass backdrop-blur-xl
+      ${isSelected ? 'border-glass-border-selected shadow-glow-sm' : 'border-glass-border hover:border-accent-primary/50'}
+    `}
   >
     <div className="flex items-center">
-      <div className="w-5 h-5 flex-shrink-0 border-2 rounded-full flex items-center justify-center mr-3 border-primary">
-        {isSelected && <div className="w-3 h-3 rounded-full bg-primary" />}
+      <div className={`w-6 h-6 flex-shrink-0 border-2 rounded-full flex items-center justify-center mr-4 ${isSelected ? 'border-accent-primary' : 'border-glass-border'}`}>
+        {isSelected && <div className="w-3 h-3 rounded-full bg-gradient-to-br from-accent-primary to-accent-secondary" />}
       </div>
       <div className="flex-1">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {service.icon && <span>{service.icon}</span>}
-            <span className="font-medium">{service.name}</span>
+            {service.icon && <span className="text-xl">{service.icon}</span>}
+            <span className="font-medium text-text-primary">{service.name}</span>
           </div>
-          <span className="text-primary font-semibold">
+          <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-accent-primary to-accent-secondary">
             {service.price.toLocaleString('ru-RU')} ₽
           </span>
         </div>
-        {service.description && <p className="text-sm text-gray-400 mt-1" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
+        {service.description && <p className="text-sm text-text-secondary mt-1" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
       </div>
     </div>
   </div>
@@ -55,36 +54,47 @@ const ServiceCheckboxOption: React.FC<{
 }> = ({ service, isSelected, onToggle, quantity, onQuantityChange }) => (
   <div
     onClick={onToggle}
-    className={`block p-4 rounded-lg border cursor-pointer transition-all ${
-      isSelected
-        ? 'bg-primary/20 border-primary backdrop-filter backdrop-blur-sm'
-        : 'bg-dark-secondary border-dark-tertiary hover:border-primary/50'
-    }`}
+    className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300
+      bg-glass backdrop-blur-xl
+      ${isSelected ? 'border-glass-border-selected shadow-glow-sm' : 'border-glass-border hover:border-accent-primary/50'}
+    `}
   >
     <div className="flex items-start">
-      <div className="w-5 h-5 flex-shrink-0 border-2 rounded mt-1 flex items-center justify-center mr-3 border-primary">
-        {isSelected && <div className="w-3 h-3 rounded-full bg-primary" />}
+      <div className={`w-6 h-6 flex-shrink-0 border-2 rounded-lg mt-1 flex items-center justify-center mr-4 ${isSelected ? 'border-accent-primary' : 'border-glass-border'}`}>
+        {isSelected && <div className="w-3 h-3 rounded-md bg-gradient-to-br from-accent-primary to-accent-secondary" />}
       </div>
       
       <div className="flex-1">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {service.icon && <span>{service.icon}</span>}
-            <span className="font-medium">{service.name}</span>
-            {service.unitLabel && <span className="text-sm text-gray-400">{service.unitLabel}</span>}
+            {service.icon && <span className="text-xl">{service.icon}</span>}
+            <span className="font-medium text-text-primary">{service.name}</span>
+            {service.unitLabel && <span className="text-sm text-text-secondary">{service.unitLabel}</span>}
           </div>
-          <span className="text-primary font-semibold">
+          <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-accent-primary to-accent-secondary">
             {service.price.toLocaleString('ru-RU')} ₽
           </span>
         </div>
-        {service.description && <p className="text-sm text-gray-400 mt-1" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
+        {service.description && <p className="text-sm text-text-secondary mt-1" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
       </div>
     </div>
     {service.needsQuantity && isSelected && (
-      <div className="mt-3 flex items-center justify-center gap-4">
-        <button type="button" onClick={(e) => { e.stopPropagation(); onQuantityChange(-1); }} className="w-8 h-8 rounded-full bg-dark-tertiary text-white text-lg">-</button>
-        <span className="text-lg font-semibold w-8 text-center">{quantity}</span>
-        <button type="button" onClick={(e) => { e.stopPropagation(); onQuantityChange(1); }} className="w-8 h-8 rounded-full bg-dark-tertiary text-white text-lg">+</button>
+      <div className="mt-4 flex items-center justify-center gap-4">
+        <button 
+          type="button" 
+          onClick={(e) => { e.stopPropagation(); onQuantityChange(-1); }} 
+          className="w-10 h-10 rounded-full bg-glass border border-glass-border text-text-primary text-xl font-bold hover:border-accent-secondary active:scale-95"
+        >
+          -
+        </button>
+        <span className="text-xl font-semibold w-10 text-center text-text-primary">{quantity}</span>
+        <button 
+          type="button" 
+          onClick={(e) => { e.stopPropagation(); onQuantityChange(1); }} 
+          className="w-10 h-10 rounded-full bg-glass border border-glass-border text-text-primary text-xl font-bold hover:border-accent-primary active:scale-95"
+        >
+          +
+        </button>
       </div>
     )}
   </div>
@@ -299,122 +309,128 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
   const today = new Date().toISOString().split('T')[0];
 
   return (
-    <div className="min-h-screen bg-dark px-4 py-6 pb-24 fade-in">
-      <div className="max-w-md mx-auto">
-        <h2 className="text-2xl font-bold mb-6 text-center">Онлайн-запись</h2>
+    <div className="min-h-screen px-4 py-8 pb-32 fade-in">
+      <div className="max-w-xl mx-auto">
+        <h2 className="text-3xl font-bold mb-8 text-center text-text-primary">Онлайн-запись</h2>
 
-        <div className="space-y-5">
-          {/* Имя */}
-          <div>
-            <label className="block text-sm font-medium mb-2 text-gray-300">
-              Имя *
-            </label>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => handleChange('name', e.target.value)}
-              className={`w-full bg-dark-secondary border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary ${
-                errors.name ? 'border-red-500' : 'border-dark-tertiary'
-              }`}
-              placeholder="Ваше имя"
-            />
-            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
-          </div>
-
-          {/* Телефон */}
-          <div>
-            <label className="block text-sm font-medium mb-2 text-gray-300">
-              Телефон *
-            </label>
-            <input
-              type="tel"
-              value={formData.phone}
-              onChange={(e) => handleChange('phone', e.target.value)}
-              className={`w-full bg-dark-secondary border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary ${
-                errors.phone ? 'border-red-500' : 'border-dark-tertiary'
-              }`}
-              placeholder="+7 (999) 123-45-67"
-            />
-            {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
-          </div>
-
-          {/* Марка и модель авто */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            {/* Марка */}
-            <div className="relative">
-              <label className="block text-sm font-medium mb-2 text-gray-300">
-                Марка *
-              </label>
-              <input
-                type="text"
-                value={formData.carBrand}
-                onChange={(e) => handleChange('carBrand', e.target.value)}
-                onFocus={() => {
-                  const input = formData.carBrand.toLowerCase();
-                  const filtered = input.length > 0
-                    ? allBrands.filter(brand => brand.toLowerCase().includes(input))
-                    : allBrands;
-                  setSuggestedBrands(filtered.slice(0, 5));
-                  setShowBrandSuggestions(true);
-                }}
-                onBlur={() => setTimeout(() => setShowBrandSuggestions(false), 200)}
-                className={`w-full bg-dark-secondary border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary ${
-                  errors.carBrand ? 'border-red-500' : 'border-dark-tertiary'
-                }`}
-                placeholder="BMW"
-              />
-              {showBrandSuggestions && suggestedBrands.length > 0 && (
-                <div className="absolute z-10 w-full mt-1 bg-dark-secondary border border-dark-tertiary rounded-lg shadow-lg max-h-40 overflow-y-auto">
-                  {suggestedBrands.map((brand) => (
-                    <button key={brand} type="button" onClick={() => { handleChange('carBrand', brand); setShowBrandSuggestions(false); }} className="w-full text-left px-4 py-2 hover:bg-dark-tertiary transition-colors">{brand}</button>
-                  ))}
-                </div>
-              )}
-              {errors.carBrand && <p className="text-red-500 text-sm mt-1">{errors.carBrand}</p>}
-            </div>
-            {/* Модель */}
-            <div className="relative">
-              <label className="block text-sm font-medium mb-2 text-gray-300">
-                Модель *
-              </label>
-              <input
-                type="text"
-                value={formData.carModel}
-                onChange={(e) => handleChange('carModel', e.target.value)}
-                onFocus={() => {
-                  if (formData.carBrand) {
-                    const models = getModelsByBrand(formData.carBrand);
-                    const input = formData.carModel.toLowerCase();
-                    const filtered = input.length > 0
-                      ? models.filter(model => model.toLowerCase().includes(input))
-                      : models;
-                    setSuggestedModels(filtered.slice(0, 5));
-                    setShowModelSuggestions(true);
-                  }
-                }}
-                onBlur={() => setTimeout(() => setShowModelSuggestions(false), 200)}
-                disabled={!formData.carBrand}
-                className={`w-full bg-dark-secondary border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary ${errors.carModel ? 'border-red-500' : 'border-dark-tertiary'} ${!formData.carBrand ? 'opacity-50 cursor-not-allowed' : ''}`}
-                placeholder={formData.carBrand ? "X5" : "Сначала марку"}
-              />
-              {showModelSuggestions && suggestedModels.length > 0 && (
-                <div className="absolute z-10 w-full mt-1 bg-dark-secondary border border-dark-tertiary rounded-lg shadow-lg max-h-40 overflow-y-auto">
-                  {suggestedModels.map((model) => (
-                    <button key={model} type="button" onClick={() => { handleChange('carModel', model); setShowModelSuggestions(false); }} className="w-full text-left px-4 py-2 hover:bg-dark-tertiary transition-colors">{model}</button>
-                  ))}
-                </div>
-              )}
-              {errors.carModel && <p className="text-red-500 text-sm mt-1">{errors.carModel}</p>}
-            </div>
-          </div>
+        <div className="space-y-10">
           
-          {/* Выбор услуги */}
-          <div>
-            <label className="block text-sm font-medium mb-3 text-gray-300">Услуга *</label>
+          {/* --- User & Car Info --- */}
+          <div className="space-y-8">
+            <h3 className="text-xl font-semibold text-text-primary pb-3 border-b border-glass-border">Контактная информация</h3>
+            {/* Имя */}
+            <div>
+              <label className="block text-sm font-medium mb-2 text-text-secondary">
+                Имя *
+              </label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => handleChange('name', e.target.value)}
+                className={`w-full bg-transparent border-0 border-b-2 px-1 py-2 text-text-primary focus:ring-0 focus:border-accent-primary transition-all duration-300 ${
+                  errors.name ? 'border-red-500' : 'border-glass-border'
+                }`}
+                placeholder="Как к вам обращаться?"
+              />
+              {errors.name && <p className="text-red-500 text-sm mt-2">{errors.name}</p>}
+            </div>
+
+            {/* Телефон */}
+            <div>
+              <label className="block text-sm font-medium mb-2 text-text-secondary">
+                Телефон *
+              </label>
+              <input
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => handleChange('phone', e.target.value)}
+                className={`w-full bg-transparent border-0 border-b-2 px-1 py-2 text-text-primary focus:ring-0 focus:border-accent-primary transition-all duration-300 ${
+                  errors.phone ? 'border-red-500' : 'border-glass-border'
+                }`}
+                placeholder="+7 (999) 123-45-67"
+              />
+              {errors.phone && <p className="text-red-500 text-sm mt-2">{errors.phone}</p>}
+            </div>
+
+            <h3 className="text-xl font-semibold text-text-primary pt-4 pb-3 border-b border-glass-border">Информация об автомобиле</h3>
+            {/* Марка и модель авто */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              {/* Марка */}
+              <div className="relative">
+                <label className="block text-sm font-medium mb-2 text-text-secondary">
+                  Марка *
+                </label>
+                <input
+                  type="text"
+                  value={formData.carBrand}
+                  onChange={(e) => handleChange('carBrand', e.target.value)}
+                  onFocus={() => {
+                    const input = formData.carBrand.toLowerCase();
+                    const filtered = input.length > 0
+                      ? allBrands.filter(brand => brand.toLowerCase().includes(input))
+                      : allBrands;
+                    setSuggestedBrands(filtered.slice(0, 5));
+                    setShowBrandSuggestions(true);
+                  }}
+                  onBlur={() => setTimeout(() => setShowBrandSuggestions(false), 200)}
+                  className={`w-full bg-transparent border-0 border-b-2 px-1 py-2 text-text-primary focus:ring-0 focus:border-accent-primary transition-all duration-300 ${
+                    errors.carBrand ? 'border-red-500' : 'border-glass-border'
+                  }`}
+                  placeholder="BMW"
+                />
+                {showBrandSuggestions && suggestedBrands.length > 0 && (
+                  <div className="absolute z-10 w-full mt-2 bg-glass backdrop-blur-xl border border-glass-border rounded-lg shadow-glow-sm max-h-48 overflow-y-auto">
+                    {suggestedBrands.map((brand) => (
+                      <button key={brand} type="button" onClick={() => { handleChange('carBrand', brand); setShowBrandSuggestions(false); }} className="w-full text-left px-4 py-3 hover:bg-accent-primary/20 transition-colors">{brand}</button>
+                    ))}
+                  </div>
+                )}
+                {errors.carBrand && <p className="text-red-500 text-sm mt-2">{errors.carBrand}</p>}
+              </div>
+              {/* Модель */}
+              <div className="relative">
+                <label className="block text-sm font-medium mb-2 text-text-secondary">
+                  Модель *
+                </label>
+                <input
+                  type="text"
+                  value={formData.carModel}
+                  onChange={(e) => handleChange('carModel', e.target.value)}
+                  onFocus={() => {
+                    if (formData.carBrand) {
+                      const models = getModelsByBrand(formData.carBrand);
+                      const input = formData.carModel.toLowerCase();
+                      const filtered = input.length > 0
+                        ? models.filter(model => model.toLowerCase().includes(input))
+                        : models;
+                      setSuggestedModels(filtered.slice(0, 5));
+                      setShowModelSuggestions(true);
+                    }
+                  }}
+                  onBlur={() => setTimeout(() => setShowModelSuggestions(false), 200)}
+                  disabled={!formData.carBrand}
+                  className={`w-full bg-transparent border-0 border-b-2 px-1 py-2 text-text-primary focus:ring-0 focus:border-accent-primary transition-all duration-300 ${errors.carModel ? 'border-red-500' : 'border-glass-border'} ${!formData.carBrand ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  placeholder={formData.carBrand ? "X5" : "Сначала марку"}
+                />
+                {showModelSuggestions && suggestedModels.length > 0 && (
+                  <div className="absolute z-10 w-full mt-2 bg-glass backdrop-blur-xl border border-glass-border rounded-lg shadow-glow-sm max-h-48 overflow-y-auto">
+                    {suggestedModels.map((model) => (
+                      <button key={model} type="button" onClick={() => { handleChange('carModel', model); setShowModelSuggestions(false); }} className="w-full text-left px-4 py-3 hover:bg-accent-primary/20 transition-colors">{model}</button>
+                    ))}
+                  </div>
+                )}
+                {errors.carModel && <p className="text-red-500 text-sm mt-2">{errors.carModel}</p>}
+              </div>
+            </div>
+          </div>
+
+          {/* --- Выбор услуги --- */}
+          <div className="space-y-8">
+            <h3 className="text-xl font-semibold text-text-primary pb-3 border-b border-glass-border">Выберите услугу *</h3>
             
             {/* Основные услуги */}
-            <div className="space-y-3">
-              <h4 className="text-lg font-semibold text-primary border-b-2 border-primary/50 pb-2">Основные комплексы</h4>
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-accent-primary">Основные комплексы</h4>
               {mainServices.flatMap(cat => cat.services).map(service => (
                 <ServiceRadioOption
                   key={service.id}
@@ -425,32 +441,16 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
               ))}
             </div>
 
-            {/* Доп. опции для полной химчистки */}
-            {selectedMainService?.id === 'full-cleaning-basic' && selectedMainService.additionalOptions && (
-              <div className="mt-4 pl-5 space-y-2">
-                 <label className="block text-sm font-medium mb-2 text-gray-300">Дополнительно к полной химчистке</label>
+            {/* Доп. опции */}
+            {(selectedMainService?.id === 'full-cleaning-basic' || selectedMainService?.id === 'pre-sale-prep') && selectedMainService.additionalOptions && (
+              <div className="pl-4 border-l-2 border-glass-border space-y-3">
+                 <label className="block text-sm font-medium text-text-secondary">Дополнительные опции</label>
                 {selectedMainService.additionalOptions.map(option => (
-                  <label key={option.id} className="flex items-center p-3 rounded-lg border bg-dark-secondary border-dark-tertiary hover:border-primary/50 cursor-pointer">
-                    <input type="checkbox" checked={formData.additionalOptions.includes(option.id)} onChange={() => handleOptionToggle(option.id)} className="mr-3 w-5 h-5 text-primary focus:ring-primary rounded" />
-                    <div className="flex-1 flex items-center justify-between">
+                  <label key={option.id} className="flex items-center p-3 rounded-lg border bg-glass border-glass-border hover:border-accent-primary/50 cursor-pointer">
+                    <input type="checkbox" checked={formData.additionalOptions.includes(option.id)} onChange={() => handleOptionToggle(option.id)} className="w-5 h-5 bg-transparent border-2 border-glass-border-selected text-accent-primary focus:ring-0 focus:ring-offset-0 rounded" />
+                    <div className="flex-1 flex items-center justify-between ml-4">
                       <div className="flex items-center gap-2">{option.icon && <span>{option.icon}</span>}<span>{option.name}</span></div>
-                      <span className="text-primary font-semibold">+{option.price.toLocaleString('ru-RU')} ₽</span>
-                    </div>
-                  </label>
-                ))}
-              </div>
-            )}
-
-            {/* Доп. опции для предпродажной подготовки */}
-            {selectedMainService?.id === 'pre-sale-prep' && selectedMainService.additionalOptions && (
-              <div className="mt-4 pl-5 space-y-2">
-                 <label className="block text-sm font-medium mb-2 text-gray-300">Дополнительно к предпродажной подготовке</label>
-                {selectedMainService.additionalOptions.map(option => (
-                  <label key={option.id} className="flex items-center p-3 rounded-lg border bg-dark-secondary border-dark-tertiary hover:border-primary/50 cursor-pointer">
-                    <input type="checkbox" checked={formData.additionalOptions.includes(option.id)} onChange={() => handleOptionToggle(option.id)} className="mr-3 w-5 h-5 text-primary focus:ring-primary rounded" />
-                    <div className="flex-1 flex items-center justify-between">
-                      <div className="flex items-center gap-2">{option.icon && <span>{option.icon}</span>}<span>{option.name}</span></div>
-                      <span className="text-primary font-semibold">+{option.price.toLocaleString('ru-RU')} ₽</span>
+                      <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-accent-primary to-accent-secondary">+{option.price.toLocaleString('ru-RU')} ₽</span>
                     </div>
                   </label>
                 ))}
@@ -458,77 +458,75 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
             )}
             
             {/* Локальная химчистка */}
-            <div className="mt-6">
-              <h4 className="text-lg font-semibold text-gray-300 border-b border-gray-600 pb-2 mb-4">Локальная химчистка</h4>
-              {localCleaningServices.map(category => (
-                <div key={category.id}>
-                  <div className="space-y-3">
-                    {category.services.map(service => (
-                      <ServiceCheckboxOption
-                        key={service.id}
-                        service={service}
-                        isSelected={formData.services.includes(service.id)}
-                        onToggle={() => handleLocalServiceToggle(service.id)}
-                        quantity={quantities[service.id] || 1}
-                        onQuantityChange={(delta) => handleQuantityChange(service.id, delta)}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ))}
+            <div className="space-y-4">
+              <h4 className="text-lg font-semibold text-accent-primary">Локальная химчистка</h4>
+              <div className="grid grid-cols-1 gap-4">
+                {localCleaningServices.flatMap(cat => cat.services).map(service => (
+                    <ServiceCheckboxOption
+                      key={service.id}
+                      service={service}
+                      isSelected={formData.services.includes(service.id)}
+                      onToggle={() => handleLocalServiceToggle(service.id)}
+                      quantity={quantities[service.id] || 1}
+                      onQuantityChange={(delta) => handleQuantityChange(service.id, delta)}
+                    />
+                ))}
+              </div>
             </div>
-            {errors.services && <p className="text-red-500 text-sm mt-1">{errors.services}</p>}
+            {errors.services && <p className="text-red-500 text-sm mt-2">{errors.services}</p>}
           </div>
 
-          {/* Итоговая стоимость */}
+          {/* --- Итоговая стоимость --- */}
           {formData.services.length > 0 && (
-            <div className="mt-6 pt-4 border-t border-dark-tertiary">
+            <div className="mt-12 p-6 bg-glass backdrop-blur-xl border border-glass-border rounded-2xl shadow-glow">
               <div className="flex justify-between items-center">
-                <span className="text-lg font-semibold">Итоговая сумма:</span>
-                <span className="text-2xl font-bold text-primary">
+                <span className="text-xl font-semibold text-text-primary">Итоговая сумма:</span>
+                <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-accent-primary to-accent-secondary">
                   {totalPrice.toLocaleString('ru-RU')} ₽
                 </span>
               </div>
-              <p className="text-xs text-gray-500 mt-2 text-center">
-                Цена может изменяться. Для определения итоговой суммы необходимо связаться с менеджером.
+              <p className="text-xs text-text-secondary mt-3 text-center">
+                Цена является предварительной. Менеджер свяжется с вами для подтверждения итоговой стоимости.
               </p>
             </div>
           )}
 
-          {/* Дата и время */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div>
-              <label className="block text-sm font-medium mb-2 text-gray-300">
-                Дата *
-              </label>
-              <input
-                type="date"
-                value={formData.date}
-                min={today}
-                onChange={(e) => handleChange('date', e.target.value)}
-                className={`w-full bg-dark-secondary border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary ${
-                  errors.date ? 'border-red-500' : 'border-dark-tertiary'
-                }`}
-              />
-              {errors.date && <p className="text-red-500 text-sm mt-1">{errors.date}</p>}
+          {/* --- Дата и Комментарий --- */}
+          <div className="space-y-8">
+            <h3 className="text-xl font-semibold text-text-primary pt-4 pb-3 border-b border-glass-border">Дата и пожелания</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div>
+                <label className="block text-sm font-medium mb-2 text-text-secondary">
+                  Желаемая дата *
+                </label>
+                <input
+                  type="date"
+                  value={formData.date}
+                  min={today}
+                  onChange={(e) => handleChange('date', e.target.value)}
+                  className={`w-full bg-transparent border-0 border-b-2 px-1 py-2 text-text-primary focus:ring-0 focus:border-accent-primary transition-all duration-300 ${
+                    errors.date ? 'border-red-500' : 'border-glass-border'
+                  }`}
+                />
+                {errors.date && <p className="text-red-500 text-sm mt-2">{errors.date}</p>}
+              </div>
+              <div className="flex items-center justify-start h-full pt-8">
+                <p className="text-text-secondary text-sm">Менеджер свяжется с вами для уточнения удобного времени.</p>
+              </div>
             </div>
-            <div className="flex items-center justify-start h-full pt-8">
-              <p className="text-gray-400 text-sm">С вами после заполнения формы свяжется менеджер и уточнит удобное для вас время.</p>
-            </div>
-          </div>
 
-          {/* Комментарий */}
-          <div>
-            <label className="block text-sm font-medium mb-2 text-gray-300">
-              Комментарий
-            </label>
-            <textarea
-              value={formData.comment}
-              onChange={(e) => handleChange('comment', e.target.value)}
-              rows={3}
-              className="w-full bg-dark-secondary border border-dark-tertiary rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-              placeholder="Есть пожелания?"
-            />
+            <div>
+              <label className="block text-sm font-medium mb-2 text-text-secondary">
+                Комментарий
+              </label>
+              <textarea
+                value={formData.comment}
+                onChange={(e) => handleChange('comment', e.target.value)}
+                rows={3}
+                className="w-full bg-transparent border-0 border-b-2 px-1 py-2 text-text-primary focus:ring-0 focus:border-accent-primary transition-all duration-300 resize-none border-glass-border"
+                placeholder="Есть особые пожелания?"
+              />
+            </div>
           </div>
         </div>
       </div>

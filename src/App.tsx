@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, CSSProperties } from 'react';
 import Home from './pages/Home';
 import Booking from './pages/Booking';
 import Services from './pages/Services';
@@ -10,43 +10,75 @@ import ErrorBoundary from './ErrorBoundary';
 // Define a type for the page keys
 export type PageKey = 'Home' | 'Booking' | 'Services' | 'Works' | 'Contacts';
 
+interface NavButton {
+  key: PageKey;
+  label: string;
+  icon: string; // Add icon for visual appeal
+}
+
 // Define a map of pages
-const appPages: Record<PageKey, { component: React.FC<any>; label: string }> = {
-  Home: { component: Home, label: 'Главная' },
-  Booking: { component: Booking, label: 'Запись' },
-  Services: { component: Services, label: 'Услуги' },
-  Works: { component: Works, label: 'Работы' },
-  Contacts: { component: Contacts, label: 'Контакты' },
+const appPages: Record<PageKey, React.FC<any>> = {
+  Home: Home,
+  Booking: Booking,
+  Services: Services,
+  Works: Works,
+  Contacts: Contacts,
 };
 
-function App() {
-  const [currentPage, setCurrentPage] = useState<PageKey>('Home'); // Default to Home page
+const navButtons: NavButton[] = [
+  { key: 'Home', label: 'Главная', icon: '🏠' },
+  { key: 'Services', label: 'Услуги', icon: '✨' },
+  { key: 'Booking', label: 'Запись', icon: '📅' },
+  { key: 'Works', label: 'Работы', icon: '🚗' },
+  { key: 'Contacts', label: 'Контакты', icon: '📞' },
+];
 
-  const CurrentPageComponent = appPages[currentPage].component;
+function App() {
+  const [currentPage, setCurrentPage] = useState<PageKey>('Home');
+
+  const CurrentPageComponent = appPages[currentPage];
 
   return (
-    <div className="min-h-screen bg-dark text-white flex flex-col">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-10 flex flex-nowrap p-2 bg-dark-secondary shadow-lg overflow-x-auto">
-        {(Object.keys(appPages) as PageKey[]).map((pageKey) => (
-          <button
-            key={pageKey}
-            onClick={() => setCurrentPage(pageKey)}
-            className={`flex-shrink-0 px-4 py-2 mx-1 rounded-lg font-medium transition-colors duration-200 ${
-              currentPage === pageKey ? 'bg-primary text-white' : 'text-gray-300 hover:text-white hover:bg-dark-tertiary'
-            }`}
-          >
-            {appPages[pageKey].label}
-          </button>
-        ))}
-      </nav>
-
+    // The main container no longer needs a background color, as it's on the body
+    <div className="min-h-screen text-text-primary flex flex-col">
+      
       {/* Page Content */}
-      <main className="flex-grow pt-16 pb-4"> {/* pt-16 to offset fixed nav */}
+      {/* The pt-24 provides space for the floating nav bar below */}
+      <main className="flex-grow pt-28 pb-24">
         <ErrorBoundary>
           <CurrentPageComponent onNavigate={setCurrentPage} />
         </ErrorBoundary>
       </main>
+      
+      {/* Futuristic Glassmorphism Bottom Navigation */}
+      <nav 
+        className="fixed bottom-0 left-0 right-0 z-20"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      >
+        <div className="mx-auto max-w-lg bg-glass/80 backdrop-blur-xl border-t border-glass-border rounded-t-2xl">
+          <div className="flex justify-around items-center p-2">
+            {navButtons.map(({ key, label, icon }) => (
+              <button
+                key={key}
+                onClick={() => setCurrentPage(key)}
+                className={`flex flex-col items-center justify-center text-center w-16 h-16 rounded-lg transition-all duration-300
+                  ${ currentPage === key 
+                    ? 'text-accent-primary' 
+                    : 'text-text-secondary hover:text-text-primary'
+                  }`
+                }
+              >
+                <span className={`text-2xl mb-1 transition-all duration-300 ${currentPage === key ? 'scale-110' : 'scale-100'}`}>{icon}</span>
+                <span className="text-xs font-medium">{label}</span>
+                {currentPage === key && (
+                  <div className="w-2 h-2 mt-1 rounded-full bg-gradient-to-r from-accent-primary to-accent-secondary"></div>
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      </nav>
+
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { hapticFeedback } from '../utils/telegram';
-import { PageKey } from '../App'; // Import PageKey from App
+import { PageKey } from '../App';
 
 interface HomeProps {
   onNavigate: (pageKey: PageKey) => void;
@@ -7,58 +7,55 @@ interface HomeProps {
 
 const Home: React.FC<HomeProps> = ({ onNavigate }) => {
 
-  const handleNavigation = (pageKey: PageKey) => { // Change string to PageKey
+  const handleNavigation = (pageKey: PageKey) => {
     hapticFeedback('light');
     onNavigate(pageKey);
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 fade-in">
-      <div className="w-full max-w-md bg-dark-glassy rounded-3xl p-6 sm:p-8 md:p-10 shadow-lg border border-dark-tertiary">
-        {/* Логотип и слоган */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-primary">
+    <div className="min-h-full flex flex-col items-center justify-center text-center px-4 py-8 fade-in">
+      <div className="w-full max-w-md">
+        
+        {/* Hero Section */}
+        <div className="mb-12">
+          <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-accent-primary to-accent-secondary">
             NP Auto Detail
           </h1>
-          <p className="text-lg md:text-xl text-gray-400 font-medium">
-            Чистота начинается здесь
+          <p className="text-lg md:text-xl text-text-secondary font-medium">
+            Будущее чистоты вашего автомобиля
           </p>
         </div>
 
-        {/* Кнопки навигации */}
+        {/* Navigation Buttons */}
         <div className="w-full space-y-4">
-        <button
-          onClick={() => handleNavigation('Booking')}
-          className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 text-lg"
-        >
-          <span className="text-2xl">🚗</span>
-          <span>Записаться</span>
-        </button>
-
-        <button
-          onClick={() => handleNavigation('Services')}
-          className="w-full bg-dark-secondary hover:bg-dark-tertiary text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 text-lg border border-dark-tertiary"
-        >
-          <span className="text-2xl">💰</span>
-          <span>Услуги и цены</span>
-        </button>
-
-        <button
-          onClick={() => handleNavigation('Works')}
-          className="w-full bg-dark-secondary hover:bg-dark-tertiary text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 text-lg border border-dark-tertiary"
-        >
-          <span className="text-2xl">📸</span>
-          <span>Наши работы</span>
-        </button>
-
-        <button
-          onClick={() => handleNavigation('Contacts')}
-          className="w-full bg-dark-secondary hover:bg-dark-tertiary text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 text-lg border border-dark-tertiary"
-        >
-          <span className="text-2xl">📞</span>
-          <span>Контакты</span>
-        </button>
-      </div>
+          <button
+            onClick={() => handleNavigation('Booking')}
+            className="w-full bg-gradient-to-r from-accent-primary to-accent-secondary text-white font-bold py-4 px-6 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-glow active:scale-98 text-lg"
+          >
+            Записаться онлайн
+          </button>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+            <button
+              onClick={() => handleNavigation('Services')}
+              className="w-full bg-glass backdrop-blur-xl border border-glass-border text-text-primary font-semibold py-3 px-5 rounded-2xl transition-all duration-300 hover:border-accent-primary/50 hover:scale-105 active:scale-98"
+            >
+              Услуги и цены
+            </button>
+            <button
+              onClick={() => handleNavigation('Works')}
+              className="w-full bg-glass backdrop-blur-xl border border-glass-border text-text-primary font-semibold py-3 px-5 rounded-2xl transition-all duration-300 hover:border-accent-primary/50 hover:scale-105 active:scale-98"
+            >
+              Наши работы
+            </button>
+          </div>
+           <button
+              onClick={() => handleNavigation('Contacts')}
+              className="w-full bg-transparent text-text-secondary font-semibold py-3 px-5 rounded-2xl transition-all duration-300 hover:text-text-primary active:scale-98"
+            >
+              Контакты
+            </button>
+        </div>
       </div>
     </div>
   );
