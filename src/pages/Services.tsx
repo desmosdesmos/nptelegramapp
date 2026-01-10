@@ -44,13 +44,13 @@ const ServiceRow: React.FC<{ service: Service }> = ({ service }) => {
   return (
     <motion.div variants={rowVariants}>
       <div className="flex items-center justify-between p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl">
-        <div className="flex items-center gap-4">
-          {service.icon && <span className="text-2xl">{service.icon}</span>}
-          <span className="font-medium text-white whitespace-nowrap">{service.name.split('(')[0]}
+        <div className="flex items-center gap-4 flex-grow overflow-hidden">
+          {service.icon && <span className="text-2xl flex-shrink-0">{service.icon}</span>}
+          <span className="font-medium text-white whitespace-nowrap overflow-hidden text-ellipsis">{service.name.split('(')[0]}
             {service.name.includes('(') && <span className="text-sm opacity-60 ml-1">({service.name.split('(')[1]}</span>}
           </span>
         </div>
-        <span className="font-bold text-purple-400">{service.price.toLocaleString('ru-RU')} ₽</span>
+        <span className="font-bold text-purple-400 whitespace-nowrap flex-shrink-0 ml-4">{service.price.toLocaleString('ru-RU')} ₽</span>
       </div>
     </motion.div>
   );
