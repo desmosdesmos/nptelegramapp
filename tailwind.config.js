@@ -14,9 +14,11 @@ export default {
         'accent-primary': 'var(--accent-primary)',
         'accent-secondary': 'var(--accent-secondary)',
         glass: {
-          DEFAULT: 'var(--glass-bg)',
-          'border': 'var(--glass-border-color)',
-          'border-selected': 'var(--glass-selected-border-color)',
+          DEFAULT: 'rgba(255, 255, 255, 0.08)',
+          'border': 'rgba(255, 255, 255, 0.1)',
+          'border-selected': 'rgba(0, 162, 255, 0.8)',
+          'card-bg': 'rgba(255, 255, 255, 0.05)',
+          'card-border': 'rgba(255, 255, 255, 0.1)',
         }
       },
       fontFamily: {
