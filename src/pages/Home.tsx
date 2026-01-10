@@ -51,7 +51,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
           </div>
            <button
               onClick={() => handleNavigation('Contacts')}
-              className="w-full bg-transparent text-text-secondary font-semibold py-3 px-5 rounded-2xl transition-all duration-300 hover:text-text-primary active:scale-98"
+              className="w-full bg-glass backdrop-blur-xl border border-glass-border text-text-primary font-semibold py-3 px-5 rounded-2xl transition-all duration-300 hover:border-accent-primary/50 hover:scale-105 active:scale-98"
             >
               Контакты
             </button>
