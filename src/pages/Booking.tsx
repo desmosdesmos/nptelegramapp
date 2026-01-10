@@ -11,6 +11,16 @@ interface BookingProps {
   onNavigate: (pageKey: PageKey) => void;
 }
 
+// New component for structuring form sections
+const FormSection: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
+  <div className="bg-glass/50 backdrop-blur-xl border border-glass-border rounded-2xl p-6 shadow-lg">
+    <h3 className="text-xl font-bold text-accent-primary pb-4 mb-6 border-b border-glass-border">{title}</h3>
+    <div className="space-y-6">
+      {children}
+    </div>
+  </div>
+);
+
 // Компонент для отображения опции выбора основной услуги (радио-кнопка)
 const ServiceRadioOption: React.FC<{
   service: Service;
@@ -20,8 +30,10 @@ const ServiceRadioOption: React.FC<{
   <div
     onClick={onSelect}
     className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300
-      bg-glass backdrop-blur-xl
-      ${isSelected ? 'border-glass-border-selected shadow-glow-sm' : 'border-glass-border hover:border-accent-primary/50'}
+      ${isSelected 
+        ? 'bg-gradient-to-br from-accent-primary/20 to-bg-dark-secondary border-glass-border-selected shadow-glow-sm scale-105' 
+        : 'bg-glass border-glass-border hover:border-accent-primary/50 opacity-70 hover:opacity-100'
+      }
     `}
   >
     <div className="flex items-center">
@@ -55,8 +67,10 @@ const ServiceCheckboxOption: React.FC<{
   <div
     onClick={onToggle}
     className={`p-4 rounded-2xl border cursor-pointer transition-all duration-300
-      bg-glass backdrop-blur-xl
-      ${isSelected ? 'border-glass-border-selected shadow-glow-sm' : 'border-glass-border hover:border-accent-primary/50'}
+      ${isSelected 
+        ? 'bg-gradient-to-br from-accent-primary/20 to-bg-dark-secondary border-glass-border-selected shadow-glow-sm scale-105' 
+        : 'bg-glass border-glass-border hover:border-accent-primary/50 opacity-70 hover:opacity-100'
+      }
     `}
   >
     <div className="flex items-start">
@@ -313,16 +327,10 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       <div className="max-w-xl mx-auto">
         <h2 className="text-3xl font-bold mb-8 text-center text-text-primary">Онлайн-запись</h2>
 
-        <div className="space-y-10">
-          
-          {/* --- User & Car Info --- */}
-          <div className="space-y-8">
-            <h3 className="text-xl font-semibold text-text-primary pb-3 border-b border-glass-border">Контактная информация</h3>
-            {/* Имя */}
+        <div className="space-y-8">
+          <FormSection title="Контактная информация">
             <div>
-              <label className="block text-sm font-medium mb-2 text-text-secondary">
-                Имя *
-              </label>
+              <label className="block text-sm font-medium mb-2 text-text-secondary">Имя *</label>
               <input
                 type="text"
                 value={formData.name}
@@ -334,12 +342,8 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
               />
               {errors.name && <p className="text-red-500 text-sm mt-2">{errors.name}</p>}
             </div>
-
-            {/* Телефон */}
             <div>
-              <label className="block text-sm font-medium mb-2 text-text-secondary">
-                Телефон *
-              </label>
+              <label className="block text-sm font-medium mb-2 text-text-secondary">Телефон *</label>
               <input
                 type="tel"
                 value={formData.phone}
@@ -351,24 +355,19 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
               />
               {errors.phone && <p className="text-red-500 text-sm mt-2">{errors.phone}</p>}
             </div>
+          </FormSection>
 
-            <h3 className="text-xl font-semibold text-text-primary pt-4 pb-3 border-b border-glass-border">Информация об автомобиле</h3>
-            {/* Марка и модель авто */}
+          <FormSection title="Информация об автомобиле">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-              {/* Марка */}
               <div className="relative">
-                <label className="block text-sm font-medium mb-2 text-text-secondary">
-                  Марка *
-                </label>
+                <label className="block text-sm font-medium mb-2 text-text-secondary">Марка *</label>
                 <input
                   type="text"
                   value={formData.carBrand}
                   onChange={(e) => handleChange('carBrand', e.target.value)}
                   onFocus={() => {
                     const input = formData.carBrand.toLowerCase();
-                    const filtered = input.length > 0
-                      ? allBrands.filter(brand => brand.toLowerCase().includes(input))
-                      : allBrands;
+                    const filtered = input.length > 0 ? allBrands.filter(brand => brand.toLowerCase().includes(input)) : allBrands;
                     setSuggestedBrands(filtered.slice(0, 5));
                     setShowBrandSuggestions(true);
                   }}
@@ -387,11 +386,8 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 )}
                 {errors.carBrand && <p className="text-red-500 text-sm mt-2">{errors.carBrand}</p>}
               </div>
-              {/* Модель */}
               <div className="relative">
-                <label className="block text-sm font-medium mb-2 text-text-secondary">
-                  Модель *
-                </label>
+                <label className="block text-sm font-medium mb-2 text-text-secondary">Модель *</label>
                 <input
                   type="text"
                   value={formData.carModel}
@@ -400,9 +396,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                     if (formData.carBrand) {
                       const models = getModelsByBrand(formData.carBrand);
                       const input = formData.carModel.toLowerCase();
-                      const filtered = input.length > 0
-                        ? models.filter(model => model.toLowerCase().includes(input))
-                        : models;
+                      const filtered = input.length > 0 ? models.filter(model => model.toLowerCase().includes(input)) : models;
                       setSuggestedModels(filtered.slice(0, 5));
                       setShowModelSuggestions(true);
                     }
@@ -422,15 +416,11 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 {errors.carModel && <p className="text-red-500 text-sm mt-2">{errors.carModel}</p>}
               </div>
             </div>
-          </div>
+          </FormSection>
 
-          {/* --- Выбор услуги --- */}
-          <div className="space-y-8">
-            <h3 className="text-xl font-semibold text-text-primary pb-3 border-b border-glass-border">Выберите услугу *</h3>
-            
-            {/* Основные услуги */}
+          <FormSection title="Выберите услугу *">
             <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-accent-primary">Основные комплексы</h4>
+              <h4 className="text-lg font-semibold text-text-primary">Основные комплексы</h4>
               {mainServices.flatMap(cat => cat.services).map(service => (
                 <ServiceRadioOption
                   key={service.id}
@@ -441,12 +431,11 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
               ))}
             </div>
 
-            {/* Доп. опции */}
             {(selectedMainService?.id === 'full-cleaning-basic' || selectedMainService?.id === 'pre-sale-prep') && selectedMainService.additionalOptions && (
-              <div className="pl-4 border-l-2 border-glass-border space-y-3">
+              <div className="pl-4 border-l-2 border-glass-border space-y-3 pt-4">
                  <label className="block text-sm font-medium text-text-secondary">Дополнительные опции</label>
                 {selectedMainService.additionalOptions.map(option => (
-                  <label key={option.id} className="flex items-center p-3 rounded-lg border bg-glass border-glass-border hover:border-accent-primary/50 cursor-pointer">
+                  <label key={option.id} className="flex items-center p-3 rounded-lg border bg-glass/80 border-glass-border hover:border-accent-primary/50 cursor-pointer">
                     <input type="checkbox" checked={formData.additionalOptions.includes(option.id)} onChange={() => handleOptionToggle(option.id)} className="w-5 h-5 bg-transparent border-2 border-glass-border-selected text-accent-primary focus:ring-0 focus:ring-offset-0 rounded" />
                     <div className="flex-1 flex items-center justify-between ml-4">
                       <div className="flex items-center gap-2">{option.icon && <span>{option.icon}</span>}<span>{option.name}</span></div>
@@ -457,9 +446,8 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
               </div>
             )}
             
-            {/* Локальная химчистка */}
-            <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-accent-primary">Локальная химчистка</h4>
+            <div className="space-y-4 pt-4">
+              <h4 className="text-lg font-semibold text-text-primary">Локальная химчистка</h4>
               <div className="grid grid-cols-1 gap-4">
                 {localCleaningServices.flatMap(cat => cat.services).map(service => (
                     <ServiceCheckboxOption
@@ -474,11 +462,10 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
               </div>
             </div>
             {errors.services && <p className="text-red-500 text-sm mt-2">{errors.services}</p>}
-          </div>
-
-          {/* --- Итоговая стоимость --- */}
+          </FormSection>
+          
           {formData.services.length > 0 && (
-            <div className="mt-12 p-6 bg-glass backdrop-blur-xl border border-glass-border rounded-2xl shadow-glow">
+            <div className="mt-12 p-6 bg-gradient-to-br from-accent-primary/20 to-bg-dark-secondary backdrop-blur-xl border border-glass-border-selected rounded-2xl shadow-glow">
               <div className="flex justify-between items-center">
                 <span className="text-xl font-semibold text-text-primary">Итоговая сумма:</span>
                 <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-accent-primary to-accent-secondary">
@@ -491,14 +478,10 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
             </div>
           )}
 
-          {/* --- Дата и Комментарий --- */}
-          <div className="space-y-8">
-            <h3 className="text-xl font-semibold text-text-primary pt-4 pb-3 border-b border-glass-border">Дата и пожелания</h3>
+          <FormSection title="Дата и пожелания">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               <div>
-                <label className="block text-sm font-medium mb-2 text-text-secondary">
-                  Желаемая дата *
-                </label>
+                <label className="block text-sm font-medium mb-2 text-text-secondary">Желаемая дата *</label>
                 <input
                   type="date"
                   value={formData.date}
@@ -516,9 +499,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2 text-text-secondary">
-                Комментарий
-              </label>
+              <label className="block text-sm font-medium mb-2 text-text-secondary">Комментарий</label>
               <textarea
                 value={formData.comment}
                 onChange={(e) => handleChange('comment', e.target.value)}
@@ -527,7 +508,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 placeholder="Есть особые пожелания?"
               />
             </div>
-          </div>
+          </FormSection>
         </div>
       </div>
     </div>
