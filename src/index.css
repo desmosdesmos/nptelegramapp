@@ -17,18 +17,18 @@
   --accent-primary: #00A2FF; /* Electric Blue */
   --accent-secondary: #8E2DE2; /* Neon Purple */
 
-  /* Glass */
-  --glass-bg: rgba(26, 22, 52, 0.5); /* Increased opacity for better readability */
-  --glass-border-color: rgba(255, 255, 255, 0.15);
+  /* Glass - Refined values as per new spec */
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-border-color: rgba(255, 255, 255, 0.1);
   --glass-selected-border-color: rgba(0, 162, 255, 0.8);
 
   /* Glows / Shadows */
   --shadow-color: rgba(142, 45, 226, 0.3);
   --glow-color-primary: rgba(0, 162, 255, 0.5);
 
-  /* -- Effects & Tokens -- */
+  /* -- Effects & Tokens - Refined values as per new spec -- */
   --glass-backdrop-blur: 20px;
-  --base-border-radius: 20px; /* Larger radius for a softer, futuristic look */
+  --base-border-radius: 24px;
   --transition-speed: 0.3s;
 }
 
