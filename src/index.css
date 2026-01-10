@@ -1,99 +1,29 @@
+/* src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/*
-  === iOS 26 Concept / Futuristic Glassmorphism Design System ===
-*/
-
-:root {
-  /* -- Colors -- */
-  --bg-dark-primary: #020010;
-  --bg-dark-secondary: #100D20;
-  --text-primary: #F0F2FF;
-  --text-secondary: #a8a3c4;
-  
-  /* Accent Gradient */
-  --accent-primary: #00A2FF; /* Electric Blue */
-  --accent-secondary: #8E2DE2; /* Neon Purple */
-
-  /* Glass - Refined values as per new spec */
-  --glass-bg: rgba(255, 255, 255, 0.08);
-  --glass-border-color: rgba(255, 255, 255, 0.1);
-  --glass-selected-border-color: rgba(0, 162, 255, 0.8);
-
-  /* Glows / Shadows */
-  --shadow-color: rgba(142, 45, 226, 0.3);
-  --glow-color-primary: rgba(0, 162, 255, 0.5);
-
-  /* -- Effects & Tokens - Refined values as per new spec -- */
-  --glass-backdrop-blur: 20px;
-  --base-border-radius: 24px;
-  --transition-speed: 0.3s;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  /* Use system-ui to get San Francisco on Apple devices */
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  
-  /* Dark, abstract gradient background */
-  background-color: var(--bg-dark-primary);
-  background-image: radial-gradient(circle at 10% 10%, var(--bg-dark-secondary) 0%, transparent 40%),
-                    radial-gradient(circle at 90% 80%, var(--accent-secondary) -10%, transparent 40%);
-  background-repeat: no-repeat;
-  
-  color: var(--text-primary);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-}
-
-#root {
-  min-height: 100vh;
-  width: 100%;
-}
-
-/* Base styles for interactive elements to have smooth transitions */
-a, button, input, textarea, [role="button"], [role="checkbox"], [role="radio"] {
-  transition: all var(--transition-speed) ease-out;
-}
-
-/* Custom scrollbar for the futuristic theme */
-::-webkit-scrollbar {
-  width: 5px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--glass-border-color);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-primary);
-}
-
-/* Animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px) scale(0.98);
+@layer base {
+  :root {
+    --background: #0D0C15; /* Deep Black/Dark Violet */
+    --foreground: #F3F4F6; /* Off-White */
+    --orb-1: #4c1d95; /* Deep Purple */
+    --orb-2: #22d3ee; /* Neon Blue */
   }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
 
-.fade-in {
-  animation: fadeIn 0.4s ease-out forwards;
+  html, body, #root {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden; /* Prevent scrollbars from the layout itself */
+  }
 }
