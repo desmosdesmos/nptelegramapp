@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { hapticFeedback } from '../utils/telegram';
 import { PageKey } from '../App';
 import { mainServices, localCleaningServices } from '../data/services';
 import type { Service } from '../types/services';
@@ -14,7 +13,7 @@ interface ServicesProps {
 const ServiceCardComplex: React.FC<{ service: Service; isSelected: boolean; onSelect: () => void }> = ({ service, isSelected, onSelect }) => {
   const cardVariants = {
     initial: { y: 20, opacity: 0 },
-    animate: { y: 0, opacity: 1, transition: { duration: 0.5, ease: [0.25, 1, 0.5, 1] } },
+    animate: { y: 0, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } },
   };
 
   return (
@@ -58,7 +57,7 @@ const ServiceCardComplex: React.FC<{ service: Service; isSelected: boolean; onSe
 
           <div className="relative z-10">
             <h4 className="text-2xl font-bold mb-2 text-white">{service.name}</h4>
-            <p className="text-base text-white/70 mb-4 opacity-70" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>
+            {service.description && <p className="text-base text-white/70 mb-4 opacity-70" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
             <span className="text-4xl font-bold text-cyan-400">{service.price.toLocaleString('ru-RU')} ₽</span>
           </div>
         </div>
@@ -71,7 +70,7 @@ const ServiceCardComplex: React.FC<{ service: Service; isSelected: boolean; onSe
 const ServiceRow: React.FC<{ service: Service; isSelected: boolean; onToggle: () => void }> = ({ service, isSelected, onToggle }) => {
   const rowVariants = {
     initial: { x: -20, opacity: 0 },
-    animate: { x: 0, opacity: 1, transition: { duration: 0.5, ease: [0.25, 1, 0.5, 1] } },
+    animate: { x: 0, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } },
   };
 
   return (
