@@ -1,14 +1,13 @@
 /* src/components/PageWrapper.css */
 
 .page-wrapper {
-  height: 100vh; /* Critical for scrolling */
-  background: #000; /* As requested, black background */
+  height: 100dvh; /* Dynamic Viewport Height */
+  background: #000;
   position: relative;
-  overflow-y: scroll; /* Force scrollbar */
-  -webkit-overflow-scrolling: touch; /* Smooth iOS scrolling */
-  z-index: 1; /* Content will be on top */
-  padding-top: 40px;
-  padding-bottom: 200px;
+  overflow: hidden; /* No scrolling */
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px 120px; /* Top, Horizontal, Bottom */
 }
 
 .background-mesh {
