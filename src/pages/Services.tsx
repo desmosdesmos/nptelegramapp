@@ -4,7 +4,7 @@ import { PageKey } from '../App';
 import { mainServices, localCleaningServices } from '../data/services';
 import type { Service } from '../types/services';
 import ScaleButton from '../components/ScaleButton';
-import ServicesHeader from '../components/ServicesHeader';
+import ServicesHeader from '../components/ServicesHeader'; // Import the new header
 
 interface ServicesProps {
   onNavigate: (pageKey: PageKey) => void;
@@ -64,9 +64,9 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
 
   return (
     <div className="bg-transparent" style={{ paddingBottom: '180px' }}>
-      <ServicesHeader badge="Прайс-лист" /> {/* Main header for the page */}
-      
-      <div className="max-w-2xl mx-auto px-4"> {/* Added px-4 for content padding */}
+      <div className="max-w-2xl mx-auto">
+        <h2 className="text-4xl font-bold mb-10 text-center text-white">Услуги и цены</h2> {/* Replaced by standard h2 */}
+        
         <motion.div 
           variants={containerVariants}
           initial="hidden"
@@ -75,9 +75,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
         >
           {/* Основные комплексы */}
           <section>
-            <div className="flex flex-col items-start pb-4 mb-6"> {/* Container for badge and content */}
-              <ServicesHeader badge="Основные комплексы" /> {/* Subheader badge */}
-            </div>
+            <ServicesHeader text="Основные комплексы" /> {/* Updated usage */}
             <div className="space-y-6">
               {mainServices.flatMap(cat => cat.services).map(service => (
                 <ServiceCardComplex key={service.id} service={service} />
@@ -87,9 +85,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
 
           {/* Химчистка отдельных зон */}
           <section>
-            <div className="flex flex-col items-start pb-4 mb-6"> {/* Container for badge and content */}
-              <ServicesHeader badge="Локальная химчистка" /> {/* Subheader badge */}
-            </div>
+            <ServicesHeader text="Локальная химчистка" /> {/* Updated usage */}
             <div className="space-y-3">
               {localCleaningServices.flatMap(cat => cat.services).map(service => (
                 <ServiceRow key={service.id} service={service} />
