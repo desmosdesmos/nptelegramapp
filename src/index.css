@@ -59,3 +59,21 @@
     }
   }
 }
+
+@layer utilities {
+  @keyframes pulse-shadow {
+    0% {
+      box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+    }
+    50% {
+      box-shadow: 0 10px 35px rgba(139, 92, 246, 0.6);
+    }
+    100% {
+      box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+    }
+  }
+
+  .pulse-shadow {
+    animation: pulse-shadow 2s infinite ease-in-out;
+  }
+}
