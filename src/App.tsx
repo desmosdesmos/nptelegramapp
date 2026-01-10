@@ -1,5 +1,5 @@
 
-import { useState, CSSProperties } from 'react';
+import { useState } from 'react';
 import Home from './pages/Home';
 import Booking from './pages/Booking';
 import Services from './pages/Services';
