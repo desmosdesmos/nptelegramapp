@@ -42,12 +42,12 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
       </div>
       
       {/* 3. The "Bento Grid" Navigation */}
-      <div className="w-full max-w-sm mx-auto grid grid-cols-2 gap-4 mt-6"> {/* Added mt-6 for separation */}
+      <div className="w-full max-w-sm mx-auto grid grid-cols-2 gap-4 mt-6">
         {/* Card A (Services) */}
         <ScaleButton>
           <div 
             onClick={() => handleNavigation('Services')}
-            className={["relative", "flex", "flex-col", "items-center", "justify-center", "p-4", "aspect-square", "bg-glass-card-bg", "backdrop-blur-md", "border", "border-glass-card-border", "rounded-2xl", "cursor-pointer"].join(' ')}
+            className="relative flex flex-col items-center justify-center p-4 aspect-square bg-glass-card-bg backdrop-blur-md border-glass-card-border rounded-2xl cursor-pointer"
           >
             <span className="absolute text-[6rem] opacity-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">🫧</span>
             <p className="relative z-10 font-bold text-white text-lg self-start justify-self-end mt-auto">Услуги</p>
@@ -58,7 +58,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         <ScaleButton>
           <div 
             onClick={() => handleNavigation('Works')}
-            className={["relative", "flex", "flex-col", "items-center", "justify-center", "p-4", "aspect-square", "bg-glass-card-bg", "backdrop-blur-md", "border", "border-glass-card-border", "rounded-2xl", "cursor-pointer"].join(' ')}
+            className="relative flex flex-col items-center justify-center p-4 aspect-square bg-glass-card-bg backdrop-blur-md border-glass-card-border rounded-2xl cursor-pointer"
           >
             <span className="absolute text-[6rem] opacity-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">📸</span>
             <p className="relative z-10 font-bold text-white text-lg self-start justify-self-end mt-auto">Работы</p>
@@ -69,7 +69,8 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         <ScaleButton>
           <div 
             onClick={() => handleNavigation('Services')} {/* Assuming reviews might be under services or a new page */}
-            className={["relative", "flex", "flex-col", "items-center", "justify-center", "p-4", "aspect-square", "bg-glass-card-bg", "backdrop-blur-md", "border", "border-glass-card-border", "rounded-2xl", "cursor-pointer"].join(' ')}
+            className="relative flex flex-col items-center justify-center p-4 aspect-square bg-glass-card-bg backdrop-blur-md border-glass-card-border rounded-2xl cursor-pointer"
+          >
             <span className="absolute text-[6rem] opacity-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">⭐</span>
             <p className="relative z-10 font-bold text-white text-lg self-start justify-self-end mt-auto">Отзывы</p>
             <div className="absolute top-3 right-3 inline-flex items-center justify-center bg-green-500/80 text-white text-xs font-bold rounded-full px-2 py-0.5 backdrop-blur-sm">
@@ -82,7 +83,8 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         <ScaleButton>
           <div 
             onClick={() => handleNavigation('Contacts')}
-            className={["relative", "flex", "flex-col", "items-center", "justify-center", "p-4", "aspect-square", "bg-glass-card-bg", "backdrop-blur-md", "border", "border-glass-card-border", "rounded-2xl", "cursor-pointer"].join(' ')}
+            className="relative flex flex-col items-center justify-center p-4 aspect-square bg-glass-card-bg backdrop-blur-md border-glass-card-border rounded-2xl cursor-pointer"
+          >
             <span className="absolute text-[6rem] opacity-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">📞</span>
             <p className="relative z-10 font-bold text-white text-lg self-start justify-self-end mt-auto">Контакты</p>
           </div>
