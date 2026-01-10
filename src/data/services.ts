@@ -79,11 +79,9 @@ export const localCleaningServices: ServiceCategory[] = [
     services: [
       {
         id: 'seat',
-        name: 'Сиденье',
+        name: 'Сиденье (цена за 1 шт.)',
         price: 1000,
         icon: '🧽',
-        needsQuantity: true,
-        unitLabel: '(цена за 1 шт.)'
       },
       {
         id: 'ceiling-only',
@@ -105,11 +103,9 @@ export const localCleaningServices: ServiceCategory[] = [
       },
       {
         id: 'door-cards',
-        name: 'Дверная карта',
+        name: 'Дверная карта (цена за 1 шт.)',
         price: 400,
         icon: '🚪',
-        needsQuantity: true,
-        unitLabel: '(цена за 1 шт.)'
       },
       {
         id: 'ozonation-local',
