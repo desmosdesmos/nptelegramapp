@@ -58,7 +58,7 @@ const ServiceRow: React.FC<{ service: Service }> = ({ service }) => {
             </p>
           </div>
         </div>
-        <span className="font-bold text-purple-400 whitespace-nowrap flex-shrink-0">{service.price.toLocaleString('ru-RU')} ₽</span>
+        <span className="font-bold text-purple-400 whitespace-nowrap flex-shrink-0 ml-4">{service.price.toLocaleString('ru-RU')} ₽</span>
       </div>
     </motion.div>
   );
