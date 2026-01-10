@@ -38,20 +38,20 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
             <button
               onClick={() => handleNavigation('Services')}
-              className="w-full bg-glass backdrop-blur-xl border border-glass-border text-text-primary font-semibold py-3 px-5 rounded-2xl transition-all duration-300 hover:border-accent-primary/50 hover:scale-105 active:scale-98"
+              className="w-full h-[60px] bg-white/5 backdrop-blur-md border border-white/10 rounded-[20px] font-bold text-white flex items-center justify-center transition-all duration-300 hover:border-white/30 active:scale-95"
             >
               Услуги и цены
             </button>
             <button
               onClick={() => handleNavigation('Works')}
-              className="w-full bg-glass backdrop-blur-xl border border-glass-border text-text-primary font-semibold py-3 px-5 rounded-2xl transition-all duration-300 hover:border-accent-primary/50 hover:scale-105 active:scale-98"
+              className="w-full h-[60px] bg-white/5 backdrop-blur-md border border-white/10 rounded-[20px] font-bold text-white flex items-center justify-center transition-all duration-300 hover:border-white/30 active:scale-95"
             >
               Наши работы
             </button>
           </div>
            <button
               onClick={() => handleNavigation('Contacts')}
-              className="w-full bg-glass backdrop-blur-xl border border-glass-border text-text-primary font-semibold py-3 px-5 rounded-2xl transition-all duration-300 hover:border-accent-primary/50 hover:scale-105 active:scale-98"
+              className="w-full h-[60px] bg-white/5 backdrop-blur-md border border-white/10 rounded-[20px] font-bold text-white flex items-center justify-center transition-all duration-300 hover:border-white/30 active:scale-95"
             >
               Контакты
             </button>
