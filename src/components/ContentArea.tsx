@@ -7,17 +7,17 @@ interface ContentAreaProps {
 
 const ContentArea: React.FC<ContentAreaProps> = ({ children }) => {
   return (
-    <main 
-      className="relative z-10 w-full h-full overflow-y-auto"
+    <div 
+      className="relative z-10 w-full min-h-full"
       style={{
         paddingTop: '20px',
         paddingLeft: '16px',
         paddingRight: '16px',
-        paddingBottom: '120px', // Critical for floating nav
+        // paddingBottom: handled by PageWrapper now
       }}
     >
       {children}
-    </main>
+    </div>
   );
 };
 

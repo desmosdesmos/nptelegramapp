@@ -1,16 +1,18 @@
 /* src/components/PageWrapper.css */
 
 .page-wrapper {
-  min-height: 100vh;
+  height: 100vh; /* Critical for scrolling */
   background: #000; /* As requested, black background */
   position: relative;
-  overflow: hidden;
+  overflow-y: scroll; /* Force scrollbar */
+  -webkit-overflow-scrolling: touch; /* Smooth iOS scrolling */
+  z-index: 1; /* Content will be on top */
 }
 
 .background-mesh {
-  position: absolute;
-  inset: 0; /* Cover the entire wrapper */
-  z-index: 0; /* Stay behind all content */
+  position: fixed; /* Stay fixed in viewport */
+  inset: 0; /* Cover the entire viewport */
+  z-index: -1; /* Stay behind all content */
   opacity: 0.6; /* Soften the effect */
 }
 

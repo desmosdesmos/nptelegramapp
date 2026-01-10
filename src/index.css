@@ -9,6 +9,11 @@
     --foreground: #F3F4F6; /* Off-White */
     --orb-1: #4c1d95; /* Deep Purple */
     --orb-2: #22d3ee; /* Neon Blue */
+
+    /* Global Border Radii */
+    --card-border-radius: 24px;
+    --input-button-border-radius: 16px;
+    --dock-border-radius: 35px;
   }
 
   html, body, #root {
@@ -24,6 +29,13 @@
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow: hidden; /* Prevent scrollbars from the layout itself */
+    /* overflow: hidden; REMOVED as PageWrapper handles scrolling */
   }
 }
+
+/* Force global border-radius values using !important */
+.rounded-2xl { border-radius: var(--card-border-radius) !important; }
+.rounded-xl { border-radius: var(--input-button-border-radius) !important; }
+/* Assuming a custom class or direct style for the dock for 35px */
+/* You might need to add a custom class for the dock with a custom border-radius */
+/* e.g. .rounded-dock { border-radius: var(--dock-border-radius) !important; } */
