@@ -5,7 +5,7 @@ import { mainServices, localCleaningServices } from '../data/services';
 import type { Service } from '../types/services';
 import ScaleButton from '../components/ScaleButton';
 import ServicesHeader from '../components/ServicesHeader'; // Import the new header
-import SparklesIcon from '../components/SparklesIcon'; // Import icon for badges
+import SparklesIcon from '../components/SparklesIcon'; // SparklesIcon is not directly used in Services.tsx anymore
 
 interface ServicesProps {
   onNavigate: (pageKey: PageKey) => void;
@@ -65,9 +65,9 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
 
   return (
     <div className="bg-transparent" style={{ paddingBottom: '180px' }}>
-      <ServicesHeader title="Услуги и цены" badge="Прайс-лист" />
+      <ServicesHeader badge="Прайс-лист" /> {/* Main header for the page */}
       
-      <div className="max-w-2xl mx-auto px-4">
+      <div className="max-w-2xl mx-auto px-4"> {/* Added px-4 for content padding */}
         <motion.div 
           variants={containerVariants}
           initial="hidden"
@@ -76,9 +76,8 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
         >
           {/* Основные комплексы */}
           <section>
-            <div className="inline-flex items-center gap-2 py-2 px-4 bg-[rgba(34,211,238,0.1)] border border-[rgba(34,211,238,0.3)] rounded-full backdrop-blur-md mb-6">
-              <SparklesIcon className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-cyan-400 text-sm font-bold uppercase tracking-wider">Основные комплексы</h3>
+            <div className="flex flex-col items-start pb-4 mb-6"> {/* Container for badge and content */}
+              <ServicesHeader badge="Основные комплексы" /> {/* Subheader badge */}
             </div>
             <div className="space-y-6">
               {mainServices.flatMap(cat => cat.services).map(service => (
@@ -89,9 +88,8 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
 
           {/* Химчистка отдельных зон */}
           <section>
-             <div className="inline-flex items-center gap-2 py-2 px-4 bg-[rgba(34,211,238,0.1)] border border-[rgba(34,211,238,0.3)] rounded-full backdrop-blur-md mb-6">
-              <SparklesIcon className="w-4 h-4 text-cyan-400" />
-              <h3 className="text-cyan-400 text-sm font-bold uppercase tracking-wider">Локальная химчистка</h3>
+            <div className="flex flex-col items-start pb-4 mb-6"> {/* Container for badge and content */}
+              <ServicesHeader badge="Локальная химчистка" /> {/* Subheader badge */}
             </div>
             <div className="space-y-3">
               {localCleaningServices.flatMap(cat => cat.services).map(service => (
