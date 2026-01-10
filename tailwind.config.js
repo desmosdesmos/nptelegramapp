@@ -33,6 +33,10 @@ export default {
       boxShadow: {
         'glow': '0 0 20px 5px var(--shadow-color)',
         'glow-sm': '0 0 10px 2px var(--shadow-color)',
+        'primary-button-glow': '0 10px 25px rgba(139, 92, 246, 0.4)', // New shadow
+      },
+      backgroundImage: {
+        'gradient-primary-button': 'linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%)', // New gradient
       },
       backdropBlur: {
         'xl': 'var(--glass-backdrop-blur)',

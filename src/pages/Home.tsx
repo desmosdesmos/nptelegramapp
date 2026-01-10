@@ -34,7 +34,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         <ScaleButton>
           <button
             onClick={() => handleNavigation('Booking')}
-            className="w-full h-16 bg-[linear-gradient(90deg,#3b82f6_0%,#8b5cf6_100%)] text-white font-bold uppercase rounded-2xl soft-press pulse-shadow"
+            className="w-full h-16 bg-gradient-primary-button text-white font-bold uppercase rounded-2xl soft-press pulse-shadow shadow-primary-button-glow"
           >
             Записаться онлайн
           </button>
