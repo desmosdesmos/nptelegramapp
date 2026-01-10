@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Transition } from 'framer-motion';
 import { PageKey } from '../App';
 import { mainServices, localCleaningServices } from '../data/services';
 import type { Service } from '../types/services';
@@ -13,7 +13,7 @@ interface ServicesProps {
 const ServiceCardComplex: React.FC<{ service: Service; isSelected: boolean; onSelect: () => void }> = ({ service, isSelected, onSelect }) => {
   const cardVariants = {
     initial: { y: 20, opacity: 0 },
-    animate: { y: 0, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } },
+    animate: { y: 0, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } as Transition },
   };
 
   return (
@@ -70,7 +70,7 @@ const ServiceCardComplex: React.FC<{ service: Service; isSelected: boolean; onSe
 const ServiceRow: React.FC<{ service: Service; isSelected: boolean; onToggle: () => void }> = ({ service, isSelected, onToggle }) => {
   const rowVariants = {
     initial: { x: -20, opacity: 0 },
-    animate: { x: 0, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } },
+    animate: { x: 0, opacity: 1, transition: { duration: 0.5, ease: "easeOut" } as Transition },
   };
 
   return (
