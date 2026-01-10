@@ -5,7 +5,6 @@
 
 @layer base {
   :root {
-    --background: #0D0C15; /* Deep Black/Dark Violet */
     --foreground: #F3F4F6; /* Off-White */
     --orb-1: #4c1d95; /* Deep Purple */
     --orb-2: #22d3ee; /* Neon Blue */
@@ -16,20 +15,24 @@
     --dock-border-radius: 35px;
   }
 
-  html, body, #root {
+  html {
     height: 100%;
     width: 100%;
     margin: 0;
     padding: 0;
   }
 
+  /* CRITICAL OVERRIDE FOR TRANSPARENCY */
+  body, #root, .App {
+    background-color: transparent !important;
+    min-height: 100dvh;
+  }
+
   body {
-    background-color: var(--background);
     color: var(--foreground);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* overflow: hidden; REMOVED as PageWrapper handles scrolling */
   }
 }
 
