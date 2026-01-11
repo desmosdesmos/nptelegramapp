@@ -1,7 +1,6 @@
 import React from 'react';
 import { hapticFeedback } from '../utils/telegram';
 import { PageKey } from '../App';
-import ScaleButton from '../components/ScaleButton'; // Although not used for cards, it's used for the CTA button
 import SparklesIcon from '../components/SparklesIcon';
 
 interface HomeProps { onNavigate: (pageKey: PageKey) => void; }
@@ -13,8 +12,11 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
     onNavigate(pageKey);
   };
 
-  // Card class with 'heavy' press effect
-  const cardClass = 'relative h-full flex flex-col items-start justify-end p-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden transition-all duration-500 ease-out active:scale-[0.98] active:bg-white/10 cursor-pointer group';
+  // Shared spring physics class for all interactive elements on this page
+  const springClass = 'transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90';
+
+  // Specific class for cards to add their own background/border transitions
+  const cardBaseClass = 'relative h-full flex flex-col items-start justify-end p-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden cursor-pointer group';
 
   return (
     <div className='w-full h-[100dvh] flex flex-col items-center px-4 pt-4 pb-32 gap-3 bg-black text-white relative overflow-hidden select-none'>
@@ -34,38 +36,36 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* CTA BUTTON */}
+      {/* MAIN CTA BUTTON with Spring Physics */}
       <div className='relative z-10 w-full max-w-sm mx-auto'>
-        <ScaleButton>
-          <button 
-            onClick={() => handlePress('Booking')} 
-            className='w-full h-12 bg-gradient-to-r from-[#4c6ef5] to-[#9d4edd] text-white font-bold uppercase text-sm rounded-xl pulse-shadow transition-all duration-300 ease-out hover:brightness-110 hover:-translate-y-0.5 active:scale-[0.97] active:shadow-[0_0_5px_rgba(157,78,221,0.6)]'
-          >
-            Записаться онлайн
-          </button>
-        </ScaleButton>
+        <button 
+          onClick={() => handlePress('Booking')} 
+          className={`w-full h-12 bg-gradient-to-r from-[#4c6ef5] to-[#9d4edd] text-white font-bold uppercase text-sm rounded-xl pulse-shadow hover:shadow-lg active:scale-90 ${springClass}`}
+        >
+          Записаться онлайн
+        </button>
       </div>
 
-      {/* GRID */}
+      {/* GRID with Spring Physics */}
       <div className='relative z-10 w-full max-w-sm mx-auto grid grid-cols-2 gap-3 mt-1 flex-1 min-h-0'>
         
-        <div onClick={() => handlePress('Services')} className={cardClass}>
+        <div onClick={() => handlePress('Services')} className={`${cardBaseClass} ${springClass}`}>
             <span className='absolute text-[4rem] opacity-40 top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] transition-transform duration-500 group-active:scale-110 group-active:rotate-3' style={{filter: 'grayscale(0)'}}>🫧</span>
             <p className='relative z-10 font-bold text-white text-base drop-shadow-md'>Услуги</p>
         </div>
 
-        <div onClick={() => handlePress('Works')} className={cardClass}>
+        <div onClick={() => handlePress('Works')} className={`${cardBaseClass} ${springClass}`}>
             <span className='absolute text-[4rem] opacity-40 top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] transition-transform duration-500 group-active:scale-110 group-active:-rotate-3' style={{filter: 'grayscale(0)'}}>📸</span>
             <p className='relative z-10 font-bold text-white text-base drop-shadow-md'>Работы</p>
         </div>
 
-        <div onClick={() => handlePress('Reviews')} className={cardClass}>
+        <div onClick={() => handlePress('Reviews')} className={`${cardBaseClass} ${springClass}`}>
             <div className='absolute top-2 right-2 bg-green-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full z-20'>5.0</div>
             <span className='absolute text-[4rem] opacity-40 top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-yellow-300 transition-transform duration-500 group-active:scale-110' style={{filter: 'grayscale(0)'}}>⭐</span>
             <p className='relative z-10 font-bold text-white text-base drop-shadow-md'>Отзывы</p>
         </div>
 
-        <div onClick={() => handlePress('Contacts')} className={cardClass}>
+        <div onClick={() => handlePress('Contacts')} className={`${cardBaseClass} ${springClass}`}>
             <span className='absolute text-[4rem] opacity-40 top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] transition-transform duration-500 group-active:scale-110 group-active:rotate-6' style={{filter: 'grayscale(0)'}}>📞</span>
             <p className='relative z-10 font-bold text-white text-base drop-shadow-md'>Контакты</p>
         </div>
