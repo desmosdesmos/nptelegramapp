@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { House, Calendar, Sparkles, User } from 'lucide-react';
 
 // Import all pages
 import Home from './pages/Home';
@@ -11,6 +9,7 @@ import Services from './pages/Services';
 import Reviews from './pages/Reviews';
 import Profile from './pages/Profile';
 import ErrorBoundary from './ErrorBoundary';
+import { House, Calendar, Sparkles, User } from 'lucide-react';
 
 // Define a type for the page keys
 export type PageKey = 'Home' | 'Booking' | 'Works' | 'Contacts' | 'Services' | 'Reviews' | 'Profile';
@@ -26,32 +25,30 @@ const appPages: Record<PageKey, { component: React.FC<any> }> = {
   Profile: { component: Profile },
 };
 
-// --- Reusable Dock Components ---
-const ScaleButton: React.FC<React.PropsWithChildren<{ onClick: () => void }>> = ({ children, onClick }) => (
-  <motion.button
-    onClick={onClick}
-    whileTap={{ scale: 0.95 }}
-    transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-    className="flex-1"
-  >
-    {children}
-  </motion.button>
-);
-
-const DockItem: React.FC<{ icon: React.ReactNode; label: string; active?: boolean; onClick: () => void; }> = ({ icon, label, active, onClick }) => (
-    <div onClick={onClick} className="relative flex flex-col items-center justify-center gap-1 w-16 h-16 cursor-pointer">
-      {active && <motion.div className="absolute inset-0 bg-white/10 rounded-2xl" layoutId="active-dock-item" style={{ filter: 'blur(10px)' }} />}
-      <div className={`w-6 h-6 flex items-center justify-center transition-colors ${active ? 'text-white' : 'text-gray-400'}`}>
-        {icon}
-      </div>
-      <span className={`text-[10px] font-bold transition-colors ${active ? 'text-white' : 'text-gray-400'}`}>{label}</span>
-    </div>
-);
-
-// --- Main App Component ---
+// --- Main App Component: The Single Source of Truth for Navigation ---
 function App() {
   const [page, setPage] = useState<PageKey>('Home');
   const CurrentPageComponent = appPages[page].component;
+
+  // A single, clean component for dock buttons with refined animations
+  const DockButton: React.FC<{
+    pageKey: PageKey,
+    label: string,
+    icon: React.ReactNode,
+  }> = ({ pageKey, label, icon }) => {
+    const isActive = page === pageKey;
+    return (
+      <button 
+        onClick={() => setPage(pageKey)} 
+        className={`flex flex-col items-center justify-center gap-1 w-16 h-16 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] active:scale-75 ${isActive ? 'text-white' : 'text-white/50 hover:text-white'}`}
+      >
+        <div className={isActive ? 'drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]' : ''}>
+          {icon}
+        </div>
+        <span className='text-[10px] font-medium'>{label}</span>
+      </button>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-black">
@@ -59,12 +56,12 @@ function App() {
         <CurrentPageComponent onNavigate={setPage} />
       </ErrorBoundary>
 
-      {/* Global Bottom Dock */}
-      <div className="fixed bottom-5 left-1/2 -translate-x-1/2 h-20 px-4 bg-[#1c1c1e]/70 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-full flex items-center justify-center gap-2 z-50">
-        <ScaleButton onClick={() => setPage('Home')}><DockItem icon={<House />} label="Главная" active={page === 'Home'} onClick={() => setPage('Home')} /></ScaleButton>
-        <ScaleButton onClick={() => setPage('Booking')}><DockItem icon={<Calendar />} label="Запись" active={page === 'Booking'} onClick={() => setPage('Booking')} /></ScaleButton>
-        <ScaleButton onClick={() => setPage('Services')}><DockItem icon={<Sparkles />} label="Услуги" active={page === 'Services'} onClick={() => setPage('Services')} /></ScaleButton>
-        <ScaleButton onClick={() => setPage('Profile')}><DockItem icon={<User />} label="Профиль" active={page === 'Profile'} onClick={() => setPage('Profile')} /></ScaleButton>
+      {/* GLOBAL BOTTOM DOCK with refined animations */}
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[90%] max-w-sm h-20 px-4 bg-[#1c1c1e]/70 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-full flex items-center justify-around z-50">
+        <DockButton pageKey="Home" label="Главная" icon={<House className='w-6 h-6' />} />
+        <DockButton pageKey="Booking" label="Запись" icon={<Calendar className='w-6 h-6' />} />
+        <DockButton pageKey="Services" label="Услуги" icon={<Sparkles className='w-6 h-6' />} />
+        <DockButton pageKey="Profile" label="Профиль" icon={<User className='w-6 h-6' />} />
       </div>
     </div>
   );
