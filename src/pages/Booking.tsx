@@ -181,12 +181,38 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
     
   const handleChange = (field: keyof Omit<BookingFormData, 'quantities'>, value: any) => {
     hapticFeedback('light'); // Added haptic feedback for input changes
+    
+    let processedValue = value;
+    if (field === 'phone') {
+      // Clean the input: remove all non-digits except for a leading '+'
+      const cleanValue = processedValue.replace(/[^+\d]/g, '');
+
+      if (cleanValue === '' || cleanValue === '+') {
+        processedValue = '+7';
+      } else if (!cleanValue.startsWith('+7')) {
+        // If it doesn't start with +7, prepend it.
+        // Also handle cases like '89...' -> '+79...'
+        // or '79...' -> '+79...'
+        const digitsOnly = cleanValue.replace(/\D/g, ''); // Get only digits
+        if (digitsOnly.startsWith('7')) {
+          processedValue = '+7' + digitsOnly.substring(1); // Remove leading 7 if present
+        } else if (digitsOnly.startsWith('8')) {
+            processedValue = '+7' + digitsOnly.substring(1); // Remove leading 8 if present
+        }
+        else {
+            processedValue = '+7' + digitsOnly;
+        }
+      } else {
+          processedValue = cleanValue; // Keep the clean +7... value
+      }
+    }
+
     const isCarBrandChange = field === 'carBrand';
-    const newBrand = isCarBrandChange ? (value as string) : formData.carBrand;
+    const newBrand = isCarBrandChange ? (processedValue as string) : formData.carBrand;
 
     setFormData(prev => {
-      const newData = { ...prev, [field]: value };
-      if (isCarBrandChange && prev.carBrand !== value) {
+      const newData = { ...prev, [field]: processedValue };
+      if (isCarBrandChange && prev.carBrand !== processedValue) {
         newData.carModel = '';
       }
       return newData;
@@ -200,8 +226,8 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       });
     }
 
-    if (isCarBrandChange && typeof value === 'string') {
-      const input = value.toLowerCase();
+    if (isCarBrandChange && typeof processedValue === 'string') {
+      const input = processedValue.toLowerCase();
       if (input.length > 0) {
         const filtered = allBrands.filter(brand => brand.toLowerCase().includes(input)).slice(0, 5);
         setSuggestedBrands(filtered);
@@ -212,9 +238,9 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       }
     }
 
-    if (field === 'carModel' && typeof value === 'string') {
+    if (field === 'carModel' && typeof processedValue === 'string') {
       const models = getModelsByBrand(newBrand);
-      const input = value.toLowerCase();
+      const input = processedValue.toLowerCase();
       if (input.length > 0 && models.length > 0) {
         const filtered = models.filter(model => model.toLowerCase().includes(input)).slice(0, 5);
         setSuggestedModels(filtered);
