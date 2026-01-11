@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { ArrowLeft } from 'lucide-react'; 
 import { PageKey } from '../App';
 import { getTelegramWebApp, hapticFeedback, notificationFeedback, getTelegramUser } from '../utils/telegram';
@@ -13,9 +13,9 @@ interface BookingProps {
 
 // Re-defining FormSection with the new glass style
 const FormSection: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
-  <div className="p-6 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl mb-6 shadow-xl overflow-visible">
+  <div className="p-6 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl mb-6 shadow-xl">
     <h3 className="text-xl font-bold text-white pb-4 mb-6 border-b border-white/10">{title}</h3>
-    <div className="space-y-6 overflow-visible">
+    <div className="space-y-6">
       {children}
     </div>
   </div>
@@ -137,11 +137,6 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
   const [suggestedModels, setSuggestedModels] = useState<string[]>([]);
   const [showBrandSuggestions, setShowBrandSuggestions] = useState(false);
   const [showModelSuggestions, setShowModelSuggestions] = useState(false);
-  const [brandDropdownPosition, setBrandDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
-  const [modelDropdownPosition, setModelDropdownPosition] = useState({ top: 0, left: 0, width: 0 });
-
-  const brandInputRef = useRef<HTMLInputElement>(null);
-  const modelInputRef = useRef<HTMLInputElement>(null);
 
   const allBrands = getAllBrands();
 
@@ -183,37 +178,6 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       }
     };
   }, [tg]);
-
-  // Update dropdown positions on scroll
-  useEffect(() => {
-    const updatePositions = () => {
-      if (showBrandSuggestions && brandInputRef.current) {
-        const rect = brandInputRef.current.getBoundingClientRect();
-        setBrandDropdownPosition({
-          top: rect.bottom + window.scrollY + 8,
-          left: rect.left + window.scrollX,
-          width: rect.width
-        });
-      }
-      if (showModelSuggestions && modelInputRef.current) {
-        const rect = modelInputRef.current.getBoundingClientRect();
-        setModelDropdownPosition({
-          top: rect.bottom + window.scrollY + 8,
-          left: rect.left + window.scrollX,
-          width: rect.width
-        });
-      }
-    };
-
-    if (showBrandSuggestions || showModelSuggestions) {
-      window.addEventListener('scroll', updatePositions, true);
-      window.addEventListener('resize', updatePositions);
-      return () => {
-        window.removeEventListener('scroll', updatePositions, true);
-        window.removeEventListener('resize', updatePositions);
-      };
-    }
-  }, [showBrandSuggestions, showModelSuggestions]);
     
   const handleChange = (field: keyof Omit<BookingFormData, 'quantities'>, value: any) => {
     hapticFeedback('light'); // Added haptic feedback for input changes
@@ -430,23 +394,14 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
 
         {/* Car Info */}
         <FormSection title="Информация об автомобиле">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 overflow-visible">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div className="relative">
               <label className="block text-sm font-medium mb-2 text-gray-400">Марка *</label>
               <input
-                ref={brandInputRef}
                 type="text"
                 value={formData.carBrand}
                 onChange={(e) => handleChange('carBrand', e.target.value)}
                 onFocus={() => {
-                  if (brandInputRef.current) {
-                    const rect = brandInputRef.current.getBoundingClientRect();
-                    setBrandDropdownPosition({
-                      top: rect.bottom + window.scrollY + 8,
-                      left: rect.left + window.scrollX,
-                      width: rect.width
-                    });
-                  }
                   const input = formData.carBrand.toLowerCase();
                   const filtered = input.length > 0 ? allBrands.filter(brand => brand.toLowerCase().includes(input)) : allBrands;
                   setSuggestedBrands(filtered.slice(0, 5));
@@ -457,20 +412,14 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 placeholder="BMW"
               />
               {showBrandSuggestions && suggestedBrands.length > 0 && (
-                <div 
-                  className="fixed z-[99999] rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] max-h-56 overflow-hidden"
-                  style={{
-                    top: `${brandDropdownPosition.top}px`,
-                    left: `${brandDropdownPosition.left}px`,
-                    width: `${brandDropdownPosition.width}px`
-                  }}
-                >
+                <div className="absolute top-full left-0 right-0 z-50 mt-2 rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] max-h-56 overflow-hidden">
                   <div className="max-h-56 overflow-y-auto">
                     {suggestedBrands.map((brand, index) => (
                       <button 
                         key={brand} 
                         type="button" 
-                        onClick={() => { handleChange('carBrand', brand); setShowBrandSuggestions(false); }} 
+                        onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleChange('carBrand', brand); setShowBrandSuggestions(false); }} 
                         className={`w-full text-left px-5 py-4 text-white/90 hover:bg-white/10 active:bg-white/15 transition-all duration-200 font-medium ${
                           index === 0 ? 'rounded-t-3xl' : ''
                         } ${
@@ -488,18 +437,11 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
             <div className="relative">
               <label className="block text-sm font-medium mb-2 text-gray-400">Модель *</label>
               <input
-                ref={modelInputRef}
                 type="text"
                 value={formData.carModel}
                 onChange={(e) => handleChange('carModel', e.target.value)}
                 onFocus={() => {
-                  if (formData.carBrand && modelInputRef.current) {
-                    const rect = modelInputRef.current.getBoundingClientRect();
-                    setModelDropdownPosition({
-                      top: rect.bottom + window.scrollY + 8,
-                      left: rect.left + window.scrollX,
-                      width: rect.width
-                    });
+                  if (formData.carBrand) {
                     const models = getModelsByBrand(formData.carBrand);
                     const input = formData.carModel.toLowerCase();
                     const filtered = input.length > 0 ? models.filter(model => model.toLowerCase().includes(input)) : models;
@@ -513,20 +455,14 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 placeholder={formData.carBrand ? "X5" : "Сначала марку"}
               />
               {showModelSuggestions && suggestedModels.length > 0 && (
-                <div 
-                  className="fixed z-[99999] rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] max-h-56 overflow-hidden"
-                  style={{
-                    top: `${modelDropdownPosition.top}px`,
-                    left: `${modelDropdownPosition.left}px`,
-                    width: `${modelDropdownPosition.width}px`
-                  }}
-                >
+                <div className="absolute top-full left-0 right-0 z-50 mt-2 rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] max-h-56 overflow-hidden">
                   <div className="max-h-56 overflow-y-auto">
                     {suggestedModels.map((model, index) => (
                       <button 
                         key={model} 
                         type="button" 
-                        onClick={() => { handleChange('carModel', model); setShowModelSuggestions(false); }} 
+                        onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleChange('carModel', model); setShowModelSuggestions(false); }} 
                         className={`w-full text-left px-5 py-4 text-white/90 hover:bg-white/10 active:bg-white/15 transition-all duration-200 font-medium ${
                           index === 0 ? 'rounded-t-3xl' : ''
                         } ${
