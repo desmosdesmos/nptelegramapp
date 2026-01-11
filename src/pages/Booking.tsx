@@ -412,9 +412,9 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 placeholder="BMW"
               />
               {showBrandSuggestions && suggestedBrands.length > 0 && (
-                <div className="absolute z-50 w-full mt-2 rounded-2xl bg-neutral-800/90 border border-white/10 shadow-lg max-h-48 overflow-y-auto">
+                <div className="absolute z-[9999] w-full mt-2 rounded-2xl bg-neutral-800/95 backdrop-blur-xl border border-white/20 shadow-2xl max-h-48 overflow-y-auto">
                   {suggestedBrands.map((brand) => (
-                    <button key={brand} type="button" onClick={() => { handleChange('carBrand', brand); setShowBrandSuggestions(false); }} className="w-full text-left px-4 py-3 text-white hover:bg-white/10 transition-colors">{brand}</button>
+                    <button key={brand} type="button" onClick={() => { handleChange('carBrand', brand); setShowBrandSuggestions(false); }} className="w-full text-left px-4 py-3 text-white hover:bg-white/10 transition-colors first:rounded-t-2xl last:rounded-b-2xl">{brand}</button>
                   ))}
                 </div>
               )}
@@ -441,9 +441,9 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 placeholder={formData.carBrand ? "X5" : "Сначала марку"}
               />
               {showModelSuggestions && suggestedModels.length > 0 && (
-                <div className="absolute z-50 w-full mt-2 rounded-2xl bg-neutral-800/90 border border-white/10 shadow-lg max-h-48 overflow-y-auto">
+                <div className="absolute z-[9999] w-full mt-2 rounded-2xl bg-neutral-800/95 backdrop-blur-xl border border-white/20 shadow-2xl max-h-48 overflow-y-auto">
                   {suggestedModels.map((model) => (
-                    <button key={model} type="button" onClick={() => { handleChange('carModel', model); setShowModelSuggestions(false); }} className="w-full text-left px-4 py-3 text-white hover:bg-white/10 transition-colors">{model}</button>
+                    <button key={model} type="button" onClick={() => { handleChange('carModel', model); setShowModelSuggestions(false); }} className="w-full text-left px-4 py-3 text-white hover:bg-white/10 transition-colors first:rounded-t-2xl last:rounded-b-2xl">{model}</button>
                   ))}
                 </div>
               )}
