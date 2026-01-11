@@ -395,7 +395,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
         {/* Car Info */}
         <FormSection title="Информация об автомобиле">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="relative">
+            <div className="relative z-20">
               <label className="block text-sm font-medium mb-2 text-gray-400">Марка *</label>
               <input
                 type="text"
@@ -412,7 +412,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 placeholder="BMW"
               />
               {showBrandSuggestions && suggestedBrands.length > 0 && (
-                <div className="absolute z-50 w-full mt-2 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-xl shadow-lg max-h-48 overflow-y-auto">
+                <div className="absolute z-50 w-full mt-2 rounded-2xl bg-white/20 border border-white/10 backdrop-blur-xl shadow-lg max-h-48 overflow-y-auto">
                   {suggestedBrands.map((brand) => (
                     <button key={brand} type="button" onClick={() => { handleChange('carBrand', brand); setShowBrandSuggestions(false); }} className="w-full text-left px-4 py-3 text-white hover:bg-white/10 transition-colors">{brand}</button>
                   ))}
@@ -420,7 +420,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
               )}
               {errors.carBrand && <p className="text-red-500 text-sm mt-2">{errors.carBrand}</p>}
             </div>
-            <div className="relative">
+            <div className="relative z-20">
               <label className="block text-sm font-medium mb-2 text-gray-400">Модель *</label>
               <input
                 type="text"
@@ -441,7 +441,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 placeholder={formData.carBrand ? "X5" : "Сначала марку"}
               />
               {showModelSuggestions && suggestedModels.length > 0 && (
-                <div className="absolute z-50 w-full mt-2 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-xl shadow-lg max-h-48 overflow-y-auto">
+                <div className="absolute z-50 w-full mt-2 rounded-2xl bg-white/20 border border-white/10 backdrop-blur-xl shadow-lg max-h-48 overflow-y-auto">
                   {suggestedModels.map((model) => (
                     <button key={model} type="button" onClick={() => { handleChange('carModel', model); setShowModelSuggestions(false); }} className="w-full text-left px-4 py-3 text-white hover:bg-white/10 transition-colors">{model}</button>
                   ))}
