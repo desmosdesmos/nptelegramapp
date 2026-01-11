@@ -412,7 +412,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 placeholder="BMW"
               />
               {showBrandSuggestions && suggestedBrands.length > 0 && (
-                <div className="absolute top-full left-0 right-0 z-50 mt-2 rounded-3xl bg-[#1c1c1e]/90 backdrop-blur-xl border border-white/10 shadow-2xl max-h-56 overflow-y-auto p-4">
+                <div className="absolute top-full left-0 right-0 z-[9999] mt-2 rounded-3xl bg-[#1c1c1e] backdrop-blur-2xl border border-white/10 shadow-2xl max-h-56 overflow-y-auto p-4">
                   <div className="flex flex-col gap-2">
                     {suggestedBrands.map((brand) => (
                       <button 
@@ -420,7 +420,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                         type="button" 
                         onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleChange('carBrand', brand); setShowBrandSuggestions(false); }} 
-                        className="w-full text-left px-4 py-3 text-white/90 hover:bg-white/10 active:bg-white/15 transition-all duration-200 font-medium rounded-2xl"
+                        className="w-full text-left px-4 py-3 text-white hover:bg-white/10 active:bg-white/15 transition-all duration-200 font-medium rounded-2xl"
                       >
                         {brand}
                       </button>
@@ -451,7 +451,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 placeholder={formData.carBrand ? "X5" : "Сначала марку"}
               />
               {showModelSuggestions && suggestedModels.length > 0 && (
-                <div className="absolute top-full left-0 right-0 z-50 mt-2 rounded-3xl bg-[#1c1c1e]/90 backdrop-blur-xl border border-white/10 shadow-2xl max-h-56 overflow-y-auto p-4">
+                <div className="absolute top-full left-0 right-0 z-[9999] mt-2 rounded-3xl bg-[#1c1c1e] backdrop-blur-2xl border border-white/10 shadow-2xl max-h-56 overflow-y-auto p-4">
                   <div className="flex flex-col gap-2">
                     {suggestedModels.map((model) => (
                       <button 
@@ -459,7 +459,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                         type="button" 
                         onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleChange('carModel', model); setShowModelSuggestions(false); }} 
-                        className="w-full text-left px-4 py-3 text-white/90 hover:bg-white/10 active:bg-white/15 transition-all duration-200 font-medium rounded-2xl"
+                        className="w-full text-left px-4 py-3 text-white hover:bg-white/10 active:bg-white/15 transition-all duration-200 font-medium rounded-2xl"
                       >
                         {model}
                       </button>
