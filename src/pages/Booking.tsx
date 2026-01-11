@@ -395,7 +395,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
         {/* Car Info */}
         <FormSection title="Информация об автомобиле">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="relative z-20">
+            <div className="relative z-[999]">
               <label className="block text-sm font-medium mb-2 text-gray-400">Марка *</label>
               <input
                 type="text"
@@ -420,7 +420,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
               )}
               {errors.carBrand && <p className="text-red-500 text-sm mt-2">{errors.carBrand}</p>}
             </div>
-            <div className="relative z-20">
+            <div className="relative z-[999]">
               <label className="block text-sm font-medium mb-2 text-gray-400">Модель *</label>
               <input
                 type="text"
