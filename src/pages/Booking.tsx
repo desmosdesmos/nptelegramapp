@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { PageKey } from '../App';
-import { hapticFeedback } from '../utils/telegram';
+import { hapticFeedback, getTelegramWebApp } from '../utils/telegram';
 
 interface BookingProps {
   onNavigate: (page: PageKey) => void;
@@ -24,9 +24,10 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
     e.preventDefault();
     hapticFeedback('heavy');
 
-    const tg = window.Telegram.WebApp;
-    if (!tg.initDataUnsafe.user) {
-      tg.showAlert('Не удалось получить данные пользователя. Пожалуйста, перезапустите приложение.');
+    const tg = getTelegramWebApp();
+    if (!tg || !tg.initDataUnsafe.user) {
+      // Use showAlert from utils/telegram for consistency
+      tg?.showAlert('Не удалось получить данные пользователя. Пожалуйста, перезапустите приложение.');
       return;
     }
     
