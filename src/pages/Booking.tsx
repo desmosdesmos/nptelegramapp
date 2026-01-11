@@ -13,9 +13,9 @@ interface BookingProps {
 
 // Re-defining FormSection with the new glass style
 const FormSection: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
-  <div className="p-6 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl mb-6 shadow-xl">
+  <div className="p-6 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl mb-6 shadow-xl overflow-visible">
     <h3 className="text-xl font-bold text-white pb-4 mb-6 border-b border-white/10">{title}</h3>
-    <div className="space-y-6">
+    <div className="space-y-6 overflow-visible">
       {children}
     </div>
   </div>
@@ -394,8 +394,8 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
 
         {/* Car Info */}
         <FormSection title="Информация об автомобиле">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div className="relative z-[999]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 overflow-visible">
+            <div className="relative">
               <label className="block text-sm font-medium mb-2 text-gray-400">Марка *</label>
               <input
                 type="text"
@@ -412,15 +412,28 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 placeholder="BMW"
               />
               {showBrandSuggestions && suggestedBrands.length > 0 && (
-                <div className="absolute z-[9999] w-full mt-2 rounded-2xl bg-neutral-800/95 backdrop-blur-xl border border-white/20 shadow-2xl max-h-48 overflow-y-auto">
-                  {suggestedBrands.map((brand) => (
-                    <button key={brand} type="button" onClick={() => { handleChange('carBrand', brand); setShowBrandSuggestions(false); }} className="w-full text-left px-4 py-3 text-white hover:bg-white/10 transition-colors first:rounded-t-2xl last:rounded-b-2xl">{brand}</button>
-                  ))}
+                <div className="absolute top-full left-0 right-0 z-[10000] mt-2 rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] max-h-56 overflow-hidden">
+                  <div className="max-h-56 overflow-y-auto">
+                    {suggestedBrands.map((brand, index) => (
+                      <button 
+                        key={brand} 
+                        type="button" 
+                        onClick={() => { handleChange('carBrand', brand); setShowBrandSuggestions(false); }} 
+                        className={`w-full text-left px-5 py-4 text-white/90 hover:bg-white/10 active:bg-white/15 transition-all duration-200 font-medium ${
+                          index === 0 ? 'rounded-t-3xl' : ''
+                        } ${
+                          index === suggestedBrands.length - 1 ? 'rounded-b-3xl' : 'border-b border-white/5'
+                        }`}
+                      >
+                        {brand}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
               {errors.carBrand && <p className="text-red-500 text-sm mt-2">{errors.carBrand}</p>}
             </div>
-            <div className="relative z-[999]">
+            <div className="relative">
               <label className="block text-sm font-medium mb-2 text-gray-400">Модель *</label>
               <input
                 type="text"
@@ -441,10 +454,23 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 placeholder={formData.carBrand ? "X5" : "Сначала марку"}
               />
               {showModelSuggestions && suggestedModels.length > 0 && (
-                <div className="absolute z-[9999] w-full mt-2 rounded-2xl bg-neutral-800/95 backdrop-blur-xl border border-white/20 shadow-2xl max-h-48 overflow-y-auto">
-                  {suggestedModels.map((model) => (
-                    <button key={model} type="button" onClick={() => { handleChange('carModel', model); setShowModelSuggestions(false); }} className="w-full text-left px-4 py-3 text-white hover:bg-white/10 transition-colors first:rounded-t-2xl last:rounded-b-2xl">{model}</button>
-                  ))}
+                <div className="absolute top-full left-0 right-0 z-[10000] mt-2 rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] max-h-56 overflow-hidden">
+                  <div className="max-h-56 overflow-y-auto">
+                    {suggestedModels.map((model, index) => (
+                      <button 
+                        key={model} 
+                        type="button" 
+                        onClick={() => { handleChange('carModel', model); setShowModelSuggestions(false); }} 
+                        className={`w-full text-left px-5 py-4 text-white/90 hover:bg-white/10 active:bg-white/15 transition-all duration-200 font-medium ${
+                          index === 0 ? 'rounded-t-3xl' : ''
+                        } ${
+                          index === suggestedModels.length - 1 ? 'rounded-b-3xl' : 'border-b border-white/5'
+                        }`}
+                      >
+                        {model}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
               {errors.carModel && <p className="text-red-500 text-sm mt-2">{errors.carModel}</p>}
