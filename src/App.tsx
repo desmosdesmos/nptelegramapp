@@ -35,9 +35,9 @@ function App() {
   const handleNavigate = (pageKey: PageKey) => {
     hapticFeedback('light');
     setPage(pageKey);
-  }
+  };
 
-  // A single, clean component for dock buttons with soft, physics-based animations
+  // A single, clean component for dock buttons with CSS-based transitions
   const DockButton: React.FC<{
     pageKey: PageKey,
     label: string,
@@ -45,17 +45,15 @@ function App() {
   }> = ({ pageKey, label, icon }) => {
     const isActive = page === pageKey;
     return (
-      <motion.button 
+      <button 
         onClick={() => handleNavigate(pageKey)} 
-        whileTap={{ scale: 0.85 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 15 }}
-        className={`flex flex-col items-center justify-center gap-1 w-16 h-16 rounded-full transition-colors duration-200 ${isActive ? 'text-white' : 'text-white/50 hover:text-white'}`}
+        className={`flex flex-col items-center justify-center gap-1 w-16 h-16 transition-all duration-300 ease-[cubic-bezier(0.25,0.8,0.25,1)] active:scale-75 ${isActive ? 'text-white' : 'text-white/50 hover:text-white'}`}
       >
-        <div className={isActive ? 'drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]' : ''}>
+        <div className={isActive ? 'drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]' : ''}>
           {icon}
         </div>
         <span className='text-[10px] font-medium'>{label}</span>
-      </motion.button>
+      </button>
     );
   };
 
@@ -65,9 +63,9 @@ function App() {
         <AnimatePresence mode='wait'>
           <motion.div
             key={page}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -15 }}
+            initial={{ opacity: 0.5, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0.5, scale: 0.98 }}
             transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
           >
             <CurrentPageComponent onNavigate={setPage} />
@@ -75,7 +73,7 @@ function App() {
         </AnimatePresence>
       </ErrorBoundary>
 
-      {/* GLOBAL BOTTOM DOCK with soft animations */}
+      {/* GLOBAL BOTTOM DOCK with CSS-based animations */}
       <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[90%] max-w-sm h-20 px-4 bg-[#1c1c1e]/70 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-full flex items-center justify-around z-50">
         <DockButton pageKey="Home" label="Главная" icon={<House className='w-6 h-6' />} />
         <DockButton pageKey="Booking" label="Запись" icon={<Calendar className='w-6 h-6' />} />

@@ -1,7 +1,7 @@
 import React from 'react';
 import { hapticFeedback } from '../utils/telegram';
 import { PageKey } from '../App';
-import ScaleButton from '../components/ScaleButton';
+import ScaleButton from '../components/ScaleButton'; // Although not used for cards, it's used for the CTA button
 import SparklesIcon from '../components/SparklesIcon';
 
 interface HomeProps { onNavigate: (pageKey: PageKey) => void; }
@@ -13,8 +13,8 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
     onNavigate(pageKey);
   };
 
-  // Premium iOS Animation Class
-  const cardClass = 'relative h-full flex flex-col items-start justify-end p-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden transition-all duration-400 ease-[cubic-bezier(0.25,1,0.5,1)] active:scale-[0.96] active:bg-white/10 active:border-white/20 cursor-pointer group';
+  // Card class with 'heavy' press effect
+  const cardClass = 'relative h-full flex flex-col items-start justify-end p-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden transition-all duration-500 ease-out active:scale-[0.98] active:bg-white/10 cursor-pointer group';
 
   return (
     <div className='w-full h-[100dvh] flex flex-col items-center px-4 pt-4 pb-32 gap-3 bg-black text-white relative overflow-hidden select-none'>
@@ -50,24 +50,24 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
       <div className='relative z-10 w-full max-w-sm mx-auto grid grid-cols-2 gap-3 mt-1 flex-1 min-h-0'>
         
         <div onClick={() => handlePress('Services')} className={cardClass}>
-            <span className='absolute text-[3.5rem] opacity-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 grayscale-0 transition-transform duration-500 group-active:scale-110 group-active:rotate-3'>🫧</span>
-            <p className='relative z-10 font-bold text-white text-sm drop-shadow-md'>Услуги</p>
+            <span className='absolute text-[4rem] opacity-40 top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] transition-transform duration-500 group-active:scale-110 group-active:rotate-3' style={{filter: 'grayscale(0)'}}>🫧</span>
+            <p className='relative z-10 font-bold text-white text-base drop-shadow-md'>Услуги</p>
         </div>
 
         <div onClick={() => handlePress('Works')} className={cardClass}>
-            <span className='absolute text-[3.5rem] opacity-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 grayscale-0 transition-transform duration-500 group-active:scale-110 group-active:-rotate-3'>📸</span>
-            <p className='relative z-10 font-bold text-white text-sm drop-shadow-md'>Работы</p>
+            <span className='absolute text-[4rem] opacity-40 top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] transition-transform duration-500 group-active:scale-110 group-active:-rotate-3' style={{filter: 'grayscale(0)'}}>📸</span>
+            <p className='relative z-10 font-bold text-white text-base drop-shadow-md'>Работы</p>
         </div>
 
         <div onClick={() => handlePress('Reviews')} className={cardClass}>
             <div className='absolute top-2 right-2 bg-green-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full z-20'>5.0</div>
-            <span className='absolute text-[3.5rem] opacity-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 grayscale-0 transition-transform duration-500 group-active:scale-110'>⭐</span>
-            <p className='relative z-10 font-bold text-white text-sm drop-shadow-md'>Отзывы</p>
+            <span className='absolute text-[4rem] opacity-40 top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] text-yellow-300 transition-transform duration-500 group-active:scale-110' style={{filter: 'grayscale(0)'}}>⭐</span>
+            <p className='relative z-10 font-bold text-white text-base drop-shadow-md'>Отзывы</p>
         </div>
 
         <div onClick={() => handlePress('Contacts')} className={cardClass}>
-            <span className='absolute text-[3.5rem] opacity-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 grayscale-0 transition-transform duration-500 group-active:scale-110 group-active:rotate-6'>📞</span>
-            <p className='relative z-10 font-bold text-white text-sm drop-shadow-md'>Контакты</p>
+            <span className='absolute text-[4rem] opacity-40 top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] transition-transform duration-500 group-active:scale-110 group-active:rotate-6' style={{filter: 'grayscale(0)'}}>📞</span>
+            <p className='relative z-10 font-bold text-white text-base drop-shadow-md'>Контакты</p>
         </div>
       </div>
     </div>
