@@ -15,7 +15,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col items-center text-center px-4 pt-10 pb-44 gap-6">
+    <div className="w-full h-full flex flex-col items-center text-center px-4 pt-10 pb-[240px] gap-6">
       
       {/* 1. Hero Header */}
       <div className="flex flex-col items-center justify-center text-center mb-6">
