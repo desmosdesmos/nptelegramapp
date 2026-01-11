@@ -60,7 +60,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       tg.showPopup({
         title: 'Заявка отправлена!',
         message: 'Мы скоро свяжемся с вами для подтверждения деталей.',
-        buttons: [{ type: 'ok' }],
+        buttons: [{ type: 'ok', text: 'ОК' }],
       });
       
       onNavigate('Home');
