@@ -411,8 +411,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 className={`w-full p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl text-white focus:ring-2 focus:ring-blue-500 focus:outline-none ${errors.carBrand ? 'border-red-500' : ''}`}
                 placeholder="BMW"
               />
-              {showBrandSuggestions && suggestedBrands.length > 0 && (
-                <div className="absolute z-50 w-full mt-2 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-lg max-h-48 overflow-y-auto">
+                <div className="absolute z-50 w-full mt-2 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-xl shadow-lg max-h-48 overflow-y-auto">
                   {suggestedBrands.map((brand) => (
                     <button key={brand} type="button" onClick={() => { handleChange('carBrand', brand); setShowBrandSuggestions(false); }} className="w-full text-left px-4 py-3 text-white hover:bg-white/10 transition-colors">{brand}</button>
                   ))}
@@ -441,7 +440,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 placeholder={formData.carBrand ? "X5" : "Сначала марку"}
               />
               {showModelSuggestions && suggestedModels.length > 0 && (
-                <div className="absolute z-50 w-full mt-2 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-lg max-h-48 overflow-y-auto">
+                <div className="absolute z-50 w-full mt-2 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-xl shadow-lg max-h-48 overflow-y-auto">
                   {suggestedModels.map((model) => (
                     <button key={model} type="button" onClick={() => { handleChange('carModel', model); setShowModelSuggestions(false); }} className="w-full text-left px-4 py-3 text-white hover:bg-white/10 transition-colors">{model}</button>
                   ))}
