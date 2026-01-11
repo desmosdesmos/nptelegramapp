@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { ArrowLeft, Star } from 'lucide-react'; // Added Star for service icons if needed
+import { ArrowLeft } from 'lucide-react'; 
 import { PageKey } from '../App';
 import { getTelegramWebApp, hapticFeedback, notificationFeedback, getTelegramUser } from '../utils/telegram';
+import { sendBookingToTelegram, validateBookingForm, type BookingFormData } from '../utils/booking';
+import { mainServices, localCleaningServices, getServiceById, getServiceOptionById } from '../data/services';
+import { getAllBrands, getModelsByBrand } from '../data/carBrands';
+import type { Service } from '../types/services';
 
 interface BookingProps {
   onNavigate: (page: PageKey) => void;
