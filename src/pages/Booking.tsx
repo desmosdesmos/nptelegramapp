@@ -63,56 +63,70 @@ const ServiceCheckboxOption: React.FC<{
   onToggle: () => void;
   quantity: number;
   onQuantityChange: (delta: number) => void;
-}> = ({ service, isSelected, onToggle, quantity, onQuantityChange }) => (
-  <button
-    onClick={onToggle}
-    className={`w-full p-4 rounded-2xl border transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 text-left
-      ${isSelected 
-        ? 'bg-blue-600/20 border-blue-500/50 shadow-lg' 
-        : 'bg-white/5 border-white/10 hover:border-blue-500/20'
-      }
-    `}
-  >
-    <div className="flex items-start">
-      <div className={`w-5 h-5 flex-shrink-0 border-2 rounded-md mt-1 flex items-center justify-center mr-4 ${isSelected ? 'border-blue-500' : 'border-white/30'}`}>
-        {isSelected && <div className="w-2.5 h-2.5 rounded-sm bg-blue-500 shadow-blue-500/50" />}
-      </div>
-      
-      <div className="flex-1">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {service.icon && <span className="text-xl">{service.icon}</span>}
-            <span className="font-medium text-white">{service.name}</span>
-            {service.unitLabel && <span className="text-sm text-gray-400">{service.unitLabel}</span>}
+}> = ({ service, isSelected, onToggle, quantity, onQuantityChange }) => {
+  const needsQuantityControl = service.id === 'seat' || service.id === 'door-cards';
+  const showQuantityControl = needsQuantityControl && isSelected;
+
+  return (
+    <div
+      className={`w-full p-4 rounded-2xl border transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] 
+        ${isSelected 
+          ? 'bg-blue-600/20 border-blue-500/50 shadow-lg' 
+          : 'bg-white/5 border-white/10'
+        }
+      `}
+    >
+      <div className="flex items-center justify-between gap-4">
+        <button
+          onClick={onToggle}
+          className="flex-1 flex items-start text-left hover:scale-[1.02] active:scale-[0.98] transition-transform"
+        >
+          <div className={`w-5 h-5 flex-shrink-0 border-2 rounded-md mt-1 flex items-center justify-center mr-4 ${isSelected ? 'border-blue-500' : 'border-white/30'}`}>
+            {isSelected && <div className="w-2.5 h-2.5 rounded-sm bg-blue-500 shadow-blue-500/50" />}
           </div>
-          <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+          
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              {service.icon && <span className="text-xl">{service.icon}</span>}
+              <span className="font-medium text-white">{service.name}</span>
+              {service.unitLabel && <span className="text-sm text-gray-400">{service.unitLabel}</span>}
+            </div>
+            {service.description && <p className="text-sm text-gray-400 mt-1" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
+          </div>
+        </button>
+
+        {showQuantityControl ? (
+          <div className="flex flex-col items-end gap-2 flex-shrink-0">
+            <div className="flex items-center gap-3">
+              <button 
+                type="button" 
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); hapticFeedback('light'); onQuantityChange(-1); }}
+                className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white text-xl font-bold transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 flex items-center justify-center shadow-lg"
+              >
+                -
+              </button>
+              <span className="text-xl font-semibold min-w-[32px] text-center text-white">{quantity}</span>
+              <button 
+                type="button" 
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); hapticFeedback('light'); onQuantityChange(1); }}
+                className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white text-xl font-bold transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 flex items-center justify-center shadow-lg"
+              >
+                +
+              </button>
+            </div>
+            <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+              {(service.price * quantity).toLocaleString('ru-RU')} ₽
+            </span>
+          </div>
+        ) : (
+          <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 flex-shrink-0">
             {service.price.toLocaleString('ru-RU')} ₽
           </span>
-        </div>
-        {service.description && <p className="text-sm text-gray-400 mt-1" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
+        )}
       </div>
     </div>
-    {service.needsQuantity && isSelected && (
-      <div className="mt-4 flex items-center justify-center gap-4">
-        <button 
-          type="button" 
-          onClick={(e) => { e.stopPropagation(); hapticFeedback('light'); onQuantityChange(-1); }}
-          className="w-10 h-10 rounded-full bg-white/5 border border-white/10 text-white text-xl font-bold transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90"
-        >
-          -
-        </button>
-        <span className="text-xl font-semibold w-10 text-center text-white">{quantity}</span>
-        <button 
-          type="button" 
-          onClick={(e) => { e.stopPropagation(); hapticFeedback('light'); onQuantityChange(1); }}
-          className="w-10 h-10 rounded-full bg-white/5 border border-white/10 text-white text-xl font-bold transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90"
-        >
-          +
-        </button>
-      </div>
-    )}
-  </button>
-);
+  );
+};
 
 
 const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
@@ -282,19 +296,40 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
 
     handleChange('services', newServices);
 
-    const service = getServiceById(serviceId);
-    if (service?.needsQuantity && !quantities[serviceId]) {
+    // Set initial quantity to 1 for seat and door-cards when selected
+    const needsQuantityControl = serviceId === 'seat' || serviceId === 'door-cards';
+    if (needsQuantityControl && !isCurrentlySelected && !quantities[serviceId]) {
       setQuantities(prev => ({ ...prev, [serviceId]: 1 }));
+    } else if (isCurrentlySelected && needsQuantityControl) {
+      // Remove quantity when deselected
+      setQuantities(prev => {
+        const newQuantities = { ...prev };
+        delete newQuantities[serviceId];
+        return newQuantities;
+      });
     }
   };
 
   const handleQuantityChange = (serviceId: string, delta: number) => {
     hapticFeedback('light');
-    setQuantities(prev => {
-      const currentQuantity = prev[serviceId] || 1;
-      const newQuantity = Math.max(1, currentQuantity + delta);
-      return { ...prev, [serviceId]: newQuantity };
-    });
+    
+    const currentQuantity = quantities[serviceId] || 1;
+    const newQuantity = Math.max(0, currentQuantity + delta);
+    
+    if (newQuantity === 0) {
+      // Remove service from selection when quantity reaches 0
+      const newServices = formData.services.filter(id => id !== serviceId);
+      handleChange('services', newServices);
+      // Remove quantity entry
+      setQuantities(prev => {
+        const newQuantities = { ...prev };
+        delete newQuantities[serviceId];
+        return newQuantities;
+      });
+    } else {
+      // Update quantity
+      setQuantities(prev => ({ ...prev, [serviceId]: newQuantity }));
+    }
   };
 
   const handleOptionToggle = (optionId: string) => {
