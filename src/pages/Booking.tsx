@@ -412,19 +412,15 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 placeholder="BMW"
               />
               {showBrandSuggestions && suggestedBrands.length > 0 && (
-                <div className="absolute top-full left-0 right-0 z-50 mt-2 rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] max-h-56 overflow-hidden">
-                  <div className="max-h-56 overflow-y-auto">
-                    {suggestedBrands.map((brand, index) => (
+                <div className="absolute top-full left-0 right-0 z-50 mt-2 rounded-3xl bg-[#1c1c1e]/90 backdrop-blur-xl border border-white/10 shadow-2xl max-h-56 overflow-y-auto p-4">
+                  <div className="flex flex-col gap-2">
+                    {suggestedBrands.map((brand) => (
                       <button 
                         key={brand} 
                         type="button" 
                         onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleChange('carBrand', brand); setShowBrandSuggestions(false); }} 
-                        className={`w-full text-left px-5 py-4 text-white/90 hover:bg-white/10 active:bg-white/15 transition-all duration-200 font-medium ${
-                          index === 0 ? 'rounded-t-3xl' : ''
-                        } ${
-                          index === suggestedBrands.length - 1 ? 'rounded-b-3xl' : 'border-b border-white/5'
-                        }`}
+                        className="w-full text-left px-4 py-3 text-white/90 hover:bg-white/10 active:bg-white/15 transition-all duration-200 font-medium rounded-2xl"
                       >
                         {brand}
                       </button>
@@ -455,19 +451,15 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 placeholder={formData.carBrand ? "X5" : "Сначала марку"}
               />
               {showModelSuggestions && suggestedModels.length > 0 && (
-                <div className="absolute top-full left-0 right-0 z-50 mt-2 rounded-3xl bg-white/10 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] max-h-56 overflow-hidden">
-                  <div className="max-h-56 overflow-y-auto">
-                    {suggestedModels.map((model, index) => (
+                <div className="absolute top-full left-0 right-0 z-50 mt-2 rounded-3xl bg-[#1c1c1e]/90 backdrop-blur-xl border border-white/10 shadow-2xl max-h-56 overflow-y-auto p-4">
+                  <div className="flex flex-col gap-2">
+                    {suggestedModels.map((model) => (
                       <button 
                         key={model} 
                         type="button" 
                         onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleChange('carModel', model); setShowModelSuggestions(false); }} 
-                        className={`w-full text-left px-5 py-4 text-white/90 hover:bg-white/10 active:bg-white/15 transition-all duration-200 font-medium ${
-                          index === 0 ? 'rounded-t-3xl' : ''
-                        } ${
-                          index === suggestedModels.length - 1 ? 'rounded-b-3xl' : 'border-b border-white/5'
-                        }`}
+                        className="w-full text-left px-4 py-3 text-white/90 hover:bg-white/10 active:bg-white/15 transition-all duration-200 font-medium rounded-2xl"
                       >
                         {model}
                       </button>
