@@ -39,7 +39,7 @@ const Home: React.FC<HomeProps> = ({ onNavigate }) => {
         <ScaleButton>
           <button 
             onClick={() => handlePress('Booking')} 
-            className='w-full h-12 bg-gradient-to-r from-[#4c6ef5] to-[#9d4edd] text-white font-bold uppercase text-sm rounded-xl shadow-[0_0_15px_rgba(157,78,221,0.4)] transition-all duration-300 ease-out active:scale-[0.97] active:shadow-[0_0_5px_rgba(157,78,221,0.6)]'
+            className='w-full h-12 bg-gradient-to-r from-[#4c6ef5] to-[#9d4edd] text-white font-bold uppercase text-sm rounded-xl pulse-shadow transition-all duration-300 ease-out hover:brightness-110 hover:-translate-y-0.5 active:scale-[0.97] active:shadow-[0_0_5px_rgba(157,78,221,0.6)]'
           >
             Записаться онлайн
           </button>
