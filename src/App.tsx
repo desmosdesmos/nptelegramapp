@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { House, Calendar, Sparkles, User } from 'lucide-react';
 
 // Import all pages
 import Home from './pages/Home';
@@ -9,7 +10,6 @@ import Services from './pages/Services';
 import Reviews from './pages/Reviews';
 import Profile from './pages/Profile';
 import ErrorBoundary from './ErrorBoundary';
-import { House, Calendar, Sparkles, User } from 'lucide-react';
 
 // Define a type for the page keys
 export type PageKey = 'Home' | 'Booking' | 'Works' | 'Contacts' | 'Services' | 'Reviews' | 'Profile';
@@ -25,12 +25,12 @@ const appPages: Record<PageKey, { component: React.FC<any> }> = {
   Profile: { component: Profile },
 };
 
-// --- Main App Component: The Single Source of Truth for Navigation ---
+// --- Main App Component ---
 function App() {
   const [page, setPage] = useState<PageKey>('Home');
   const CurrentPageComponent = appPages[page].component;
 
-  // A single, clean component for dock buttons with refined animations
+  // A single, clean component for dock buttons with the final, refined animations
   const DockButton: React.FC<{
     pageKey: PageKey,
     label: string,
@@ -56,7 +56,7 @@ function App() {
         <CurrentPageComponent onNavigate={setPage} />
       </ErrorBoundary>
 
-      {/* GLOBAL BOTTOM DOCK with refined animations */}
+      {/* FINAL GLOBAL BOTTOM DOCK */}
       <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[90%] max-w-sm h-20 px-4 bg-[#1c1c1e]/70 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-full flex items-center justify-around z-50">
         <DockButton pageKey="Home" label="Главная" icon={<House className='w-6 h-6' />} />
         <DockButton pageKey="Booking" label="Запись" icon={<Calendar className='w-6 h-6' />} />
