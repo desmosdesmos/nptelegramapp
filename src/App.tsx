@@ -99,7 +99,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-black overflow-hidden">
+    <div className="min-h-screen bg-black overflow-hidden pb-24">
       <ErrorBoundary>
         <AnimatePresence mode='wait'>
           <motion.div

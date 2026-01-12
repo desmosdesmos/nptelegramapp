@@ -17,7 +17,7 @@ const Works = () => {
   };
 
   return (
-    <div className="min-h-screen px-4 py-8 pb-32 fade-in">
+    <div className="min-h-screen px-4 py-8 pb-16 fade-in">
       <div className="max-w-2xl mx-auto">
         <h2 className="text-3xl font-bold mb-8 text-center text-text-primary">Наши работы</h2>
 

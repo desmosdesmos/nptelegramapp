@@ -198,7 +198,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
     // Cleanup function
     return () => {
       if (tg) {
-        tg.MainButton.show(); // Show it back when component unmounts
+        tg.MainButton.hide(); // Keep it hidden when component unmounts to prevent showing in other sections
       }
     };
   }, [tg]);

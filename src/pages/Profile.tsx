@@ -8,7 +8,7 @@ interface ProfileProps {
 
 const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
   return (
-    <div className='w-full min-h-screen flex flex-col p-6 pt-12 pb-44 bg-black text-white'>
+    <div className='w-full min-h-screen flex flex-col p-6 pt-12 pb-28 bg-black text-white'>
       <button 
         onClick={() => onNavigate('Home')} 
         className='flex items-center gap-2 text-white/70 hover:text-white mb-8 transition-colors self-start'
