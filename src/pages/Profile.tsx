@@ -3,9 +3,6 @@ import { User, Phone, ArrowLeft, ChevronRight } from 'lucide-react';
 import { PageKey } from '../App';
 import { ServiceIcon } from '../utils/iconMapper';
 import {
-  ClipboardText,
-  Sparkle,
-  CheckCircle,
   Car,
   Calendar,
   Clock
@@ -13,9 +10,7 @@ import {
 import {
   getCustomerProfile,
   getCustomerIdFromTelegram,
-  CustomerProfile,
-  ActiveOrder,
-  VisitHistoryItem
+  CustomerProfile
 } from '../api/adminApi';
 
 interface ProfileProps {
@@ -109,10 +104,9 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
 
           {/* Progress Bar */}
           <div className="flex items-center justify-between relative">
-            {customerProfile.activeOrder.stages.map((stage, index) => {
-              const isCurrent = !stage.completed && (index === 0 || customerProfile.activeOrder.stages[index - 1]?.completed);
+            {customerProfile.activeOrder?.stages.map((stage, index) => {
+              const isCurrent = !stage.completed && (index === 0 || customerProfile.activeOrder?.stages[index - 1]?.completed);
               const isCompleted = stage.completed;
-              const Icon = stage.icon;
 
               return (
                 <div key={stage.id} className="flex flex-col items-center flex-1">
@@ -126,7 +120,7 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
                           : 'bg-white/10 border border-white/20'
                       }
                     `}>
-                      <Icon weight="duotone" className={`w-4 h-4 ${isCurrent ? 'text-white' : isCompleted ? 'text-green-400' : 'text-white/50'}`} />
+                      <ServiceIcon title={stage.name} size="sm" />
                     </div>
                   </div>
                   <span className={`
@@ -137,10 +131,10 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
                   </span>
 
                   {/* Connector line */}
-                  {index < customerProfile.activeOrder.stages.length - 1 && (
+                  {index < customerProfile.activeOrder?.stages.length! - 1 && (
                     <div className={`
                       absolute top-4 h-0.5 w-1/3 z-[-1]
-                      ${customerProfile.activeOrder.stages[index].completed ? 'bg-green-500/50' : 'bg-white/10'}
+                      ${customerProfile.activeOrder?.stages[index].completed ? 'bg-green-500/50' : 'bg-white/10'}
                       ${index === 0 ? 'left-[calc(33.33%+16px)]' : 'left-[calc(66.66%+16px)]'}
                     `}></div>
                   )}
