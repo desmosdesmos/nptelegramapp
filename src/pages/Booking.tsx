@@ -95,7 +95,7 @@ const ServiceCheckboxOption: React.FC<{
                   <span className="font-medium text-white truncate flex-1 min-w-0">
                     {service.name}
                   </span>
-                  {service.unitLabel && <span className="text-xs sm:text-sm text-gray-400 whitespace-nowrap ml-1 flex-shrink-0">{service.unitLabel}</span>}
+                  {service.unitLabel && <span className="text-[10px] sm:text-xs text-gray-400 whitespace-nowrap ml-1 flex-shrink-0">{service.unitLabel}</span>}
                 </div>
               </div>
             </div>
