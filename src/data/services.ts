@@ -79,7 +79,7 @@ export const localCleaningServices: ServiceCategory[] = [
     services: [
       {
         id: 'seat',
-        name: 'Сиденье (цена за шт.)',
+        name: 'Сиденье',
         price: 1000,
         icon: '🧽',
       },
@@ -103,7 +103,7 @@ export const localCleaningServices: ServiceCategory[] = [
       },
       {
         id: 'door-cards',
-        name: 'Дверная карта (цена за шт.)',
+        name: 'Дверная карта',
         price: 400,
         icon: '🚪',
       },
