@@ -552,7 +552,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
         {formData.services.length > 0 && (
           <div className="mt-12 p-6 bg-gradient-to-br from-blue-600/20 to-purple-600/20 backdrop-blur-xl border border-blue-500/50 rounded-3xl shadow-lg relative z-10">
             <div className="flex justify-between items-center">
-              <span className="text-xl font-semibold text-white">Итоговая сумма:</span>
+              <span className="text-xl font-semibold text-white flex-1 pr-4 min-w-0">Итоговая сумма:</span>
               <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0">
                 {totalPrice.toLocaleString('ru-RU')}&nbsp;₽
               </span>
