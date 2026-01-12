@@ -16,22 +16,20 @@ const ServiceCardComplex: React.FC<{ service: Service }> = ({ service }) => {
   const cardVariants = { initial: { y: 20, opacity: 0 }, animate: { y: 0, opacity: 1 } };
   return (
     <motion.div variants={cardVariants} className="relative">
-      <ScaleButton>
-        <div className="relative w-full p-5 sm:p-6 border rounded-3xl cursor-default bg-[rgba(255,255,255,0.05)] backdrop-blur-xl border-[rgba(255,255,255,0.1)]">
-          <div className="relative z-10">
-            <div className="flex w-full items-center">
-              <div className="flex items-center flex-1 min-w-0">
-                <ServiceIcon title={service.name} size="sm" />
-                <h4 className="text-xl sm:text-2xl font-bold text-white truncate flex-1 min-w-0 ml-2">{service.name}</h4>
-              </div>
-              <span className="text-2xl sm:text-4xl font-bold text-cyan-400 whitespace-nowrap flex-shrink-0">
-                {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap"> ₽</span>
-              </span>
+      <div className="relative w-full p-5 sm:p-6 border rounded-3xl cursor-default bg-[rgba(255,255,255,0.05)] backdrop-blur-xl border-[rgba(255,255,255,0.1)] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.02] active:scale-[0.98]">
+        <div className="relative z-10">
+          <div className="flex w-full items-center">
+            <div className="flex items-center flex-1 min-w-0">
+              <ServiceIcon title={service.name} size="sm" />
+              <h4 className="text-xl sm:text-2xl font-bold text-white truncate flex-1 min-w-0 ml-2">{service.name}</h4>
             </div>
-            {service.description && <p className="text-sm sm:text-base text-white/70 opacity-70 mt-2" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
+            <span className="text-2xl sm:text-4xl font-bold text-cyan-400 whitespace-nowrap flex-shrink-0">
+              {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap"> ₽</span>
+            </span>
           </div>
+          {service.description && <p className="text-sm sm:text-base text-white/70 opacity-70 mt-2" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
         </div>
-      </ScaleButton>
+      </div>
     </motion.div>
   );
 };
@@ -42,7 +40,7 @@ const ServiceRow: React.FC<{ service: Service }> = ({ service }) => {
 
   return (
     <motion.div variants={rowVariants}>
-      <div className="flex w-full items-center p-3 sm:p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl">
+      <div className="flex w-full items-center p-3 sm:p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.02] active:scale-[0.98]">
         <div className="flex items-center flex-1 min-w-0">
           <ServiceIcon title={service.name} size="sm" />
           <p className="font-medium text-white truncate flex-1 min-w-0 ml-2">
