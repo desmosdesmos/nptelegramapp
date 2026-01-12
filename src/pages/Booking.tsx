@@ -541,7 +541,19 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                  <label className="block text-sm font-medium text-gray-400 mb-2">Дополнительные опции</label>
                 {selectedMainService.additionalOptions.map(option => (
                   <label key={option.id} className="flex items-center p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl text-white hover:bg-white/10 cursor-pointer transition-colors">
-                    <input type="checkbox" checked={formData.additionalOptions.includes(option.id)} onChange={() => handleOptionToggle(option.id)} className="w-5 h-5 bg-transparent border-2 border-white/30 text-blue-500 focus:ring-0 focus:ring-offset-0 rounded" />
+                    <div className="relative">
+                      <input
+                        type="checkbox"
+                        checked={formData.additionalOptions.includes(option.id)}
+                        onChange={() => handleOptionToggle(option.id)}
+                        className="w-5 h-5 appearance-none border-2 border-white/30 rounded-md flex items-center justify-center transition-all duration-300 checked:bg-gradient-to-br checked:from-blue-500 checked:to-purple-500 checked:border-transparent cursor-pointer"
+                      />
+                      {formData.additionalOptions.includes(option.id) && (
+                        <svg className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 text-white pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </div>
                     <div className="flex-1 flex items-center justify-between ml-4 w-full">
                       <div className="flex items-center gap-2 flex-1 pr-4 min-w-0">
                         <ServiceIcon title={option.name} size="sm" />
