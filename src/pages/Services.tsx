@@ -5,6 +5,7 @@ import { mainServices, localCleaningServices } from '../data/services';
 import type { Service } from '../types/services';
 import ScaleButton from '../components/ScaleButton';
 import ServicesHeader from '../components/ServicesHeader'; // Import the new header
+import { ServiceIcon } from '../utils/iconMapper';
 
 interface ServicesProps {
   onNavigate: (pageKey: PageKey) => void;
@@ -19,7 +20,10 @@ const ServiceCardComplex: React.FC<{ service: Service }> = ({ service }) => {
         <div className="relative w-full p-5 sm:p-6 border rounded-3xl cursor-default bg-[rgba(255,255,255,0.05)] backdrop-blur-xl border-[rgba(255,255,255,0.1)]">
           <div className="relative z-10">
             <div className="flex w-full items-center">
-              <h4 className="text-xl sm:text-2xl font-bold text-white truncate flex-1 min-w-0 mr-2 sm:mr-3">{service.name}</h4>
+              <div className="flex items-center flex-1 min-w-0">
+                <ServiceIcon title={service.name} size="sm" />
+                <h4 className="text-xl sm:text-2xl font-bold text-white truncate flex-1 min-w-0 ml-2">{service.name}</h4>
+              </div>
               <span className="text-2xl sm:text-4xl font-bold text-cyan-400 whitespace-nowrap flex-shrink-0">
                 {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap"> ₽</span>
               </span>
@@ -40,8 +44,8 @@ const ServiceRow: React.FC<{ service: Service }> = ({ service }) => {
     <motion.div variants={rowVariants}>
       <div className="flex w-full items-center p-3 sm:p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl">
         <div className="flex items-center flex-1 min-w-0">
-          {service.icon && <span className="text-xl sm:text-2xl flex-shrink-0 mr-2 sm:mr-3">{service.icon}</span>}
-          <p className="font-medium text-white truncate flex-1 min-w-0">
+          <ServiceIcon title={service.name} size="sm" />
+          <p className="font-medium text-white truncate flex-1 min-w-0 ml-2">
             {service.name}
           </p>
         </div>

@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { ArrowLeft } from 'lucide-react'; 
+import { ArrowLeft } from 'lucide-react';
 import { PageKey } from '../App';
 import { getTelegramWebApp, hapticFeedback, notificationFeedback, getTelegramUser } from '../utils/telegram';
 import { sendBookingToTelegram, validateBookingForm, type BookingFormData } from '../utils/booking';
 import { mainServices, localCleaningServices, getServiceById, getServiceOptionById } from '../data/services';
 import { getAllBrands, getModelsByBrand } from '../data/carBrands';
 import type { Service } from '../types/services';
+import { ServiceIcon } from '../utils/iconMapper';
 
 interface BookingProps {
   onNavigate: (page: PageKey) => void;
@@ -43,8 +44,8 @@ const ServiceRadioOption: React.FC<{
       </div>
       <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center">
         <div className="flex items-center flex-1 min-w-0 mb-1 sm:mb-0 sm:mr-2">
-          {service.icon && <span className="text-lg sm:text-xl flex-shrink-0 mr-1 sm:mr-2">{service.icon}</span>}
-          <span className="font-medium text-white truncate flex-1 min-w-0">{service.name}</span>
+          <ServiceIcon title={service.name} isSelected={isSelected} size="sm" />
+          <span className="font-medium text-white truncate flex-1 min-w-0 ml-2">{service.name}</span>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-base sm:text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right">
@@ -89,7 +90,7 @@ const ServiceCheckboxOption: React.FC<{
 
           <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center">
             <div className="flex items-center gap-2 flex-1 min-w-0 mb-1 sm:mb-0 sm:mr-2">
-              {service.icon && <span className="text-lg sm:text-xl flex-shrink-0">{service.icon}</span>}
+              <ServiceIcon title={service.name} isSelected={isSelected} size="sm" />
               <div className="flex flex-col min-w-0">
                 <div className="flex items-center">
                   <span className="font-medium text-white truncate flex-1 min-w-0">
