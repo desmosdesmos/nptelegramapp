@@ -41,12 +41,12 @@ const ServiceRadioOption: React.FC<{
         {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-blue-500/50" />}
       </div>
       <div className="flex-1">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 flex-shrink-1 min-w-0">
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center gap-2 flex-1 pr-4 min-w-0">
             {service.icon && <span className="text-xl">{service.icon}</span>}
             <span className="font-medium text-white truncate">{service.name}</span>
           </div>
-          <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0">
+          <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right">
             {service.price.toLocaleString('ru-RU')}&nbsp;₽
           </span>
         </div>
@@ -86,7 +86,7 @@ const ServiceCheckboxOption: React.FC<{
           </div>
           
           <div className="flex-1">
-            <div className="flex items-center gap-2 flex-shrink-1 min-w-0">
+            <div className="flex items-center gap-2 flex-1 pr-4 min-w-0">
               {service.icon && <span className="text-xl">{service.icon}</span>}
               <span className="font-medium text-white truncate">{service.name}</span>
               {service.unitLabel && <span className="text-sm text-gray-400 whitespace-nowrap flex-shrink-0">{service.unitLabel}</span>}
@@ -114,12 +114,12 @@ const ServiceCheckboxOption: React.FC<{
                 +
               </button>
             </div>
-            <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0">
+            <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right">
               {(service.price * quantity).toLocaleString('ru-RU')}&nbsp;₽
             </span>
           </div>
         ) : (
-          <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 flex-shrink-0 whitespace-nowrap">
+          <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 flex-shrink-0 whitespace-nowrap text-right">
             {service.price.toLocaleString('ru-RU')}&nbsp;₽
           </span>
         )}
@@ -520,9 +520,9 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 {selectedMainService.additionalOptions.map(option => (
                   <label key={option.id} className="flex items-center p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl text-white hover:bg-white/10 cursor-pointer transition-colors">
                     <input type="checkbox" checked={formData.additionalOptions.includes(option.id)} onChange={() => handleOptionToggle(option.id)} className="w-5 h-5 bg-transparent border-2 border-white/30 text-blue-500 focus:ring-0 focus:ring-offset-0 rounded" />
-                    <div className="flex-1 flex items-center justify-between ml-4">
-                      <div className="flex items-center gap-2">{option.icon && <span>{option.icon}</span>}<span>{option.name}</span></div>
-                      <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0">+{option.price.toLocaleString('ru-RU')}&nbsp;₽</span>
+                    <div className="flex-1 flex items-center justify-between ml-4 w-full">
+                      <div className="flex items-center gap-2 flex-1 pr-4 min-w-0">{option.icon && <span>{option.icon}</span>}<span className="truncate">{option.name}</span></div>
+                      <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right">+{option.price.toLocaleString('ru-RU')}&nbsp;₽</span>
                     </div>
                   </label>
                 ))}
