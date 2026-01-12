@@ -242,27 +242,21 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
 
     if (isCarBrandChange && typeof processedValue === 'string') {
       const input = processedValue.toLowerCase();
-      if (input.length > 0) {
-        const filtered = allBrands.filter(brand => brand.toLowerCase().includes(input)).slice(0, 5);
-        setSuggestedBrands(filtered);
-        setShowBrandSuggestions(true);
-      } else {
-        setSuggestedBrands([]);
-        setShowBrandSuggestions(false);
-      }
+      const filtered = input.length > 0 
+        ? allBrands.filter(brand => brand.toLowerCase().includes(input))
+        : allBrands;
+      setSuggestedBrands(filtered);
+      setShowBrandSuggestions(true);
     }
 
     if (field === 'carModel' && typeof processedValue === 'string') {
       const models = getModelsByBrand(newBrand);
       const input = processedValue.toLowerCase();
-      if (input.length > 0 && models.length > 0) {
-        const filtered = models.filter(model => model.toLowerCase().includes(input)).slice(0, 5);
-        setSuggestedModels(filtered);
-        setShowModelSuggestions(true);
-      } else {
-        setSuggestedModels([]);
-        setShowModelSuggestions(false);
-      }
+      const filtered = input.length > 0 
+        ? models.filter(model => model.toLowerCase().includes(input))
+        : models;
+      setSuggestedModels(filtered);
+      setShowModelSuggestions(true);
     }
   };
 
@@ -438,9 +432,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                   value={formData.carBrand}
                   onChange={(e) => handleChange('carBrand', e.target.value)}
                   onFocus={() => {
-                    const input = formData.carBrand.toLowerCase();
-                    const filtered = input.length > 0 ? allBrands.filter(brand => brand.toLowerCase().includes(input)) : allBrands;
-                    setSuggestedBrands(filtered.slice(0, 5));
+                    setSuggestedBrands(allBrands);
                     setShowBrandSuggestions(true);
                   }}
                   onBlur={() => setTimeout(() => setShowBrandSuggestions(false), 200)}
@@ -475,9 +467,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                   onFocus={() => {
                     if (formData.carBrand) {
                       const models = getModelsByBrand(formData.carBrand);
-                      const input = formData.carModel.toLowerCase();
-                      const filtered = input.length > 0 ? models.filter(model => model.toLowerCase().includes(input)) : models;
-                      setSuggestedModels(filtered.slice(0, 5));
+                      setSuggestedModels(models);
                       setShowModelSuggestions(true);
                     }
                   }}
