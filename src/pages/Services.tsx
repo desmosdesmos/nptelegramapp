@@ -16,15 +16,15 @@ const ServiceCardComplex: React.FC<{ service: Service }> = ({ service }) => {
   return (
     <motion.div variants={cardVariants} className="relative">
       <ScaleButton>
-        <div className="relative w-full p-6 border rounded-3xl cursor-default bg-[rgba(255,255,255,0.05)] backdrop-blur-xl border-[rgba(255,255,255,0.1)]">
+        <div className="relative w-full p-5 sm:p-6 border rounded-3xl cursor-default bg-[rgba(255,255,255,0.05)] backdrop-blur-xl border-[rgba(255,255,255,0.1)]">
           <div className="relative z-10">
-            <div className="flex w-full items-center justify-between">
-              <h4 className="text-2xl font-bold text-white truncate flex-1 min-w-0 pr-3">{service.name}</h4>
-              <span className="text-4xl font-bold text-cyan-400 whitespace-nowrap flex-shrink-0">
+            <div className="flex w-full items-center">
+              <h4 className="text-xl sm:text-2xl font-bold text-white truncate flex-1 min-w-0 mr-2 sm:mr-3">{service.name}</h4>
+              <span className="text-2xl sm:text-4xl font-bold text-cyan-400 whitespace-nowrap flex-shrink-0">
                 {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap"> ₽</span>
               </span>
             </div>
-            {service.description && <p className="text-base text-white/70 mb-4 opacity-70 mt-2" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
+            {service.description && <p className="text-sm sm:text-base text-white/70 opacity-70 mt-2" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
           </div>
         </div>
       </ScaleButton>
@@ -38,14 +38,14 @@ const ServiceRow: React.FC<{ service: Service }> = ({ service }) => {
 
   return (
     <motion.div variants={rowVariants}>
-      <div className="flex w-full items-center justify-between p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl">
+      <div className="flex w-full items-center p-3 sm:p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl">
         <div className="flex items-center flex-1 min-w-0">
-          {service.icon && <span className="text-2xl flex-shrink-0 mr-3">{service.icon}</span>}
+          {service.icon && <span className="text-xl sm:text-2xl flex-shrink-0 mr-2 sm:mr-3">{service.icon}</span>}
           <p className="font-medium text-white truncate flex-1 min-w-0">
             {service.name}
           </p>
         </div>
-        <span className="font-bold text-purple-400 whitespace-nowrap flex-shrink-0 ml-4">
+        <span className="font-bold text-purple-400 whitespace-nowrap flex-shrink-0 ml-2 sm:ml-4">
           {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap"> ₽</span>
         </span>
       </div>

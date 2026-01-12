@@ -29,30 +29,30 @@ const ServiceRadioOption: React.FC<{
 }> = ({ service, isSelected, onSelect }) => (
   <button
     onClick={onSelect}
-    className={`w-full p-4 rounded-2xl border transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 text-left
+    className={`w-full p-3 sm:p-4 rounded-2xl border transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 text-left
       ${isSelected
         ? 'bg-blue-600/20 border-blue-500/50 shadow-lg'
         : 'bg-white/5 border-white/10 hover:border-blue-500/20'
       }
     `}
   >
-    <div className="flex w-full items-center justify-between">
-      <div className="flex items-center flex-1 min-w-0">
-        <div className={`w-5 h-5 flex-shrink-0 border-2 rounded-full flex items-center justify-center mr-4 ${isSelected ? 'border-blue-500' : 'border-white/30'}`}>
-          {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-blue-500/50" />}
+    <div className="flex w-full items-center">
+      <div className={`w-4 h-4 flex-shrink-0 border-2 rounded-full flex items-center justify-center mr-3 sm:mr-4 ${isSelected ? 'border-blue-500' : 'border-white/30'}`}>
+        {isSelected && <div className="w-2 h-2 rounded-full bg-blue-500 shadow-blue-500/50" />}
+      </div>
+      <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center">
+        <div className="flex items-center flex-1 min-w-0 mb-1 sm:mb-0 sm:mr-2">
+          {service.icon && <span className="text-lg sm:text-xl flex-shrink-0 mr-1 sm:mr-2">{service.icon}</span>}
+          <span className="font-medium text-white truncate flex-1 min-w-0">{service.name}</span>
         </div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-1 min-w-0 pr-3">
-            {service.icon && <span className="text-xl flex-shrink-0">{service.icon}</span>}
-            <span className="font-medium text-white truncate flex-1 min-w-0">{service.name}</span>
-          </div>
-          {service.description && <p className="text-sm text-gray-400 mt-1" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
+        <div className="flex items-center justify-between">
+          <span className="text-base sm:text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right">
+            {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap">&nbsp;₽</span>
+          </span>
         </div>
       </div>
-      <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right ml-4">
-        {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap">&nbsp;₽</span>
-      </span>
     </div>
+    {service.description && <p className="text-xs sm:text-sm text-gray-400 mt-1 pl-7 sm:pl-8" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
   </button>
 );
 
@@ -69,63 +69,64 @@ const ServiceCheckboxOption: React.FC<{
 
   return (
     <div
-      className={`w-full p-4 rounded-2xl border transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]
+      className={`w-full p-3 sm:p-4 rounded-2xl border transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]
         ${isSelected
           ? 'bg-blue-600/20 border-blue-500/50 shadow-lg'
           : 'bg-white/5 border-white/10'
         }
       `}
     >
-      <div className="flex w-full items-center justify-between">
+      <div className="flex w-full items-center">
         <button
           onClick={onToggle}
           className="flex-1 flex items-start text-left hover:scale-[1.02] active:scale-[0.98] transition-transform"
         >
-          <div className={`w-5 h-5 flex-shrink-0 border-2 rounded-md mt-1 flex items-center justify-center mr-4 ${isSelected ? 'border-blue-500' : 'border-white/30'}`}>
-            {isSelected && <div className="w-2.5 h-2.5 rounded-sm bg-blue-500 shadow-blue-500/50" />}
+          <div className={`w-4 h-4 flex-shrink-0 border-2 rounded-md mt-1 flex items-center justify-center mr-3 sm:mr-4 ${isSelected ? 'border-blue-500' : 'border-white/30'}`}>
+            {isSelected && <div className="w-2 h-2 rounded-sm bg-blue-500 shadow-blue-500/50" />}
           </div>
 
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-1 min-w-0 pr-3">
-              {service.icon && <span className="text-xl flex-shrink-0">{service.icon}</span>}
+          <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center">
+            <div className="flex items-center gap-2 flex-1 min-w-0 mb-1 sm:mb-0 sm:mr-2">
+              {service.icon && <span className="text-lg sm:text-xl flex-shrink-0">{service.icon}</span>}
               <span className="font-medium text-white truncate flex-1 min-w-0">
                 {service.name}
-                {service.unitLabel && <span className="text-sm text-gray-400 ml-1">{service.unitLabel}</span>}
+                {service.unitLabel && <span className="text-xs sm:text-sm text-gray-400 ml-1">{service.unitLabel}</span>}
               </span>
             </div>
-            {service.description && <p className="text-sm text-gray-400 mt-1" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
+            <div className="flex items-center justify-between">
+              {showQuantityControl ? (
+                <div className="flex flex-col items-end gap-1 sm:gap-2 flex-shrink-0">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <button
+                      type="button"
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); hapticFeedback('light'); onQuantityChange(-1); }}
+                      className="min-w-[36px] min-h-[36px] w-9 h-9 sm:min-w-[44px] sm:min-h-[44px] sm:w-11 sm:h-11 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white text-lg sm:text-xl font-bold transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 flex items-center justify-center shadow-lg"
+                    >
+                      -
+                    </button>
+                    <span className="text-base sm:text-xl font-semibold min-w-[24px] sm:min-w-[32px] text-center text-white">{quantity}</span>
+                    <button
+                      type="button"
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); hapticFeedback('light'); onQuantityChange(1); }}
+                      className="min-w-[36px] min-h-[36px] w-9 h-9 sm:min-w-[44px] sm:min-h-[44px] sm:w-11 sm:h-11 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white text-lg sm:text-xl font-bold transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 flex items-center justify-center shadow-lg"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <span className="text-sm sm:text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right">
+                    {(service.price * quantity).toLocaleString('ru-RU')}<span className="whitespace-nowrap">&nbsp;₽</span>
+                  </span>
+                </div>
+              ) : (
+                <span className="text-sm sm:text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right">
+                  {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap">&nbsp;₽</span>
+                </span>
+              )}
+            </div>
           </div>
         </button>
-
-        {showQuantityControl ? (
-          <div className="flex flex-col items-end gap-2 flex-shrink-0">
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={(e) => { e.preventDefault(); e.stopPropagation(); hapticFeedback('light'); onQuantityChange(-1); }}
-                className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white text-xl font-bold transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 flex items-center justify-center shadow-lg"
-              >
-                -
-              </button>
-              <span className="text-xl font-semibold min-w-[32px] text-center text-white">{quantity}</span>
-              <button
-                type="button"
-                onClick={(e) => { e.preventDefault(); e.stopPropagation(); hapticFeedback('light'); onQuantityChange(1); }}
-                className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white text-xl font-bold transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 flex items-center justify-center shadow-lg"
-              >
-                +
-              </button>
-            </div>
-            <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right">
-              {(service.price * quantity).toLocaleString('ru-RU')}<span className="whitespace-nowrap">&nbsp;₽</span>
-            </span>
-          </div>
-        ) : (
-          <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right">
-            {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap">&nbsp;₽</span>
-          </span>
-        )}
       </div>
+      {service.description && <p className="text-xs sm:text-sm text-gray-400 mt-1 pl-7 sm:pl-8" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
     </div>
   );
 };
