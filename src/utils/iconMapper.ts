@@ -1,35 +1,43 @@
-import React from 'react';
-import {
-  Armchair,
-  ArrowUpFromLine,
-  Footprints,
-  Briefcase,
-  PanelRight,
-  CircleDashed,
-  LayoutDashboard,
-  ShieldCheck,
-  Sparkles,
-  Wind,
-  Snowflake,
-  Scissors,
-  Gem,
-  Droplets,
-  CloudRain,
-  Eye,
-  Disc,
-  Zap,
-  CarFront
-} from 'lucide-react';
+import { 
+  Armchair, 
+  ArrowUp, 
+  CaretDoubleUp,
+  Rug, 
+  Footprints, 
+  Suitcase, 
+  Door, 
+  Wind, 
+  MagicWand, 
+  Sparkle, 
+  Diamond,
+  Briefcase, 
+  CircleDashed, 
+  Layout, 
+  ShieldCheck, 
+  Snowflake, 
+  Scissors, 
+  Dog, 
+  Gem, 
+  Droplets, 
+  CloudRain, 
+  Eye, 
+  Disc, 
+  Lightning,
+  Car, 
+  Star,
+  Lightbulb
+} from 'phosphor-react';
+import type { Icon } from 'phosphor-react';
 
 // Тип для иконки
-type LucideIcon = React.ComponentType<React.SVGProps<SVGSVGElement>>;
+type PhosphorIcon = React.ComponentType<any>;
 
 /**
  * Функция для сопоставления ключевых слов в названии услуги с соответствующей иконкой
  * @param title - название услуги
- * @returns компонент иконки из lucide-react
+ * @returns компонент иконки из phosphor-react с duotone стилем
  */
-export const getServiceIcon = (title: string): LucideIcon => {
+export const getServiceIcon = (title: string): PhosphorIcon => {
   const lowerTitle = title.toLowerCase();
 
   // INTERIOR (Салон)
@@ -37,22 +45,22 @@ export const getServiceIcon = (title: string): LucideIcon => {
     return Armchair;
   }
   if (lowerTitle.includes('потолок')) {
-    return ArrowUpFromLine;
+    return CaretDoubleUp;
   }
   if (lowerTitle.includes('пол') || lowerTitle.includes('ковролин')) {
-    return Footprints;
+    return Rug;
   }
   if (lowerTitle.includes('багажник')) {
-    return Briefcase;
+    return Suitcase;
   }
   if (lowerTitle.includes('дверь') || lowerTitle.includes('дверная') || lowerTitle.includes('карта')) {
-    return PanelRight;
+    return Door;
   }
   if (lowerTitle.includes('руль')) {
     return CircleDashed;
   }
   if (lowerTitle.includes('торпедо') || lowerTitle.includes('пластик')) {
-    return LayoutDashboard;
+    return Layout;
   }
   if (lowerTitle.includes('ремень')) {
     return ShieldCheck;
@@ -60,7 +68,7 @@ export const getServiceIcon = (title: string): LucideIcon => {
 
   // CLEANING & TREATMENT (Химчистка/Уход)
   if (lowerTitle.includes('полная') || lowerTitle.includes('комплекс')) {
-    return Sparkles;
+    return Sparkle;
   }
   if (lowerTitle.includes('озонация') || lowerTitle.includes('запах')) {
     return Wind;
@@ -74,7 +82,7 @@ export const getServiceIcon = (title: string): LucideIcon => {
 
   // EXTERIOR & POLISHING (Кузов/Полировка)
   if (lowerTitle.includes('полировка') || lowerTitle.includes('керамика') || lowerTitle.includes('жидкое стекло')) {
-    return Gem;
+    return MagicWand;
   }
   if (lowerTitle.includes('мойка') || lowerTitle.includes('кузов')) {
     return Droplets;
@@ -89,11 +97,16 @@ export const getServiceIcon = (title: string): LucideIcon => {
     return Disc;
   }
   if (lowerTitle.includes('двигатель') || lowerTitle.includes('мотор')) {
-    return Zap;
+    return Lightning;
+  }
+
+  // SPECIAL CASES
+  if (lowerTitle.includes('предпродажная подготовка')) {
+    return Diamond;
   }
 
   // DEFAULT FALLBACK
-  return CarFront;
+  return Car;
 };
 
 /**
@@ -111,27 +124,26 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
   size = 'md' 
 }) => {
   const IconComponent = getServiceIcon(title);
-
+  
   // Размеры
   const sizeClasses = {
-    sm: 'w-8 h-8',
-    md: 'w-10 h-10', 
-    lg: 'w-12 h-12'
+    sm: 'w-8 h-8 text-base',
+    md: 'w-10 h-10 text-lg',
+    lg: 'w-12 h-12 text-xl'
   };
-
+  
   const sizeClass = sizeClasses[size];
 
-  const containerClasses = `${sizeClass} rounded-xl flex items-center justify-center border transition-all duration-300`;
-
-  const selectedClasses = isSelected
-    ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.4)]'
-    : 'bg-white/5 border-white/10 text-white/50';
-
-  return React.createElement('div', {
-    className: containerClasses + ' ' + selectedClasses
-  },
-    React.createElement(IconComponent, {
-      className: "w-1/2 h-1/2"
-    })
+  return (
+    <div className={`
+      ${sizeClass} 
+      rounded-xl flex items-center justify-center border transition-all duration-300
+      ${isSelected 
+        ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.4)]' 
+        : 'bg-white/5 border-white/10 text-white/50'
+      }
+    `}>
+      <IconComponent className="w-1/2 h-1/2" weight="duotone" />
+    </div>
   );
 };
