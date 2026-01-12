@@ -1,104 +1,101 @@
 import React from 'react';
 import {
-  Armchair,
-  CaretDoubleUp,
-  Rug,
-  Suitcase,
-  Door,
-  Wind,
-  MagicWand,
-  Sparkle,
-  Diamond,
-  Circle,
-  Layout,
-  ShieldCheck,
-  Snowflake,
-  Scissors,
-  CloudRain,
-  Eye,
-  Disc,
-  Lightning,
-  Car
-} from 'phosphor-react';
+  SparklesIcon,
+  TrophyIcon,
+  ArchiveBoxIcon,
+  ChevronDoubleUpIcon,
+  BriefcaseIcon,
+  CloudIcon,
+  WrenchIcon,
+  TruckIcon,
+  BookOpenIcon,
+  ShieldCheckIcon,
+  CogIcon,
+  ScissorsIcon,
+  BoltIcon,
+  EyeIcon,
+  Square3Stack3DIcon,
+  CircleStackIcon
+} from '@heroicons/react/24/solid';
 
 // Тип для иконки
-type PhosphorIcon = React.ComponentType<any>;
+type HeroIcon = React.ComponentType<any>;
 
 /**
  * Функция для сопоставления ключевых слов в названии услуги с соответствующей иконкой
  * @param title - название услуги
- * @returns компонент иконки из phosphor-react с duotone стилем
+ * @returns компонент иконки из heroicons/react/24/solid
  */
-export const getServiceIcon = (title: string): PhosphorIcon => {
+export const getServiceIcon = (title: string): HeroIcon => {
   const lowerTitle = title.toLowerCase();
 
   // INTERIOR (Салон)
   if (lowerTitle.includes('сиденье') || lowerTitle.includes('кожа')) {
-    return Armchair;
+    return ArchiveBoxIcon;
   }
   if (lowerTitle.includes('потолок')) {
-    return CaretDoubleUp;
+    return ChevronDoubleUpIcon;
   }
   if (lowerTitle.includes('пол') || lowerTitle.includes('ковролин')) {
-    return Rug;
+    return Square3Stack3DIcon;
   }
   if (lowerTitle.includes('багажник')) {
-    return Suitcase;
+    return BriefcaseIcon;
   }
   if (lowerTitle.includes('дверь') || lowerTitle.includes('дверная') || lowerTitle.includes('карта')) {
-    return Door;
+    return BookOpenIcon;
   }
   if (lowerTitle.includes('руль')) {
-    return Circle;
+    return CircleStackIcon;
   }
   if (lowerTitle.includes('торпедо') || lowerTitle.includes('пластик')) {
-    return Layout;
+    return Square3Stack3DIcon;
   }
   if (lowerTitle.includes('ремень')) {
-    return ShieldCheck;
+    return ShieldCheckIcon;
   }
 
   // CLEANING & TREATMENT (Химчистка/Уход)
   if (lowerTitle.includes('полная') || lowerTitle.includes('комплекс')) {
-    return Sparkle;
+    return SparklesIcon;
   }
   if (lowerTitle.includes('озонация') || lowerTitle.includes('запах')) {
-    return Wind;
+    return CloudIcon;
   }
   if (lowerTitle.includes('кондиционер')) {
-    return Snowflake;
+    return CogIcon;
   }
   if (lowerTitle.includes('шерсть')) {
-    return Scissors;
+    return ScissorsIcon;
   }
 
   // EXTERIOR & POLISHING (Кузов/Полировка)
   if (lowerTitle.includes('полировка') || lowerTitle.includes('керамика') || lowerTitle.includes('жидкое стекло')) {
-    return MagicWand;
+    return WrenchIcon;
   }
   if (lowerTitle.includes('мойка') || lowerTitle.includes('кузов')) {
-    return Car;
+    return TruckIcon;
   }
   if (lowerTitle.includes('антидождь')) {
-    return CloudRain;
+    return CloudIcon;
   }
   if (lowerTitle.includes('фары')) {
-    return Eye;
+    return EyeIcon;
   }
   if (lowerTitle.includes('диски')) {
-    return Disc;
+    return Square3Stack3DIcon;
   }
   if (lowerTitle.includes('двигатель') || lowerTitle.includes('мотор')) {
-    return Lightning;
+    return BoltIcon;
   }
 
   // SPECIAL CASES
   if (lowerTitle.includes('предпродажная подготовка')) {
-    return Diamond;
+    return TrophyIcon;
   }
 
   // DEFAULT FALLBACK
-  return Car;
+  return TruckIcon;
 };
 
 /**
@@ -138,8 +135,7 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
     className: containerClasses
   },
     React.createElement(IconComponent, {
-      className: "w-1/2 h-1/2",
-      weight: "duotone"
+      className: "w-1/2 h-1/2 text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400"
     })
   );
 };
