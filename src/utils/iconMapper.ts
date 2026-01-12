@@ -135,7 +135,8 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
     className: containerClasses
   },
     React.createElement(IconComponent, {
-      className: "w-1/2 h-1/2 text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400"
+      className: "w-1/2 h-1/2 text-white",
+      strokeWidth: 1.5
     })
   );
 };
