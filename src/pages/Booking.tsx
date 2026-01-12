@@ -90,10 +90,14 @@ const ServiceCheckboxOption: React.FC<{
           <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center">
             <div className="flex items-center gap-2 flex-1 min-w-0 mb-1 sm:mb-0 sm:mr-2">
               {service.icon && <span className="text-lg sm:text-xl flex-shrink-0">{service.icon}</span>}
-              <span className="font-medium text-white truncate flex-1 min-w-0">
-                {service.name}
-                {service.unitLabel && <span className="text-xs sm:text-sm text-gray-400 ml-1">{service.unitLabel}</span>}
-              </span>
+              <div className="flex flex-col min-w-0">
+                <div className="flex items-center">
+                  <span className="font-medium text-white truncate flex-1 min-w-0">
+                    {service.name}
+                  </span>
+                  {service.unitLabel && <span className="text-xs sm:text-sm text-gray-400 whitespace-nowrap ml-1 flex-shrink-0">{service.unitLabel}</span>}
+                </div>
+              </div>
             </div>
             <div className="flex items-center justify-between">
               {showQuantityControl ? (
