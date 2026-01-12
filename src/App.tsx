@@ -31,12 +31,17 @@ const appPages: Record<PageKey, { component: React.FC<any> }> = {
 function App() {
   const [page, setPage] = useState<PageKey>('Home');
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
+  const [initialRender, setInitialRender] = useState(true);
   const CurrentPageComponent = appPages[page].component;
 
   // Track viewport height changes to detect keyboard visibility
   React.useEffect(() => {
     const initialViewportHeight = window.innerHeight;
     let timeoutId: number; // Use number instead of NodeJS.Timeout
+
+    // Set initial state based on viewport height to prevent initial flicker
+    setIsKeyboardVisible(window.innerHeight < initialViewportHeight - 150);
+    setInitialRender(false);
 
     const handleResize = () => {
       const currentViewportHeight = window.innerHeight;
@@ -110,7 +115,7 @@ function App() {
       {/* GLOBAL BOTTOM DOCK with Spring Physics */}
       <div
         className={`fixed bottom-4 left-1/2 -translate-x-1/2 w-[90%] max-w-sm h-20 px-4 bg-[#1c1c1e]/70 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-full flex items-center justify-around z-50 transition-opacity duration-300 ${
-          isKeyboardVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          initialRender || isKeyboardVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`}
       >
         <DockButton pageKey="Home" label="Главная" icon={<House className='w-6 h-6' />} />
