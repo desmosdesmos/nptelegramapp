@@ -18,9 +18,13 @@ const ServiceCardComplex: React.FC<{ service: Service }> = ({ service }) => {
       <ScaleButton>
         <div className="relative w-full p-6 border rounded-3xl cursor-default bg-[rgba(255,255,255,0.05)] backdrop-blur-xl border-[rgba(255,255,255,0.1)]">
           <div className="relative z-10">
-            <h4 className="text-2xl font-bold mb-2 text-white">{service.name}</h4>
-            {service.description && <p className="text-base text-white/70 mb-4 opacity-70" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
-            <span className="text-4xl font-bold text-cyan-400">{service.price.toLocaleString('ru-RU')} ₽</span>
+            <div className="flex w-full items-center justify-between">
+              <h4 className="text-2xl font-bold text-white truncate flex-1 min-w-0 pr-3">{service.name}</h4>
+              <span className="text-4xl font-bold text-cyan-400 whitespace-nowrap flex-shrink-0">
+                {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap"> ₽</span>
+              </span>
+            </div>
+            {service.description && <p className="text-base text-white/70 mb-4 opacity-70 mt-2" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
           </div>
         </div>
       </ScaleButton>
@@ -31,20 +35,19 @@ const ServiceCardComplex: React.FC<{ service: Service }> = ({ service }) => {
 // 2. Read-Only "Local Service" Row (Keep as is)
 const ServiceRow: React.FC<{ service: Service }> = ({ service }) => {
   const rowVariants = { initial: { x: -20, opacity: 0 }, animate: { x: 0, opacity: 1 } };
-  const name = service.name;
-  const noteIndex = name.indexOf('(');
-  const mainName = noteIndex > -1 ? name.substring(0, noteIndex) : name;
-  const note = noteIndex > -1 ? name.substring(noteIndex) : '';
 
   return (
     <motion.div variants={rowVariants}>
-      <div className="flex items-center justify-between gap-4 p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl">
-        {service.icon && <span className="text-2xl flex-shrink-0">{service.icon}</span>}
-        <p className="flex-grow text-left font-medium text-white whitespace-normal min-w-0">
-          {mainName}
-          {note && <span className="text-xs text-white/60 ml-1">{note}</span>}
-        </p>
-        <span className="font-bold text-purple-400 whitespace-nowrap flex-shrink-0 ml-4">{service.price.toLocaleString('ru-RU')} ₽</span>
+      <div className="flex w-full items-center justify-between p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl">
+        <div className="flex items-center flex-1 min-w-0">
+          {service.icon && <span className="text-2xl flex-shrink-0 mr-3">{service.icon}</span>}
+          <p className="font-medium text-white truncate flex-1 min-w-0">
+            {service.name}
+          </p>
+        </div>
+        <span className="font-bold text-purple-400 whitespace-nowrap flex-shrink-0 ml-4">
+          {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap"> ₽</span>
+        </span>
       </div>
     </motion.div>
   );

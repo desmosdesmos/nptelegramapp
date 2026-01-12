@@ -22,7 +22,7 @@ const FormSection: React.FC<{ title: string; children: React.ReactNode }> = ({ t
 );
 
 // Re-defining ServiceRadioOption with glass style and animations
-const ServiceRadioOption: React.FC<{ 
+const ServiceRadioOption: React.FC<{
   service: Service;
   isSelected: boolean;
   onSelect: () => void;
@@ -30,34 +30,34 @@ const ServiceRadioOption: React.FC<{
   <button
     onClick={onSelect}
     className={`w-full p-4 rounded-2xl border transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 text-left
-      ${isSelected 
-        ? 'bg-blue-600/20 border-blue-500/50 shadow-lg' 
+      ${isSelected
+        ? 'bg-blue-600/20 border-blue-500/50 shadow-lg'
         : 'bg-white/5 border-white/10 hover:border-blue-500/20'
       }
     `}
   >
-    <div className="flex items-center">
-      <div className={`w-5 h-5 flex-shrink-0 border-2 rounded-full flex items-center justify-center mr-4 ${isSelected ? 'border-blue-500' : 'border-white/30'}`}>
-        {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-blue-500/50" />}
-      </div>
-      <div className="flex-1">
-        <div className="flex items-center justify-between w-full">
-          <div className="flex items-center gap-2 flex-1 pr-4 min-w-0">
-            {service.icon && <span className="text-xl">{service.icon}</span>}
-            <span className="font-medium text-white truncate">{service.name}</span>
-          </div>
-          <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right">
-            {service.price.toLocaleString('ru-RU')}&nbsp;₽
-          </span>
+    <div className="flex w-full items-center justify-between">
+      <div className="flex items-center flex-1 min-w-0">
+        <div className={`w-5 h-5 flex-shrink-0 border-2 rounded-full flex items-center justify-center mr-4 ${isSelected ? 'border-blue-500' : 'border-white/30'}`}>
+          {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-blue-500/50" />}
         </div>
-        {service.description && <p className="text-sm text-gray-400 mt-1" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-1 min-w-0 pr-3">
+            {service.icon && <span className="text-xl flex-shrink-0">{service.icon}</span>}
+            <span className="font-medium text-white truncate flex-1 min-w-0">{service.name}</span>
+          </div>
+          {service.description && <p className="text-sm text-gray-400 mt-1" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
+        </div>
       </div>
+      <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right ml-4">
+        {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap">&nbsp;₽</span>
+      </span>
     </div>
   </button>
 );
 
 // Re-defining ServiceCheckboxOption with glass style and animations
-const ServiceCheckboxOption: React.FC<{ 
+const ServiceCheckboxOption: React.FC<{
   service: Service;
   isSelected: boolean;
   onToggle: () => void;
@@ -69,14 +69,14 @@ const ServiceCheckboxOption: React.FC<{
 
   return (
     <div
-      className={`w-full p-4 rounded-2xl border transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] 
-        ${isSelected 
-          ? 'bg-blue-600/20 border-blue-500/50 shadow-lg' 
+      className={`w-full p-4 rounded-2xl border transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]
+        ${isSelected
+          ? 'bg-blue-600/20 border-blue-500/50 shadow-lg'
           : 'bg-white/5 border-white/10'
         }
       `}
     >
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex w-full items-center justify-between">
         <button
           onClick={onToggle}
           className="flex-1 flex items-start text-left hover:scale-[1.02] active:scale-[0.98] transition-transform"
@@ -84,12 +84,14 @@ const ServiceCheckboxOption: React.FC<{
           <div className={`w-5 h-5 flex-shrink-0 border-2 rounded-md mt-1 flex items-center justify-center mr-4 ${isSelected ? 'border-blue-500' : 'border-white/30'}`}>
             {isSelected && <div className="w-2.5 h-2.5 rounded-sm bg-blue-500 shadow-blue-500/50" />}
           </div>
-          
-          <div className="flex-1">
-            <div className="flex items-center gap-2 flex-1 pr-4 min-w-0">
-              {service.icon && <span className="text-xl">{service.icon}</span>}
-              <span className="font-medium text-white truncate">{service.name}</span>
-              {service.unitLabel && <span className="text-sm text-gray-400 whitespace-nowrap flex-shrink-0">{service.unitLabel}</span>}
+
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-1 min-w-0 pr-3">
+              {service.icon && <span className="text-xl flex-shrink-0">{service.icon}</span>}
+              <span className="font-medium text-white truncate flex-1 min-w-0">
+                {service.name}
+                {service.unitLabel && <span className="text-sm text-gray-400 ml-1">{service.unitLabel}</span>}
+              </span>
             </div>
             {service.description && <p className="text-sm text-gray-400 mt-1" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
           </div>
@@ -98,16 +100,16 @@ const ServiceCheckboxOption: React.FC<{
         {showQuantityControl ? (
           <div className="flex flex-col items-end gap-2 flex-shrink-0">
             <div className="flex items-center gap-3">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); hapticFeedback('light'); onQuantityChange(-1); }}
                 className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white text-xl font-bold transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 flex items-center justify-center shadow-lg"
               >
                 -
               </button>
               <span className="text-xl font-semibold min-w-[32px] text-center text-white">{quantity}</span>
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); hapticFeedback('light'); onQuantityChange(1); }}
                 className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white text-xl font-bold transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 flex items-center justify-center shadow-lg"
               >
@@ -115,12 +117,12 @@ const ServiceCheckboxOption: React.FC<{
               </button>
             </div>
             <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right">
-              {(service.price * quantity).toLocaleString('ru-RU')}&nbsp;₽
+              {(service.price * quantity).toLocaleString('ru-RU')}<span className="whitespace-nowrap">&nbsp;₽</span>
             </span>
           </div>
         ) : (
-          <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 flex-shrink-0 whitespace-nowrap text-right">
-            {service.price.toLocaleString('ru-RU')}&nbsp;₽
+          <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right">
+            {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap">&nbsp;₽</span>
           </span>
         )}
       </div>
