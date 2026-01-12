@@ -51,6 +51,7 @@ const ServiceRadioOption: React.FC<{
       <span className="text-xs font-bold text-indigo-400 mt-1">
         {service.price.toLocaleString('ru-RU')}&nbsp;₽
       </span>
+      {service.description && <p className="text-xs text-gray-400 mt-1" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
     </div>
   </button>
 );

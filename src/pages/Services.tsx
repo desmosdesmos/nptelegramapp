@@ -32,7 +32,7 @@ const ServiceCardComplex: React.FC<{ service: Service }> = ({ service }) => {
                 </span>
               </div>
             </div>
-            {service.description && <p className="text-sm sm:text-base text-white/70 opacity-70 mt-2" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
+            {service.description && <p className="text-xs sm:text-sm text-white/70 mt-2 opacity-70" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
           </div>
         </div>
       </ScaleButton>
