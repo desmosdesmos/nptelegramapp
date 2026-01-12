@@ -244,12 +244,15 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
     }
 
     // Specifically handle services field to clear its error when updated
-    if (field === 'services' && errors.services) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors.services;
-        return newErrors;
-      });
+    if (field === 'services') {
+      // Clear services error if there are now services selected
+      if (Array.isArray(processedValue) && processedValue.length > 0 && errors.services) {
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors.services;
+          return newErrors;
+        });
+      }
     }
 
     if (isCarBrandChange && typeof processedValue === 'string') {
