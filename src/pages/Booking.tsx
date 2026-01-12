@@ -360,7 +360,6 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
     if (!validation.isValid) {
       setErrors(validation.errors);
       notificationFeedback('error');
-      tg?.showAlert('Пожалуйста, заполните все обязательные поля');
       return;
     }
 
