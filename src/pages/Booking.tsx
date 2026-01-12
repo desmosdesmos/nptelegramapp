@@ -42,12 +42,12 @@ const ServiceRadioOption: React.FC<{
       </div>
       <div className="flex-1">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-1 min-w-0">
             {service.icon && <span className="text-xl">{service.icon}</span>}
-            <span className="font-medium text-white">{service.name}</span>
+            <span className="font-medium text-white truncate">{service.name}</span>
           </div>
-          <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-            {service.price.toLocaleString('ru-RU')} ₽
+          <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0">
+            {service.price.toLocaleString('ru-RU')}&nbsp;₽
           </span>
         </div>
         {service.description && <p className="text-sm text-gray-400 mt-1" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
@@ -86,10 +86,10 @@ const ServiceCheckboxOption: React.FC<{
           </div>
           
           <div className="flex-1">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-shrink-1 min-w-0">
               {service.icon && <span className="text-xl">{service.icon}</span>}
-              <span className="font-medium text-white">{service.name}</span>
-              {service.unitLabel && <span className="text-sm text-gray-400">{service.unitLabel}</span>}
+              <span className="font-medium text-white truncate">{service.name}</span>
+              {service.unitLabel && <span className="text-sm text-gray-400 whitespace-nowrap flex-shrink-0">{service.unitLabel}</span>}
             </div>
             {service.description && <p className="text-sm text-gray-400 mt-1" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
           </div>
@@ -114,13 +114,13 @@ const ServiceCheckboxOption: React.FC<{
                 +
               </button>
             </div>
-            <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-              {(service.price * quantity).toLocaleString('ru-RU')} ₽
+            <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0">
+              {(service.price * quantity).toLocaleString('ru-RU')}&nbsp;₽
             </span>
           </div>
         ) : (
-          <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 flex-shrink-0">
-            {service.price.toLocaleString('ru-RU')} ₽
+          <span className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 flex-shrink-0 whitespace-nowrap">
+            {service.price.toLocaleString('ru-RU')}&nbsp;₽
           </span>
         )}
       </div>
@@ -522,7 +522,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                     <input type="checkbox" checked={formData.additionalOptions.includes(option.id)} onChange={() => handleOptionToggle(option.id)} className="w-5 h-5 bg-transparent border-2 border-white/30 text-blue-500 focus:ring-0 focus:ring-offset-0 rounded" />
                     <div className="flex-1 flex items-center justify-between ml-4">
                       <div className="flex items-center gap-2">{option.icon && <span>{option.icon}</span>}<span>{option.name}</span></div>
-                      <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">+{option.price.toLocaleString('ru-RU')} ₽</span>
+                      <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0">+{option.price.toLocaleString('ru-RU')}&nbsp;₽</span>
                     </div>
                   </label>
                 ))}
@@ -553,8 +553,8 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
           <div className="mt-12 p-6 bg-gradient-to-br from-blue-600/20 to-purple-600/20 backdrop-blur-xl border border-blue-500/50 rounded-3xl shadow-lg relative z-10">
             <div className="flex justify-between items-center">
               <span className="text-xl font-semibold text-white">Итоговая сумма:</span>
-              <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-                {totalPrice.toLocaleString('ru-RU')} ₽
+              <span className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0">
+                {totalPrice.toLocaleString('ru-RU')}&nbsp;₽
               </span>
             </div>
             <p className="text-xs text-gray-400 mt-3 text-center">
