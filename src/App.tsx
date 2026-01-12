@@ -36,7 +36,7 @@ function App() {
   // Track viewport height changes to detect keyboard visibility
   React.useEffect(() => {
     const initialViewportHeight = window.innerHeight;
-    let timeoutId: NodeJS.Timeout;
+    let timeoutId: number; // Use number instead of NodeJS.Timeout
 
     const handleResize = () => {
       const currentViewportHeight = window.innerHeight;
@@ -48,7 +48,7 @@ function App() {
       } else {
         // Use a delay to prevent flickering when switching between inputs
         clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
+        timeoutId = window.setTimeout(() => {
           setIsKeyboardVisible(false);
         }, 300);
       }
@@ -58,7 +58,7 @@ function App() {
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      clearTimeout(timeoutId);
+      window.clearTimeout(timeoutId);
     };
   }, []);
 
