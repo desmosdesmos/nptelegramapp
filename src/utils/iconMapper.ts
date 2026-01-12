@@ -2,13 +2,13 @@ import React from 'react';
 import {
   SparklesIcon,
   TrophyIcon,
-  ArchiveBoxIcon,
-  ChevronDoubleUpIcon,
+  UserIcon,
+  ArrowUpCircleIcon,
   BriefcaseIcon,
+  Square2StackIcon,
   CloudIcon,
   WrenchIcon,
   TruckIcon,
-  BookOpenIcon,
   ShieldCheckIcon,
   CogIcon,
   ScissorsIcon,
@@ -31,10 +31,10 @@ export const getServiceIcon = (title: string): HeroIcon => {
 
   // INTERIOR (Салон)
   if (lowerTitle.includes('сиденье') || lowerTitle.includes('кожа')) {
-    return ArchiveBoxIcon;
+    return UserIcon;
   }
   if (lowerTitle.includes('потолок')) {
-    return ChevronDoubleUpIcon;
+    return ArrowUpCircleIcon;
   }
   if (lowerTitle.includes('пол') || lowerTitle.includes('ковролин')) {
     return Square3Stack3DIcon;
@@ -43,7 +43,7 @@ export const getServiceIcon = (title: string): HeroIcon => {
     return BriefcaseIcon;
   }
   if (lowerTitle.includes('дверь') || lowerTitle.includes('дверная') || lowerTitle.includes('карта')) {
-    return BookOpenIcon;
+    return Square2StackIcon;
   }
   if (lowerTitle.includes('руль')) {
     return CircleStackIcon;
@@ -135,7 +135,7 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
     className: containerClasses
   },
     React.createElement(IconComponent, {
-      className: "w-1/2 h-1/2 text-white",
+      className: "w-1/2 h-1/2 text-transparent bg-clip-text bg-gradient-to-b from-white to-white/50",
       strokeWidth: 1.5
     })
   );
