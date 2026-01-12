@@ -447,15 +447,15 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 placeholder="BMW"
               />
               {showBrandSuggestions && suggestedBrands.length > 0 && (
-                <div className="absolute top-full left-0 right-0 z-[9999] mt-2 rounded-3xl bg-[#1c1c1e] backdrop-blur-2xl border border-white/10 shadow-2xl max-h-56 overflow-y-auto p-4">
-                  <div className="flex flex-col gap-2">
+                <div className="absolute top-full left-0 right-0 z-[100] mt-2 rounded-3xl bg-zinc-900/90 backdrop-blur-2xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] max-h-56 overflow-y-auto p-2">
+                  <div className="flex flex-col">
                     {suggestedBrands.map((brand) => (
                       <button 
                         key={brand} 
                         type="button" 
                         onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleChange('carBrand', brand); setShowBrandSuggestions(false); }} 
-                        className="w-full text-left px-4 py-3 text-white hover:bg-white/10 active:bg-white/15 transition-all duration-200 font-medium rounded-2xl"
+                        className="w-full text-left px-4 py-3 text-white hover:bg-white/10 active:bg-white/20 transition-all duration-200 font-medium rounded-2xl"
                       >
                         {brand}
                       </button>
@@ -486,15 +486,15 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 placeholder={formData.carBrand ? "X5" : "Сначала марку"}
               />
               {showModelSuggestions && suggestedModels.length > 0 && (
-                <div className="absolute top-full left-0 right-0 z-[9999] mt-2 rounded-3xl bg-[#1c1c1e] backdrop-blur-2xl border border-white/10 shadow-2xl max-h-56 overflow-y-auto p-4">
-                  <div className="flex flex-col gap-2">
+                <div className="absolute top-full left-0 right-0 z-[100] mt-2 rounded-3xl bg-zinc-900/90 backdrop-blur-2xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] max-h-56 overflow-y-auto p-2">
+                  <div className="flex flex-col">
                     {suggestedModels.map((model) => (
                       <button 
                         key={model} 
                         type="button" 
                         onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }}
                         onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleChange('carModel', model); setShowModelSuggestions(false); }} 
-                        className="w-full text-left px-4 py-3 text-white hover:bg-white/10 active:bg-white/15 transition-all duration-200 font-medium rounded-2xl"
+                        className="w-full text-left px-4 py-3 text-white hover:bg-white/10 active:bg-white/20 transition-all duration-200 font-medium rounded-2xl"
                       >
                         {model}
                       </button>
