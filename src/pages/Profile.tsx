@@ -1,66 +1,84 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, Phone, ArrowLeft, ChevronRight } from 'lucide-react';
 import { PageKey } from '../App';
 import { ServiceIcon } from '../utils/iconMapper';
-import { 
-  ClipboardText, 
-  Sparkle, 
-  CheckCircle, 
-  Car, 
+import {
+  ClipboardText,
+  Sparkle,
+  CheckCircle,
+  Car,
   Calendar,
   Clock
 } from 'phosphor-react';
+import {
+  getCustomerProfile,
+  getCustomerIdFromTelegram,
+  CustomerProfile,
+  ActiveOrder,
+  VisitHistoryItem
+} from '../api/adminApi';
 
 interface ProfileProps {
   onNavigate: (page: PageKey) => void;
 }
 
-// Mock data
-const mockActiveOrder = {
-  id: 'order-123',
-  carModel: 'BMW X5',
-  status: 'IN_PROGRESS', // 'ACCEPTED', 'IN_PROGRESS', 'READY'
-  stages: [
-    { id: 'accepted', name: 'Принят', icon: ClipboardText, completed: true },
-    { id: 'in-progress', name: 'В работе', icon: Sparkle, completed: true },
-    { id: 'ready', name: 'Готово', icon: CheckCircle, completed: false }
-  ]
-};
-
-const mockHistory = [
-  {
-    id: 'visit-1',
-    serviceName: 'Комплексная химчистка',
-    date: '12 Окт 2024',
-    price: 12000,
-    icon: '🧹'
-  },
-  {
-    id: 'visit-2',
-    serviceName: 'Предпродажная подготовка',
-    date: '5 Сен 2024',
-    price: 8999,
-    icon: '🚗'
-  },
-  {
-    id: 'visit-3',
-    serviceName: 'Полировка кузова',
-    date: '20 Авг 2024',
-    price: 15000,
-    icon: '✨'
-  },
-  {
-    id: 'visit-4',
-    serviceName: 'Химчистка салона',
-    date: '10 Июл 2024',
-    price: 6999,
-    icon: '🧽'
-  }
-];
-
 const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
-  const [activeOrder] = useState(mockActiveOrder);
-  const [history] = useState(mockHistory);
+  const [customerProfile, setCustomerProfile] = useState<CustomerProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCustomerProfile = async () => {
+      try {
+        setLoading(true);
+        const customerId = getCustomerIdFromTelegram();
+        if (!customerId) {
+          throw new Error('Не удалось получить ID клиента');
+        }
+
+        const profile = await getCustomerProfile(customerId);
+        setCustomerProfile(profile);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Неизвестная ошибка');
+        console.error('Error fetching customer profile:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCustomerProfile();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="w-full min-h-screen flex items-center justify-center bg-black text-white">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin mx-auto"></div>
+          <p className="mt-4 text-white/70">Загрузка данных...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full min-h-screen flex items-center justify-center bg-black text-white p-6">
+        <div className="text-center max-w-md">
+          <div className="w-16 h-16 mx-auto bg-red-500/20 rounded-full flex items-center justify-center">
+            <span className="text-2xl">⚠️</span>
+          </div>
+          <h2 className="text-xl font-bold mt-4">Ошибка загрузки данных</h2>
+          <p className="text-white/70 mt-2">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 px-6 py-3 bg-indigo-600 rounded-xl font-medium hover:bg-indigo-700 transition-colors"
+          >
+            Повторить попытку
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='w-full min-h-screen flex flex-col p-6 pt-12 pb-44 bg-black text-white'>
@@ -75,36 +93,36 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
       <h1 className='text-3xl font-bold mb-8'>Профиль</h1>
 
       {/* Active Order Status Widget */}
-      {activeOrder && (
+      {customerProfile?.activeOrder && (
         <div className="w-full p-5 mb-6 rounded-3xl bg-gradient-to-br from-indigo-900/40 to-black/40 border border-indigo-500/30 backdrop-blur-xl">
           <div className="flex items-center gap-2 mb-4">
             <Car weight="duotone" className="w-5 h-5 text-indigo-400" />
             <h2 className="text-lg font-semibold">Текущий заказ</h2>
           </div>
-          
+
           <div className="mb-4">
             <div className="flex items-center gap-2 text-white/80 mb-2">
               <Car weight="duotone" className="w-4 h-4" />
-              <span className="font-medium">{activeOrder.carModel}</span>
+              <span className="font-medium">{customerProfile.activeOrder.carModel}</span>
             </div>
           </div>
 
           {/* Progress Bar */}
           <div className="flex items-center justify-between relative">
-            {activeOrder.stages.map((stage, index) => {
-              const isCurrent = !stage.completed && (index === 0 || activeOrder.stages[index - 1]?.completed);
+            {customerProfile.activeOrder.stages.map((stage, index) => {
+              const isCurrent = !stage.completed && (index === 0 || customerProfile.activeOrder.stages[index - 1]?.completed);
               const isCompleted = stage.completed;
               const Icon = stage.icon;
-              
+
               return (
                 <div key={stage.id} className="flex flex-col items-center flex-1">
                   <div className="flex items-center justify-center">
                     <div className={`
                       w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300
-                      ${isCurrent 
-                        ? 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.7)] animate-pulse' 
-                        : isCompleted 
-                          ? 'bg-green-500/30 border border-green-500/50' 
+                      ${isCurrent
+                        ? 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.7)] animate-pulse'
+                        : isCompleted
+                          ? 'bg-green-500/30 border border-green-500/50'
                           : 'bg-white/10 border border-white/20'
                       }
                     `}>
@@ -117,12 +135,12 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
                   `}>
                     {stage.name}
                   </span>
-                  
+
                   {/* Connector line */}
-                  {index < activeOrder.stages.length - 1 && (
+                  {index < customerProfile.activeOrder.stages.length - 1 && (
                     <div className={`
                       absolute top-4 h-0.5 w-1/3 z-[-1]
-                      ${activeOrder.stages[index].completed ? 'bg-green-500/50' : 'bg-white/10'}
+                      ${customerProfile.activeOrder.stages[index].completed ? 'bg-green-500/50' : 'bg-white/10'}
                       ${index === 0 ? 'left-[calc(33.33%+16px)]' : 'left-[calc(66.66%+16px)]'}
                     `}></div>
                   )}
@@ -139,10 +157,10 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
           <Calendar weight="duotone" className="w-5 h-5 text-purple-400" />
           <h2 className="text-lg font-semibold">Ваши посещения</h2>
         </div>
-        
+
         <div className="space-y-3">
-          {history.map((visit) => (
-            <div 
+          {customerProfile?.visitHistory.map((visit) => (
+            <div
               key={visit.id}
               className="w-full p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl flex items-center gap-4 hover:bg-white/10 transition-colors cursor-pointer"
               onClick={() => console.log('View visit details', visit.id)}
@@ -150,7 +168,7 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
               <div className="w-12 h-12 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center flex-shrink-0">
                 <ServiceIcon title={visit.serviceName} size="md" />
               </div>
-              
+
               <div className="flex-1 min-w-0">
                 <h3 className="font-medium text-white truncate">{visit.serviceName}</h3>
                 <div className="flex items-center gap-2 mt-1">
@@ -158,7 +176,7 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
                   <span className="text-xs text-gray-400">{visit.date}</span>
                 </div>
               </div>
-              
+
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-purple-400 whitespace-nowrap">
                   {visit.price.toLocaleString('ru-RU')}&nbsp;₽
@@ -174,10 +192,10 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
         <div className='w-24 h-24 rounded-full bg-white/10 flex items-center justify-center mb-4'>
           <User className='w-12 h-12 text-white/50' />
         </div>
-        <h2 className='text-xl font-semibold'>Ivan Ivanov</h2>
+        <h2 className='text-xl font-semibold'>{customerProfile?.name || 'Имя не указано'}</h2>
         <div className='flex items-center gap-2 mt-2 text-gray-400'>
           <Phone className='w-4 h-4' />
-          <span>+7 999 123-45-67</span>
+          <span>{customerProfile?.phone || 'Телефон не указан'}</span>
         </div>
       </div>
     </div>
