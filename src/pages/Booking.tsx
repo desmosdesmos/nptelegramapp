@@ -560,7 +560,6 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                 ))}
               </div>
             </div>
-            {errors.services && <p className="text-red-500 text-sm mt-2">{errors.services}</p>}
           </FormSection>
         </div>
         
