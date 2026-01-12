@@ -19,20 +19,16 @@ const ServiceCardComplex: React.FC<{ service: Service }> = ({ service }) => {
       <ScaleButton>
         <div className="relative w-full p-5 sm:p-6 border rounded-3xl cursor-default bg-[rgba(255,255,255,0.05)] backdrop-blur-xl border-[rgba(255,255,255,0.1)]">
           <div className="relative z-10">
-            <div className="flex w-full items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center">
-                <ServiceIcon title={service.name} size="md" />
+            <div className="flex w-full items-center">
+              <div className="flex items-center flex-1 min-w-0">
+                <ServiceIcon title={service.name} size="sm" />
+                <h4 className="text-xl sm:text-2xl font-bold text-white truncate flex-1 min-w-0 ml-2">{service.name}</h4>
               </div>
-              <div className="flex flex-col flex-1 justify-center">
-                <h4 className="text-sm font-bold text-white leading-snug break-words flex-1">
-                  {service.name}
-                </h4>
-                <span className="text-xs font-bold text-indigo-400 mt-1">
-                  {service.price.toLocaleString('ru-RU')}&nbsp;₽
-                </span>
-              </div>
+              <span className="text-2xl sm:text-4xl font-bold text-cyan-400 whitespace-nowrap flex-shrink-0">
+                {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap"> ₽</span>
+              </span>
             </div>
-            {service.description && <p className="text-xs sm:text-sm text-white/70 mt-2 opacity-70" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
+            {service.description && <p className="text-sm sm:text-base text-white/70 opacity-70 mt-2" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
           </div>
         </div>
       </ScaleButton>
@@ -46,18 +42,16 @@ const ServiceRow: React.FC<{ service: Service }> = ({ service }) => {
 
   return (
     <motion.div variants={rowVariants}>
-      <div className="flex w-full items-center gap-4 p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center">
-          <ServiceIcon title={service.name} size="md" />
-        </div>
-        <div className="flex flex-col flex-1 justify-center">
-          <p className="text-sm font-medium text-white leading-snug break-words flex-1">
+      <div className="flex w-full items-center p-3 sm:p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl">
+        <div className="flex items-center flex-1 min-w-0">
+          <ServiceIcon title={service.name} size="sm" />
+          <p className="font-medium text-white truncate flex-1 min-w-0 ml-2">
             {service.name}
           </p>
-          <span className="text-xs font-bold text-indigo-400 mt-1">
-            {service.price.toLocaleString('ru-RU')}&nbsp;₽
-          </span>
         </div>
+        <span className="font-bold text-purple-400 whitespace-nowrap flex-shrink-0 ml-2 sm:ml-4">
+          {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap"> ₽</span>
+        </span>
       </div>
     </motion.div>
   );

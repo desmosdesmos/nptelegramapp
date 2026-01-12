@@ -31,28 +31,30 @@ const ServiceRadioOption: React.FC<{
   <button
     type="button"
     onClick={onSelect}
-    className={`w-full p-4 rounded-2xl flex items-center gap-4 active:scale-[0.98] transition-all
+    className={`w-full p-3 sm:p-4 rounded-2xl border transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 text-left
       ${isSelected
-        ? 'bg-blue-600/20 border border-blue-500/50 shadow-lg'
-        : 'bg-white/5 border border-white/10'
+        ? 'bg-blue-600/20 border-blue-500/50 shadow-lg'
+        : 'bg-white/5 border-white/10 hover:border-blue-500/20'
       }
     `}
   >
-    <div className={`w-4 h-4 flex-shrink-0 border-2 rounded-full flex items-center justify-center ${isSelected ? 'border-blue-500' : 'border-white/30'}`}>
-      {isSelected && <div className="w-2 h-2 rounded-full bg-blue-500 shadow-blue-500/50" />}
+    <div className="flex w-full items-center">
+      <div className={`w-4 h-4 flex-shrink-0 border-2 rounded-full flex items-center justify-center mr-3 sm:mr-4 ${isSelected ? 'border-blue-500' : 'border-white/30'}`}>
+        {isSelected && <div className="w-2 h-2 rounded-full bg-blue-500 shadow-blue-500/50" />}
+      </div>
+      <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center">
+        <div className="flex items-center flex-1 min-w-0 mb-1 sm:mb-0 sm:mr-2">
+          <ServiceIcon title={service.name} isSelected={isSelected} size="sm" />
+          <span className="font-medium text-white truncate flex-1 min-w-0 ml-2">{service.name}</span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-base sm:text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right">
+            {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap">&nbsp;₽</span>
+          </span>
+        </div>
+      </div>
     </div>
-    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center">
-      <ServiceIcon title={service.name} isSelected={isSelected} size="md" />
-    </div>
-    <div className="flex flex-col flex-1 justify-center">
-      <span className="text-sm font-medium text-white leading-snug break-words">
-        {service.name}
-      </span>
-      <span className="text-xs font-bold text-indigo-400 mt-1">
-        {service.price.toLocaleString('ru-RU')}&nbsp;₽
-      </span>
-      {service.description && <p className="text-xs text-gray-400 mt-1" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
-    </div>
+    {service.description && <p className="text-xs sm:text-sm text-gray-400 mt-1 pl-7 sm:pl-8" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
   </button>
 );
 
@@ -69,60 +71,69 @@ const ServiceCheckboxOption: React.FC<{
 
   return (
     <div
-      className={`w-full p-4 rounded-2xl flex items-center gap-4 active:scale-[0.98] transition-all
+      className={`w-full p-3 sm:p-4 rounded-2xl border transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)]
         ${isSelected
-          ? 'bg-blue-600/20 border border-blue-500/50 shadow-lg'
-          : 'bg-white/5 border border-white/10'
+          ? 'bg-blue-600/20 border-blue-500/50 shadow-lg'
+          : 'bg-white/5 border-white/10'
         }
       `}
     >
-      <button
-        type="button"
-        onClick={onToggle}
-        className="flex-1 flex items-center text-left hover:scale-[1.02] active:scale-[0.98] transition-transform"
-      >
-        <div className={`w-4 h-4 flex-shrink-0 border-2 rounded-md flex items-center justify-center ${isSelected ? 'border-blue-500' : 'border-white/30'}`}>
-          {isSelected && <div className="w-2 h-2 rounded-sm bg-blue-500 shadow-blue-500/50" />}
-        </div>
-
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-white/10 to-transparent flex items-center justify-center">
-          <ServiceIcon title={service.name} isSelected={isSelected} size="md" />
-        </div>
-
-        <div className="flex flex-col flex-1 justify-center">
-          <div className="flex items-baseline gap-2">
-            <span className="text-sm font-medium text-white leading-snug break-words flex-1">
-              {service.name}
-            </span>
-            {service.unitLabel && <span className="text-[10px] text-gray-400 whitespace-nowrap flex-shrink-0">{service.unitLabel}</span>}
+      <div className="flex w-full items-center">
+        <button
+          type="button"
+          onClick={onToggle}
+          className="flex-1 flex items-start text-left hover:scale-[1.02] active:scale-[0.98] transition-transform"
+        >
+          <div className={`w-4 h-4 flex-shrink-0 border-2 rounded-md mt-1 flex items-center justify-center mr-3 sm:mr-4 ${isSelected ? 'border-blue-500' : 'border-white/30'}`}>
+            {isSelected && <div className="w-2 h-2 rounded-sm bg-blue-500 shadow-blue-500/50" />}
           </div>
-          <span className="text-xs font-bold text-indigo-400 mt-1">
-            {showQuantityControl ? (service.price * quantity).toLocaleString('ru-RU') : service.price.toLocaleString('ru-RU')}&nbsp;₽
-          </span>
-        </div>
-      </button>
 
-      {showQuantityControl && (
-        <div className="flex flex-col items-end gap-2">
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); hapticFeedback('light'); onQuantityChange(-1); }}
-              className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white text-base font-bold transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 flex items-center justify-center shadow-lg"
-            >
-              -
-            </button>
-            <span className="w-6 text-center text-white font-medium">{quantity}</span>
-            <button
-              type="button"
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); hapticFeedback('light'); onQuantityChange(1); }}
-              className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white text-base font-bold transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 flex items-center justify-center shadow-lg"
-            >
-              +
-            </button>
+          <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center">
+            <div className="flex items-center gap-2 flex-1 min-w-0 mb-1 sm:mb-0 sm:mr-2">
+              <ServiceIcon title={service.name} isSelected={isSelected} size="sm" />
+              <div className="flex flex-col min-w-0">
+                <div className="flex items-center">
+                  <span className="font-medium text-white truncate flex-1 min-w-0">
+                    {service.name}
+                  </span>
+                  {service.unitLabel && <span className="text-[10px] sm:text-xs text-gray-400 whitespace-nowrap ml-1 flex-shrink-0">{service.unitLabel}</span>}
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              {showQuantityControl ? (
+                <div className="flex flex-col items-end gap-1 sm:gap-2 flex-shrink-0">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <button
+                      type="button"
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); hapticFeedback('light'); onQuantityChange(-1); }}
+                      className="min-w-[36px] min-h-[36px] w-9 h-9 sm:min-w-[44px] sm:min-h-[44px] sm:w-11 sm:h-11 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white text-lg sm:text-xl font-bold transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 flex items-center justify-center shadow-lg"
+                    >
+                      -
+                    </button>
+                    <span className="text-base sm:text-xl font-semibold min-w-[24px] sm:min-w-[32px] text-center text-white">{quantity}</span>
+                    <button
+                      type="button"
+                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); hapticFeedback('light'); onQuantityChange(1); }}
+                      className="min-w-[36px] min-h-[36px] w-9 h-9 sm:min-w-[44px] sm:min-h-[44px] sm:w-11 sm:h-11 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 text-white text-lg sm:text-xl font-bold transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 flex items-center justify-center shadow-lg"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <span className="text-sm sm:text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right">
+                    {(service.price * quantity).toLocaleString('ru-RU')}<span className="whitespace-nowrap">&nbsp;₽</span>
+                  </span>
+                </div>
+              ) : (
+                <span className="text-sm sm:text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right">
+                  {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap">&nbsp;₽</span>
+                </span>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        </button>
+      </div>
+      {service.description && <p className="text-xs sm:text-sm text-gray-400 mt-1 pl-7 sm:pl-8" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
     </div>
   );
 };
