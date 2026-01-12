@@ -272,6 +272,15 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       handleChange('services', [serviceId]);
     }
     handleChange('additionalOptions', []);
+
+    // Clear service-related error when a service is selected
+    if (errors.services) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.services;
+        return newErrors;
+      });
+    }
   };
 
   const handleLocalServiceToggle = (serviceId: string) => {
@@ -286,7 +295,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
         tg?.showAlert('Нельзя комбинировать основную услугу с локальными.');
         return;
     }
-      
+
     const newServices = isCurrentlySelected
       ? currentServices.filter(id => id !== serviceId)
       : [...currentServices, serviceId];
@@ -303,6 +312,15 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
         const newQuantities = { ...prev };
         delete newQuantities[serviceId];
         return newQuantities;
+      });
+    }
+
+    // Clear service-related error when a service is selected
+    if (errors.services) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.services;
+        return newErrors;
       });
     }
   };
@@ -336,6 +354,15 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       ? currentOptions.filter(id => id !== optionId)
       : [...currentOptions, optionId];
     handleChange('additionalOptions', newOptions);
+
+    // Clear service-related error when an option is selected (in case it was showing)
+    if (errors.services) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.services;
+        return newErrors;
+      });
+    }
   };
 
   const handleSubmit = useCallback(async () => {
