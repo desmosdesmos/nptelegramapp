@@ -28,6 +28,7 @@ const ServiceRadioOption: React.FC<{
   onSelect: () => void;
 }> = ({ service, isSelected, onSelect }) => (
   <button
+    type="button"
     onClick={onSelect}
     className={`w-full p-3 sm:p-4 rounded-2xl border transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 text-left
       ${isSelected
@@ -78,6 +79,7 @@ const ServiceCheckboxOption: React.FC<{
     >
       <div className="flex w-full items-center">
         <button
+          type="button"
           onClick={onToggle}
           className="flex-1 flex items-start text-left hover:scale-[1.02] active:scale-[0.98] transition-transform"
         >
@@ -369,7 +371,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       const success = await sendBookingToTelegram(fullFormData);
       if (success) {
         notificationFeedback('success');
-        tg?.showAlert('Заявка отправлена! Мы свяжемся с вами в ближайшее время.', () => onNavigate('Home'));
+        tg?.showAlert('Заявка отправлена! Мы свяжемся с вами в ближайшее время.');
       } else {
         throw new Error('Ошибка отправки');
       }
