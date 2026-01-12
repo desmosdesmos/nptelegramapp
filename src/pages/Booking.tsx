@@ -243,6 +243,15 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       });
     }
 
+    // Specifically handle services field to clear its error when updated
+    if (field === 'services' && errors.services) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.services;
+        return newErrors;
+      });
+    }
+
     if (isCarBrandChange && typeof processedValue === 'string') {
       const input = processedValue.toLowerCase();
       const filtered = input.length > 0 
@@ -272,15 +281,6 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       handleChange('services', [serviceId]);
     }
     handleChange('additionalOptions', []);
-
-    // Clear service-related error when a service is selected
-    if (errors.services) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors.services;
-        return newErrors;
-      });
-    }
   };
 
   const handleLocalServiceToggle = (serviceId: string) => {
@@ -315,14 +315,6 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       });
     }
 
-    // Clear service-related error when a service is selected
-    if (errors.services) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors.services;
-        return newErrors;
-      });
-    }
   };
 
   const handleQuantityChange = (serviceId: string, delta: number) => {
@@ -354,15 +346,6 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       ? currentOptions.filter(id => id !== optionId)
       : [...currentOptions, optionId];
     handleChange('additionalOptions', newOptions);
-
-    // Clear service-related error when an option is selected (in case it was showing)
-    if (errors.services) {
-      setErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors.services;
-        return newErrors;
-      });
-    }
   };
 
   const handleSubmit = useCallback(async () => {
