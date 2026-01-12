@@ -109,7 +109,9 @@ function App() {
 
       {/* GLOBAL BOTTOM DOCK with Spring Physics */}
       {!isKeyboardVisible && (
-        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[90%] max-w-sm h-20 px-4 bg-[#1c1c1e]/70 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-full flex items-center justify-around z-50">
+        <div
+          className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[90%] max-w-sm h-20 px-4 bg-[#1c1c1e]/70 backdrop-blur-2xl border border-white/10 shadow-2xl rounded-full flex items-center justify-around z-50 animate-fade-in-up"
+        >
           <DockButton pageKey="Home" label="Главная" icon={<House className='w-6 h-6' />} />
           <DockButton pageKey="Booking" label="Запись" icon={<Calendar className='w-6 h-6' />} />
           <DockButton pageKey="Services" label="Услуги" icon={<Sparkles className='w-6 h-6' />} />
