@@ -1,29 +1,25 @@
-import { 
-  ArmChair, 
-  ArrowUpFromLine, 
-  Footprints, 
-  Briefcase, 
-  PanelRight, 
-  CircleDashed, 
-  LayoutDashboard, 
-  ShieldCheck, 
-  Sparkles, 
-  Wind, 
-  Snowflake, 
-  Scissors, 
-  Dog, 
-  Gem, 
-  Droplets, 
-  CloudRain, 
-  Eye, 
-  Disc, 
-  Zap, 
-  Cpu, 
-  CarFront, 
-  Star,
-  Lightbulb
+import React from 'react';
+import {
+  Armchair,
+  ArrowUpFromLine,
+  Footprints,
+  Briefcase,
+  PanelRight,
+  CircleDashed,
+  LayoutDashboard,
+  ShieldCheck,
+  Sparkles,
+  Wind,
+  Snowflake,
+  Scissors,
+  Gem,
+  Droplets,
+  CloudRain,
+  Eye,
+  Disc,
+  Zap,
+  CarFront
 } from 'lucide-react';
-import type { Icon } from 'lucide-react';
 
 // Тип для иконки
 type LucideIcon = React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -38,7 +34,7 @@ export const getServiceIcon = (title: string): LucideIcon => {
 
   // INTERIOR (Салон)
   if (lowerTitle.includes('сиденье') || lowerTitle.includes('кожа')) {
-    return ArmChair;
+    return Armchair;
   }
   if (lowerTitle.includes('потолок')) {
     return ArrowUpFromLine;
@@ -115,26 +111,27 @@ export const ServiceIcon: React.FC<ServiceIconProps> = ({
   size = 'md' 
 }) => {
   const IconComponent = getServiceIcon(title);
-  
+
   // Размеры
   const sizeClasses = {
-    sm: 'w-8 h-8 text-base',
-    md: 'w-10 h-10 text-lg',
-    lg: 'w-12 h-12 text-xl'
+    sm: 'w-8 h-8',
+    md: 'w-10 h-10', 
+    lg: 'w-12 h-12'
   };
-  
+
   const sizeClass = sizeClasses[size];
 
-  return (
-    <div className={`
-      ${sizeClass} 
-      rounded-xl flex items-center justify-center border transition-all duration-300
-      ${isSelected 
-        ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.4)]' 
-        : 'bg-white/5 border-white/10 text-white/50'
-      }
-    `}>
-      <IconComponent className="w-1/2 h-1/2" />
-    </div>
+  const containerClasses = `${sizeClass} rounded-xl flex items-center justify-center border transition-all duration-300`;
+
+  const selectedClasses = isSelected
+    ? 'bg-indigo-500/20 border-indigo-500/50 text-indigo-400 shadow-[0_0_15px_rgba(99,102,241,0.4)]'
+    : 'bg-white/5 border-white/10 text-white/50';
+
+  return React.createElement('div', {
+    className: containerClasses + ' ' + selectedClasses
+  },
+    React.createElement(IconComponent, {
+      className: "w-1/2 h-1/2"
+    })
   );
 };
