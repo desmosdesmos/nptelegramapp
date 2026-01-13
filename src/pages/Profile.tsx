@@ -23,8 +23,8 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
     if (navigator.share) {
       navigator.share({
         title: 'Промокод для автосервиса',
-        text: shareText,
-        url: window.location.href
+        text: shareText
+        // Убрали url, чтобы отправлялся только текст
       }).catch(console.error);
     } else {
       // Fallback: just copy to clipboard
