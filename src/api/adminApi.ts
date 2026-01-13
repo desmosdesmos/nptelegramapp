@@ -4,7 +4,7 @@ import { getTelegramUser } from '../utils/telegram';
 export interface OrderStage {
   id: string;
   name: string;
-  icon: string; // Имя иконки
+  icon?: string; // Имя иконки (опционально)
   completed: boolean;
 }
 
@@ -61,9 +61,9 @@ export const getCustomerProfile = async (customerId: string): Promise<CustomerPr
           carModel: 'BMW X5',
           status: 'IN_PROGRESS',
           stages: [
-            { id: 'accepted', name: 'Принят', completed: true },
-            { id: 'in-progress', name: 'В работе', completed: true },
-            { id: 'ready', name: 'Готово', completed: false }
+            { id: 'accepted', name: 'Принят', completed: true, icon: 'clipboard' },
+            { id: 'in-progress', name: 'В работе', completed: true, icon: 'sparkle' },
+            { id: 'ready', name: 'Готово', completed: false, icon: 'check-circle' }
           ]
         },
         visitHistory: [
@@ -103,9 +103,9 @@ export const getCustomerProfile = async (customerId: string): Promise<CustomerPr
         carModel: 'BMW X5',
         status: 'IN_PROGRESS',
         stages: [
-          { id: 'accepted', name: 'Принят', completed: true },
-          { id: 'in-progress', name: 'В работе', completed: true },
-          { id: 'ready', name: 'Готово', completed: false }
+          { id: 'accepted', name: 'Принят', completed: true, icon: 'clipboard' },
+          { id: 'in-progress', name: 'В работе', completed: true, icon: 'sparkle' },
+          { id: 'ready', name: 'Готово', completed: false, icon: 'check-circle' }
         ]
       },
       visitHistory: [

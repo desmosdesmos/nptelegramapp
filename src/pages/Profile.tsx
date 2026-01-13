@@ -42,9 +42,9 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
               carModel: 'BMW X5',
               status: 'IN_PROGRESS',
               stages: [
-                { id: 'accepted', name: 'Принят', completed: true },
-                { id: 'in-progress', name: 'В работе', completed: true },
-                { id: 'ready', name: 'Готово', completed: false }
+                { id: 'accepted', name: 'Принят', completed: true, icon: 'clipboard' },
+                { id: 'in-progress', name: 'В работе', completed: true, icon: 'sparkle' },
+                { id: 'ready', name: 'Готово', completed: false, icon: 'check-circle' }
               ]
             },
             visitHistory: [
@@ -77,6 +77,7 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
         setCustomerProfile(profile);
       } catch (err) {
         console.warn('Error fetching customer profile, using mock data:', err);
+        setError(err instanceof Error ? err.message : 'Неизвестная ошибка');
 
         // Используем mock-данные при ошибке
         const mockProfile: CustomerProfile = {
@@ -88,9 +89,9 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
             carModel: 'BMW X5',
             status: 'IN_PROGRESS',
             stages: [
-              { id: 'accepted', name: 'Принят', completed: true },
-              { id: 'in-progress', name: 'В работе', completed: true },
-              { id: 'ready', name: 'Готово', completed: false }
+              { id: 'accepted', name: 'Принят', completed: true, icon: 'clipboard' },
+              { id: 'in-progress', name: 'В работе', completed: true, icon: 'sparkle' },
+              { id: 'ready', name: 'Готово', completed: false, icon: 'check-circle' }
             ]
           },
           visitHistory: [
