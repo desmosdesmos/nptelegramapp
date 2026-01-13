@@ -44,7 +44,7 @@ const Contacts = () => {
     {
       icon: '💬',
       title: 'Telegram для связи',
-      value: '@npdetailing',
+      value: '@yanvtg',
       action: handleTelegramClick,
       actionLabel: 'Написать'
     },
