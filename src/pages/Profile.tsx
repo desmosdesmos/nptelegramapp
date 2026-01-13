@@ -18,16 +18,18 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
   };
 
   const shareCode = () => {
+    const shareText = 'Промокод на 500₽ в NP: NP2026. Используй его при первой записи и получай скидку :)';
+
     if (navigator.share) {
       navigator.share({
         title: 'Промокод для автосервиса',
-        text: 'Используй промокод NP2026 и получи скидку 500₽ на комплексную химчистку салона!',
+        text: shareText,
         url: window.location.href
       }).catch(console.error);
     } else {
       // Fallback: just copy to clipboard
-      copyCode();
-      alert('Промокод скопирован в буфер обмена!');
+      navigator.clipboard.writeText(shareText);
+      alert('Текст промокода скопирован в буфер обмена!');
     }
   };
 
