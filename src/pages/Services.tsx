@@ -1,61 +1,158 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { PageKey } from '../App';
-import { mainServices, localCleaningServices } from '../data/services';
-import type { Service } from '../types/services';
 import ScaleButton from '../components/ScaleButton';
-import ServicesHeader from '../components/ServicesHeader'; // Import the new header
-import { ServiceIcon } from '../utils/iconMapper';
+import ServicesHeader from '../components/ServicesHeader';
+import { Sparkles, Diamond, Armchair, ArrowUp } from 'lucide-react';
+
+interface Service {
+  id: string;
+  name: string;
+  price: number;
+  category: string;
+  iconName: string;
+  description?: string[];
+}
+
+// Hardcoded services data
+const SERVICES: Service[] = [
+  {
+    id: '1',
+    name: 'Полная химчистка салона',
+    price: 6999,
+    category: 'Interior',
+    iconName: 'Sparkles',
+    description: [
+      'химчистка всех сидений',
+      'химчистка ковролина',
+      'химчистка багажника',
+      'химчистка торпедо и пластика'
+    ]
+  },
+  {
+    id: '2',
+    name: 'Предпродажная подготовка',
+    price: 4899,
+    category: 'Interior',
+    iconName: 'Diamond',
+    description: [
+      'химчистка сидений',
+      'обеспыливание',
+      'пылесос',
+      'пластик'
+    ]
+  },
+  {
+    id: '3',
+    name: 'Сиденье (1 шт)',
+    price: 1000,
+    category: 'Local',
+    iconName: 'ArmChair',
+    description: []
+  },
+  {
+    id: '4',
+    name: 'Потолок',
+    price: 3000,
+    category: 'Local',
+    iconName: 'ArrowUp',
+    description: []
+  }
+];
 
 interface ServicesProps {
   onNavigate: (pageKey: PageKey) => void;
 }
 
-// 1. Read-Only "Complex" Card (Keep as is)
-const ServiceCardComplex: React.FC<{ service: Service }> = ({ service }) => {
+// Icon mapping
+const iconMap: Record<string, React.ComponentType<any>> = {
+  'Sparkles': Sparkles,
+  'Sparkle': Sparkles,
+  'Diamond': Diamond,
+  'ArmChair': Armchair,
+  'ArrowUp': ArrowUp,
+  'Car': () => null, // Placeholder if needed
+  'HelpCircle': () => null // Placeholder if needed
+};
+
+// Service Card Component with Vertical Stack layout
+const ServiceCard: React.FC<{ service: Service }> = ({ service }) => {
   const cardVariants = { initial: { y: 20, opacity: 0 }, animate: { y: 0, opacity: 1 } };
+  
+  // Get the icon component based on iconName
+  const IconComponent = iconMap[service.iconName] || (() => null);
+  
   return (
     <motion.div variants={cardVariants} className="relative">
-      <div className="relative w-full p-5 sm:p-6 border rounded-3xl cursor-default bg-[rgba(255,255,255,0.05)] backdrop-blur-xl border-[rgba(255,255,255,0.1)] transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.02] active:scale-[0.98]">
-        <div className="relative z-10">
-          <div className="flex w-full items-center">
-            <div className="flex items-center flex-1 min-w-0">
-              <ServiceIcon title={service.name} size="sm" />
-              <h4 className="text-xl sm:text-2xl font-bold text-white truncate flex-1 min-w-0 ml-2">{service.name}</h4>
+      <ScaleButton>
+        <div className="relative w-full p-5 sm:p-6 border rounded-3xl cursor-default bg-[rgba(255,255,255,0.05)] backdrop-blur-xl border-[rgba(255,255,255,0.1)] flex flex-col">
+          <div className="relative z-10 flex flex-col h-full">
+            {/* Top Row: Icon + Title */}
+            <div className="flex items-start mb-3">
+              <IconComponent className="text-2xl flex-shrink-0 mt-1" />
+              <h4 className="text-xl font-bold text-white ml-3 flex-1 whitespace-normal break-words">
+                {service.name}
+              </h4>
             </div>
-            <span className="text-2xl sm:text-4xl font-bold text-cyan-400 whitespace-nowrap flex-shrink-0">
-              {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap"> ₽</span>
-            </span>
+            
+            {/* Description List */}
+            {service.description && service.description.length > 0 && (
+              <div className="mt-2 mb-4">
+                <ul className="space-y-1">
+                  {service.description.map((desc, idx) => (
+                    <li key={idx} className="text-sm text-white/70 flex items-start">
+                      <span className="inline-block mr-2 mt-1.5 text-xs">•</span>
+                      <span>{desc}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            
+            {/* Footer: Price aligned to bottom-right */}
+            <div className="mt-auto pt-4">
+              <span className="text-xl sm:text-2xl font-bold text-indigo-400 self-end whitespace-nowrap">
+                {service.price.toLocaleString('ru-RU')} ₽
+              </span>
+            </div>
           </div>
-          {service.description && <p className="text-sm sm:text-base text-white/70 opacity-70 mt-2" dangerouslySetInnerHTML={{ __html: service.description.replace(/\n/g, '<br />') }}></p>}
         </div>
-      </div>
+      </ScaleButton>
     </motion.div>
   );
 };
 
-// 2. Read-Only "Local Service" Row (Keep as is)
+// Local Service Row Component with Vertical Stack layout
 const ServiceRow: React.FC<{ service: Service }> = ({ service }) => {
   const rowVariants = { initial: { x: -20, opacity: 0 }, animate: { x: 0, opacity: 1 } };
-
+  
+  // Get the icon component based on iconName
+  const IconComponent = iconMap[service.iconName] || (() => null);
+  
   return (
     <motion.div variants={rowVariants}>
-      <div className="flex w-full items-center p-3 sm:p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.02] active:scale-[0.98]">
-        <div className="flex items-center flex-1 min-w-0">
-          <ServiceIcon title={service.name} size="sm" />
-          <p className="font-medium text-white truncate flex-1 min-w-0 ml-2">
-            {service.name}
-          </p>
+      <div className="flex flex-col w-full p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl">
+        <div className="flex items-start mb-2">
+          <IconComponent className="text-2xl flex-shrink-0 mt-1" />
+          <div className="ml-3 flex-1">
+            <h4 className="text-lg font-medium text-white whitespace-normal break-words">
+              {service.name}
+            </h4>
+          </div>
         </div>
-        <span className="font-bold text-purple-400 whitespace-nowrap flex-shrink-0 ml-2 sm:ml-4">
-          {service.price.toLocaleString('ru-RU')}<span className="whitespace-nowrap"> ₽</span>
-        </span>
+        
+        {/* Price aligned to bottom-right */}
+        <div className="mt-2 pt-2 flex justify-end">
+          <span className="text-lg font-bold text-indigo-400 whitespace-nowrap">
+            {service.price.toLocaleString('ru-RU')} ₽
+          </span>
+        </div>
       </div>
     </motion.div>
   );
 };
 
-// 3. Main Services Screen
+// Main Services Screen
 const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -67,12 +164,21 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
     },
   };
 
+  // Separate services by category
+  const interiorServices = SERVICES.filter(service => 
+    service.category === 'Interior'
+  );
+  
+  const localServices = SERVICES.filter(service => 
+    service.category === 'Local'
+  );
+
   return (
     <div className="bg-transparent" style={{ paddingBottom: '180px' }}>
       <div className="max-w-2xl mx-auto">
         {/* Main page title is gone */}
-        
-        <motion.div 
+
+        <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -80,19 +186,19 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
         >
           {/* Основные комплексы */}
           <section>
-            <ServicesHeader text="Основные комплексы" /> {/* Updated usage */}
+            <ServicesHeader text="Основные комплексы" />
             <div className="space-y-6">
-              {mainServices.flatMap(cat => cat.services).map(service => (
-                <ServiceCardComplex key={service.id} service={service} />
+              {interiorServices.map(service => (
+                <ServiceCard key={service.id} service={service} />
               ))}
             </div>
           </section>
 
-          {/* Химчистка отдельных зон */}
+          {/* Локальная химчистка */}
           <section>
-            <ServicesHeader text="Локальная химчистка" /> {/* Updated usage */}
+            <ServicesHeader text="Локальная химчистка" />
             <div className="space-y-3">
-              {localCleaningServices.flatMap(cat => cat.services).map(service => (
+              {localServices.map(service => (
                 <ServiceRow key={service.id} service={service} />
               ))}
             </div>
