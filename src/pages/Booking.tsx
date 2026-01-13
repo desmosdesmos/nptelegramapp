@@ -45,7 +45,7 @@ const ServiceRadioOption: React.FC<{
       <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center">
         <div className="flex items-center flex-1 min-w-0 mb-1 sm:mb-0 sm:mr-2">
           <ServiceIcon title={service.name} isSelected={isSelected} size="sm" />
-          <span className="font-medium text-white truncate flex-1 min-w-0 ml-2">{service.name}</span>
+          <span className="font-medium text-white break-words flex-1 min-w-0 ml-2">{service.name}</span>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-base sm:text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right">
@@ -93,7 +93,7 @@ const ServiceCheckboxOption: React.FC<{
               <ServiceIcon title={service.name} isSelected={isSelected} size="sm" />
               <div className="flex flex-col min-w-0">
                 <div className="flex items-center">
-                  <span className="font-medium text-white truncate flex-1 min-w-0">
+                  <span className="font-medium text-white break-words flex-1 min-w-0">
                     {service.name}
                   </span>
                   {service.unitLabel && <span className="text-[10px] sm:text-xs text-gray-400 whitespace-nowrap ml-1 flex-shrink-0">{service.unitLabel}</span>}
