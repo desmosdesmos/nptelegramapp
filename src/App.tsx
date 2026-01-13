@@ -86,11 +86,17 @@ function App() {
   }> = ({ pageKey, label, icon }) => {
     const isActive = page === pageKey;
     return (
-      <button 
-        onClick={() => handleNavigate(pageKey)} 
+      <button
+        onClick={() => handleNavigate(pageKey)}
         className={`flex flex-col items-center justify-center gap-1 w-16 h-16 transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 ${isActive ? 'text-white' : 'text-white/50 hover:text-white'}`}
       >
-        <div className={isActive ? 'drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]' : ''}>
+        <div
+          className={`${
+          isActive ? 'drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]' : ''
+        } ${
+          !isActive ? 'animate-float' : ''
+        }`}
+        >
           {icon}
         </div>
         <span className='text-[10px] font-medium'>{label}</span>
