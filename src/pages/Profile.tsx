@@ -40,7 +40,16 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
 
   const handlePhoneClick = () => {
     // Initiate a phone call
-    window.location.href = 'tel:+79197544130';
+    const phoneNumber = '+79197544130';
+
+    // Try different methods to initiate a call
+    if (window.Telegram?.WebApp) {
+      // If in Telegram WebApp, try to use the openTelegramLink method
+      window.Telegram.WebApp.openTelegramLink(`tg://call?phone=${phoneNumber}`);
+    } else {
+      // Fallback to tel: link
+      window.location.href = `tel:${phoneNumber}`;
+    }
   };
 
   return (
