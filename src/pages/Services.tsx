@@ -40,7 +40,7 @@ const ServiceCardComplex: React.FC<{ service: Service }> = ({ service }) => {
   );
 };
 
-// 2. Read-Only "Local Service" Row (Keep as is but with improved layout)
+// 2. Read-Only "Local Service" Row (Keep as is)
 const ServiceRow: React.FC<{ service: Service }> = ({ service }) => {
   const rowVariants = { initial: { x: -20, opacity: 0 }, animate: { x: 0, opacity: 1 } };
   const name = service.name;
@@ -50,22 +50,17 @@ const ServiceRow: React.FC<{ service: Service }> = ({ service }) => {
 
   return (
     <motion.div variants={rowVariants}>
-      <div className="flex flex-col w-full p-3 sm:p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl">
-        <div className="flex items-start mb-2">
+      <div className="flex w-full items-center p-3 sm:p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl">
+        <div className="flex items-center flex-1 min-w-0">
           <ServiceIcon title={service.name} size="sm" />
-          <div className="ml-3 flex-1">
-            <p className="flex-grow text-left font-medium text-white whitespace-normal min-w-0">
-              {mainName}
-              {note && <span className="text-xs text-white/60 ml-1">{note}</span>}
-            </p>
-          </div>
+          <p className="flex-grow text-left font-medium text-white whitespace-normal min-w-0 ml-3">
+            {mainName}
+            {note && <span className="text-xs text-white/60 ml-1">{note}</span>}
+          </p>
         </div>
-        {/* Price aligned to bottom-right */}
-        <div className="mt-2 pt-2 flex justify-end">
-          <span className="font-bold text-purple-400 whitespace-nowrap flex-shrink-0">
-            {service.price.toLocaleString('ru-RU')} ₽
-          </span>
-        </div>
+        <span className="font-bold text-purple-400 whitespace-nowrap flex-shrink-0">
+          {service.price.toLocaleString('ru-RU')} ₽
+        </span>
       </div>
     </motion.div>
   );
