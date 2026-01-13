@@ -15,43 +15,37 @@ interface WorksProps {
 }
 
 const Works: React.FC<WorksProps> = ({ onNavigate }) => {
-  // Mock data for work items
+  // Real data for work items
   const workItems: WorkItem[] = [
     {
       id: '1',
-      carModel: 'BMW X5',
-      carImage: 'https://placehold.co/400x300/3b82f6/white?text=BMW+X5',
-      postUrl: 'https://t.me/your_channel_post1'
+      carModel: 'Toyota Isis',
+      carImage: 'https://placehold.co/400x300/3b82f6/white?text=Toyota+Isis',
+      postUrl: 'https://t.me/npdetailing/28'
     },
     {
       id: '2',
-      carModel: 'Mercedes E-Class',
-      carImage: 'https://placehold.co/400x300/ef4444/white?text=Mercedes+E',
-      postUrl: 'https://t.me/your_channel_post2'
+      carModel: 'Mitsubishi Lancer X',
+      carImage: 'https://placehold.co/400x300/ef4444/white?text=Mitsubishi+Lancer',
+      postUrl: 'https://t.me/npdetailing/50'
     },
     {
       id: '3',
-      carModel: 'Audi A6',
-      carImage: 'https://placehold.co/400x300/8b5cf6/white?text=Audi+A6',
-      postUrl: 'https://t.me/your_channel_post3'
+      carModel: 'Opel Astra H',
+      carImage: 'https://placehold.co/400x300/8b5cf6/white?text=Opel+Astra+H',
+      postUrl: 'https://t.me/npdetailing/65'
     },
     {
       id: '4',
-      carModel: 'Toyota Camry',
-      carImage: 'https://placehold.co/400x300/f97316/white?text=Toyota+Camry',
-      postUrl: 'https://t.me/your_channel_post4'
+      carModel: 'Lada Largus',
+      carImage: 'https://placehold.co/400x300/f97316/white?text=Lada+Largus',
+      postUrl: 'https://t.me/npdetailing/10'
     },
     {
       id: '5',
-      carModel: 'Lexus RX',
-      carImage: 'https://placehold.co/400x300/06b6d4/white?text=Lexus+RX',
-      postUrl: 'https://t.me/your_channel_post5'
-    },
-    {
-      id: '6',
-      carModel: 'Volkswagen Passat',
-      carImage: 'https://placehold.co/400x300/22c55e/white?text=VW+Passat',
-      postUrl: 'https://t.me/your_channel_post6'
+      carModel: 'Volkswagen Polo',
+      carImage: 'https://placehold.co/400x300/06b6d4/white?text=VW+Polo',
+      postUrl: 'https://t.me/npdetailing/33'
     }
   ];
 
@@ -120,7 +114,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
       <div className="mt-12 text-center">
         <p className="text-white/60 mb-4">Больше работ смотрите в нашем Telegram канале</p>
         <button
-          onClick={() => window.open('https://t.me/your_channel', '_blank')}
+          onClick={() => window.open('https://t.me/npdetailing', '_blank')}
           className="px-6 py-3 bg-gradient-to-r from-[#3b82f6] to-[#8b5cf6] text-white font-bold rounded-2xl hover:opacity-90 transition-opacity"
         >
           Перейти в канал
