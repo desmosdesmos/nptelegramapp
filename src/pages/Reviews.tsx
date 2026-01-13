@@ -84,8 +84,8 @@ const Reviews: React.FC<ReviewsProps> = ({ onNavigate }) => {
 
   return (
     <div className='w-full min-h-screen flex flex-col p-6 pt-12 pb-28 bg-black text-white'>
-      <button 
-        onClick={() => onNavigate('Home')} 
+      <button
+        onClick={() => onNavigate('Home')}
         className='flex items-center gap-2 text-white/70 hover:text-white mb-8 transition-colors self-start'
       >
         <ArrowLeft className='w-5 h-5' />
@@ -100,7 +100,15 @@ const Reviews: React.FC<ReviewsProps> = ({ onNavigate }) => {
             <div className='flex items-center gap-1 text-yellow-400 mb-2'>
               {[...Array(5)].map((_, j) => <Star key={j} className='w-4 h-4 fill-current' />)}
             </div>
-            <p className='text-sm text-gray-300'>'{review.text}'</p>
+            <p className='text-sm text-gray-300'>
+              {expandedReviews[i] ? review.text : `${review.text.substring(0, 100)}...`}
+            </p>
+            <button
+              onClick={() => toggleExpand(i)}
+              className='text-xs text-blue-400 mt-2 hover:underline'
+            >
+              {expandedReviews[i] ? 'Скрыть' : 'Показать больше'}
+            </button>
             <p className='text-xs text-gray-500 mt-3 font-bold'>— {review.name}</p>
           </div>
         ))}
