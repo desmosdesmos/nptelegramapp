@@ -18,7 +18,7 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
   };
 
   const shareCode = () => {
-    const shareText = 'Промокод на 500₽ в NP: NP2026. Используй его при первой записи и получай скидку :)';
+    const shareText = 'Промокод на 500₽ в NP: NP2026. Используй его при первой записи в @nptime_bot и получай скидку ❤️';
 
     if (navigator.share) {
       navigator.share({
