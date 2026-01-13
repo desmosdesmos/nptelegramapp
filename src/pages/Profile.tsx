@@ -33,12 +33,12 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
 
   const handleTelegramClick = () => {
     // Open Telegram with a predefined message
-    window.open('https://t.me/your_service_bot', '_blank');
+    window.open('https://t.me/yanvtg', '_blank');
   };
 
   const handlePhoneClick = () => {
     // Initiate a phone call
-    window.location.href = 'tel:+71234567890'; // Replace with actual phone number
+    window.location.href = 'tel:+79197544130';
   };
 
   return (
