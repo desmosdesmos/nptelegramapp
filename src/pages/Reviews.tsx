@@ -7,15 +7,6 @@ interface ReviewsProps {
 }
 
 const Reviews: React.FC<ReviewsProps> = ({ onNavigate }) => {
-  const [expandedReviews, setExpandedReviews] = React.useState<Record<string, boolean>>({});
-
-  const toggleExpand = (index: number) => {
-    setExpandedReviews(prev => ({
-      ...prev,
-      [index]: !prev[index]
-    }));
-  };
-
   const reviews = [
     {
       name: 'Евгений Л.',
