@@ -9,6 +9,7 @@ export interface WorkExample {
   problem: string;
   beforeImage: string;
   afterImage: string;
+  photos: string[];
 }
 
 // Примеры работ (в реальном приложении загружаются с сервера)
@@ -20,6 +21,11 @@ export const works: WorkExample[] = [
     problem: 'Шерсть животных, запах',
     beforeImage: 'https://via.placeholder.com/400x300/1A1A1A/FFFFFF?text=До',
     afterImage: 'https://via.placeholder.com/400x300/2A2A2A/FFFFFF?text=После',
+    photos: [
+      'https://via.placeholder.com/400x300/1A1A1A/FFFFFF?text=Фото+1',
+      'https://via.placeholder.com/400x300/2A2A2A/FFFFFF?text=Фото+2',
+      'https://via.placeholder.com/400x300/3A3A3A/FFFFFF?text=Фото+3',
+    ],
   },
   {
     id: '2',
@@ -28,6 +34,11 @@ export const works: WorkExample[] = [
     problem: 'Соль, грязь после зимы',
     beforeImage: 'https://via.placeholder.com/400x300/1A1A1A/FFFFFF?text=До',
     afterImage: 'https://via.placeholder.com/400x300/2A2A2A/FFFFFF?text=После',
+    photos: [
+      'https://via.placeholder.com/400x300/1A1A1A/FFFFFF?text=Фото+1',
+      'https://via.placeholder.com/400x300/2A2A2A/FFFFFF?text=Фото+2',
+      'https://via.placeholder.com/400x300/3A3A3A/FFFFFF?text=Фото+3',
+    ],
   },
   {
     id: '3',
@@ -36,6 +47,11 @@ export const works: WorkExample[] = [
     problem: 'Плесень, влага',
     beforeImage: 'https://via.placeholder.com/400x300/1A1A1A/FFFFFF?text=До',
     afterImage: 'https://via.placeholder.com/400x300/2A2A2A/FFFFFF?text=После',
+    photos: [
+      'https://via.placeholder.com/400x300/1A1A1A/FFFFFF?text=Фото+1',
+      'https://via.placeholder.com/400x300/2A2A2A/FFFFFF?text=Фото+2',
+      'https://via.placeholder.com/400x300/3A3A3A/FFFFFF?text=Фото+3',
+    ],
   },
   {
     id: '4',
@@ -44,6 +60,11 @@ export const works: WorkExample[] = [
     problem: 'Дети, пятна, запах',
     beforeImage: 'https://via.placeholder.com/400x300/1A1A1A/FFFFFF?text=До',
     afterImage: 'https://via.placeholder.com/400x300/2A2A2A/FFFFFF?text=После',
+    photos: [
+      'https://via.placeholder.com/400x300/1A1A1A/FFFFFF?text=Фото+1',
+      'https://via.placeholder.com/400x300/2A2A2A/FFFFFF?text=Фото+2',
+      'https://via.placeholder.com/400x300/3A3A3A/FFFFFF?text=Фото+3',
+    ],
   },
   {
     id: '5',
@@ -52,5 +73,10 @@ export const works: WorkExample[] = [
     problem: 'Такси, износ',
     beforeImage: 'https://via.placeholder.com/400x300/1A1A1A/FFFFFF?text=До',
     afterImage: 'https://via.placeholder.com/400x300/2A2A2A/FFFFFF?text=После',
+    photos: [
+      'https://via.placeholder.com/400x300/1A1A1A/FFFFFF?text=Фото+1',
+      'https://via.placeholder.com/400x300/2A2A2A/FFFFFF?text=Фото+2',
+      'https://via.placeholder.com/400x300/3A3A3A/FFFFFF?text=Фото+3',
+    ],
   },
 ];
