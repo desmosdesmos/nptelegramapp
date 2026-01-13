@@ -3,17 +3,17 @@ import { hapticFeedback, openTelegramLink } from '../utils/telegram';
 const Contacts = () => {
   const handleTelegramClick = () => {
     hapticFeedback('light');
-    openTelegramLink('https://t.me/npdetailing');
+    openTelegramLink('https://t.me/yanvtg');
   };
 
   const handleYandexMapsClick = () => {
     hapticFeedback('light');
-    window.open('https://yandex.ru/maps/-/CLXsAPYJ', '_blank');
+    window.open('https://yandex.ru/maps/org/np_detail/173294910771/?ll=45.985120%2C51.545949&pt=45.9525%2C51.5336&utm_source=share&z=17', '_blank');
   };
 
   const handleTelegramChannelClick = () => {
     hapticFeedback('light');
-    openTelegramLink('https://t.me/npdetailing');
+    openTelegramLink('https://t.me/yanvtg');
   };
 
   const handlePhoneClick = () => {
