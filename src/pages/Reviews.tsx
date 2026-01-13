@@ -91,15 +91,7 @@ const Reviews: React.FC<ReviewsProps> = ({ onNavigate }) => {
             <div className='flex items-center gap-1 text-yellow-400 mb-2'>
               {[...Array(5)].map((_, j) => <Star key={j} className='w-4 h-4 fill-current' />)}
             </div>
-            <p className='text-sm text-gray-300'>
-              {expandedReviews[i] ? review.text : `${review.text.substring(0, 100)}...`}
-            </p>
-            <button
-              onClick={() => toggleExpand(i)}
-              className='text-xs text-blue-400 mt-2 hover:underline'
-            >
-              {expandedReviews[i] ? 'Скрыть' : 'Показать больше'}
-            </button>
+            <p className='text-sm text-gray-300'>{review.text}</p>
             <p className='text-xs text-gray-500 mt-3 font-bold'>— {review.name}</p>
           </div>
         ))}
