@@ -53,20 +53,20 @@ const Contacts = () => {
   return (
     <div className="min-h-screen px-4 py-8 pb-16 fade-in">
       <div className="max-w-2xl mx-auto">
-        <h2 className="text-3xl font-bold mb-8 text-center text-text-primary">Контакты</h2>
+        <h2 className="text-3xl font-bold mb-8 text-center text-white">Контакты</h2>
 
-        <div className="space-y-8">
+        <div className="space-y-6">
           {/* Unified Contact Card */}
-          <div className="bg-glass backdrop-blur-xl border border-glass-border rounded-2xl p-6 shadow-lg">
+          <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
             <div className="space-y-6">
               {contactItems.map(item => (
-                <div key={item.title} className="flex items-start gap-5">
-                  <span className="text-3xl mt-1">{item.icon}</span>
+                <div key={item.title} className="flex items-start gap-4">
+                  <span className="text-2xl mt-1">{item.icon}</span>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-lg text-text-primary">{item.title}</h3>
-                    <p className="text-text-secondary">{item.value}</p>
+                    <h3 className="font-semibold text-white/80 text-base">{item.title}</h3>
+                    <p className="text-white/60 text-sm mt-1">{item.value}</p>
                     {item.action && (
-                       <button onClick={item.action} className="text-accent-primary font-semibold text-sm hover:text-accent-secondary soft-press">
+                       <button onClick={item.action} className="mt-2 text-blue-400 font-semibold text-xs hover:underline">
                         {item.actionLabel}
                       </button>
                     )}
@@ -80,14 +80,14 @@ const Contacts = () => {
           <div className="space-y-4 pt-4">
             <button
               onClick={handleTelegramChannelClick}
-              className="w-full bg-gradient-to-r from-accent-primary to-accent-secondary text-white font-bold py-4 px-6 rounded-full text-lg soft-press"
+              className="w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold py-4 px-6 rounded-2xl text-lg"
             >
               Наш Telegram канал
             </button>
-            
+
             <button
               onClick={handleYandexMapsClick}
-              className="w-full bg-glass backdrop-blur-xl border border-glass-border text-text-primary font-semibold py-3 px-5 rounded-2xl soft-press"
+              className="w-full bg-white/5 backdrop-blur-md border border-white/10 text-white font-semibold py-3 px-5 rounded-2xl"
             >
               Мы на Яндекс Картах
             </button>
