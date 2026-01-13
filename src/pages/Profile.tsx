@@ -60,9 +60,17 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
       {/* User Profile Card */}
       <div className="w-full p-5 mb-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-            <User className="w-8 h-8 text-white" />
-          </div>
+          {telegramUser?.photo_url ? (
+            <img
+              src={telegramUser.photo_url}
+              alt="Avatar"
+              className="w-16 h-16 rounded-full object-cover border-2 border-white/20"
+            />
+          ) : (
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+              <User className="w-8 h-8 text-white" />
+            </div>
+          )}
           <div className="flex-1">
             <div className="flex items-center gap-2">
               <h2 className="text-xl font-semibold">{telegramUser?.first_name || 'Пользователь'} {telegramUser?.last_name || ''}</h2>
