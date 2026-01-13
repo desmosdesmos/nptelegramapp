@@ -7,6 +7,8 @@ interface ReviewsProps {
 }
 
 const Reviews: React.FC<ReviewsProps> = ({ onNavigate }) => {
+  const [expandedReviews, setExpandedReviews] = React.useState<Record<string, boolean>>({});
+
   const reviews = [
     {
       name: 'Евгений Л.',
