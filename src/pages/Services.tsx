@@ -11,13 +11,13 @@ interface ServicesProps {
   onNavigate: (pageKey: PageKey) => void;
 }
 
-// 1. Read-Only "Complex" Card (Keep as is but with improved layout)
+// 1. Read-Only "Complex" Card (Keep as is but with improved layout and animations)
 const ServiceCardComplex: React.FC<{ service: Service }> = ({ service }) => {
   const cardVariants = { initial: { y: 20, opacity: 0 }, animate: { y: 0, opacity: 1 } };
   return (
     <motion.div variants={cardVariants} className="relative">
       <ScaleButton>
-        <div className="relative w-full p-5 sm:p-6 border rounded-3xl cursor-default bg-[rgba(255,255,255,0.05)] backdrop-blur-xl border-[rgba(255,255,255,0.1)] flex flex-col">
+        <div className="relative w-full p-5 sm:p-6 border rounded-3xl cursor-default bg-[rgba(255,255,255,0.05)] backdrop-blur-xl border-[rgba(255,255,255,0.1)] flex flex-col transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.02] active:scale-[0.98]">
           <div className="relative z-10 flex flex-col h-full">
             {/* Top Row: Icon + Title */}
             <div className="flex items-start mb-3">
@@ -40,7 +40,7 @@ const ServiceCardComplex: React.FC<{ service: Service }> = ({ service }) => {
   );
 };
 
-// 2. Read-Only "Local Service" Row (Keep as is)
+// 2. Read-Only "Local Service" Row (Keep as is with animations)
 const ServiceRow: React.FC<{ service: Service }> = ({ service }) => {
   const rowVariants = { initial: { x: -20, opacity: 0 }, animate: { x: 0, opacity: 1 } };
   const name = service.name;
@@ -50,7 +50,7 @@ const ServiceRow: React.FC<{ service: Service }> = ({ service }) => {
 
   return (
     <motion.div variants={rowVariants}>
-      <div className="flex w-full items-center p-3 sm:p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl">
+      <div className="flex w-full items-center p-3 sm:p-4 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.1)] rounded-2xl transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-[1.02] active:scale-[0.98]">
         <div className="flex items-center flex-1 min-w-0">
           <ServiceIcon title={service.name} size="sm" />
           <p className="flex-grow text-left font-medium text-white whitespace-normal min-w-0 ml-3">
