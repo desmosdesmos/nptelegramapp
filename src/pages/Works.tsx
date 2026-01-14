@@ -8,6 +8,7 @@ interface WorkItem {
   carModel: string;
   carImage: string;
   postUrl: string;
+  brandColor?: string;
 }
 
 interface WorksProps {
@@ -15,36 +16,41 @@ interface WorksProps {
 }
 
 const Works: React.FC<WorksProps> = ({ onNavigate }) => {
-  // Real data for work items with brand logos from StickPNG
+  // Real data for work items with brand colors and text
   const workItems: WorkItem[] = [
     {
       id: '1',
       carModel: 'Toyota Isis',
-      carImage: 'https://www.stickpng.com/assets/images/584a9b3b3ac3a54e907f67a0.png',
+      carImage: '',
+      brandColor: '#E60000', // Toyota red
       postUrl: 'https://t.me/npdetailing/28'
     },
     {
       id: '2',
       carModel: 'Mitsubishi Lancer X',
-      carImage: 'https://www.stickpng.com/assets/images/584a9b3e3ac3a54e907f67a3.png',
+      carImage: '',
+      brandColor: '#FF0000', // Mitsubishi red
       postUrl: 'https://t.me/npdetailing/50'
     },
     {
       id: '3',
       carModel: 'Opel Astra H',
-      carImage: 'https://www.stickpng.com/assets/images/584a9b3c3ac3a54e907f67a1.png',
+      carImage: '',
+      brandColor: '#000000', // Opel black
       postUrl: 'https://t.me/npdetailing/65'
     },
     {
       id: '4',
       carModel: 'Lada Largus',
-      carImage: 'https://www.stickpng.com/assets/images/584a9b3a3ac3a54e907f679f.png',
+      carImage: '',
+      brandColor: '#FF0000', // Lada red
       postUrl: 'https://t.me/npdetailing/10'
     },
     {
       id: '5',
       carModel: 'Volkswagen Polo',
-      carImage: 'https://www.stickpng.com/assets/images/584a9b3d3ac3a54e907f67a2.png',
+      carImage: '',
+      brandColor: '#008000', // Volkswagen green
       postUrl: 'https://t.me/npdetailing/33'
     }
   ];
@@ -96,12 +102,9 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
             <div className="aspect-video overflow-hidden flex items-center justify-center bg-gradient-to-br from-gray-900 to-black/80">
               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
               <div className="absolute inset-0 backdrop-blur-3xl bg-white/5"></div>
-              <img
-                src={item.carImage}
-                alt={item.carModel}
-                className="relative z-10 w-1/3 h-1/3 object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
-                loading="lazy"
-              />
+              <div className="relative z-10 flex items-center justify-center w-1/3 h-1/3 rounded-full" style={{ backgroundColor: item.brandColor }}>
+                <span className="text-white font-bold text-xl">{item.carModel.split(' ')[0]}</span>
+              </div>
             </div>
             <div className="p-4">
               <div className="flex items-center gap-3">
