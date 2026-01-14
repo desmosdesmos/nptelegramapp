@@ -5,6 +5,7 @@ interface WorkItem {
   title: string;
   imageUrl: string;
   telegramLink: string;
+  brandLogoUrl: string;
 }
 
 interface PortfolioGridProps {
@@ -41,19 +42,23 @@ const PortfolioGrid: React.FC<PortfolioGridProps> = ({ works }) => {
             alt={work.title}
             className="w-full h-48 object-cover"
           />
-          
+
           {/* Градиентное затемнение внизу */}
-          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/80 to-transparent"></div>
-          
+          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/90 to-transparent"></div>
+
           {/* Название авто */}
           <div className="absolute bottom-0 left-0 p-4">
             <h3 className="text-white font-bold text-lg truncate">{work.title}</h3>
           </div>
-          
+
           {/* Логотип бренда в правом нижнем углу */}
-          <div className="absolute bottom-2 right-2">
-            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-              <span className="text-xs font-bold text-white">{work.title.split(' ')[0].charAt(0)}</span>
+          <div className="absolute bottom-3 right-3">
+            <div className="bg-white/90 rounded-full p-1.5">
+              <img
+                src={work.brandLogoUrl}
+                alt={`${work.title.split(' ')[0]} logo`}
+                className="w-10 h-10 object-contain"
+              />
             </div>
           </div>
         </div>
