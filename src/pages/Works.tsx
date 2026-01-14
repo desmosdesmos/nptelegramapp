@@ -15,36 +15,36 @@ interface WorksProps {
 }
 
 const Works: React.FC<WorksProps> = ({ onNavigate }) => {
-  // Real data for work items with brand logos
+  // Real data for work items with brand logos from StickPNG
   const workItems: WorkItem[] = [
     {
       id: '1',
       carModel: 'Toyota Isis',
-      carImage: 'https://cdn.worldvectorlogo.com/logos/toyota-1.svg',
+      carImage: 'https://www.stickpng.com/assets/images/584a9b3b3ac3a54e907f67a0.png',
       postUrl: 'https://t.me/npdetailing/28'
     },
     {
       id: '2',
       carModel: 'Mitsubishi Lancer X',
-      carImage: 'https://cdn.worldvectorlogo.com/logos/mitsubishi-2.svg',
+      carImage: 'https://www.stickpng.com/assets/images/584a9b3e3ac3a54e907f67a3.png',
       postUrl: 'https://t.me/npdetailing/50'
     },
     {
       id: '3',
       carModel: 'Opel Astra H',
-      carImage: 'https://cdn.worldvectorlogo.com/logos/opel-logo.svg',
+      carImage: 'https://www.stickpng.com/assets/images/584a9b3c3ac3a54e907f67a1.png',
       postUrl: 'https://t.me/npdetailing/65'
     },
     {
       id: '4',
       carModel: 'Lada Largus',
-      carImage: 'https://cdn.worldvectorlogo.com/logos/lada-logo.svg',
+      carImage: 'https://www.stickpng.com/assets/images/584a9b3a3ac3a54e907f679f.png',
       postUrl: 'https://t.me/npdetailing/10'
     },
     {
       id: '5',
       carModel: 'Volkswagen Polo',
-      carImage: 'https://cdn.worldvectorlogo.com/logos/volkswagen-logo.svg',
+      carImage: 'https://www.stickpng.com/assets/images/584a9b3d3ac3a54e907f67a2.png',
       postUrl: 'https://t.me/npdetailing/33'
     }
   ];
