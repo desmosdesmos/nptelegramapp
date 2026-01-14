@@ -20,31 +20,31 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
     {
       id: '1',
       carModel: 'Toyota Isis',
-      carImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Toyota_Symbol_%282016%29.svg/512px-Toyota_Symbol_%282016%29.svg.png',
+      carImage: 'https://cdn.worldvectorlogo.com/logos/toyota-1.svg',
       postUrl: 'https://t.me/npdetailing/28'
     },
     {
       id: '2',
       carModel: 'Mitsubishi Lancer X',
-      carImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Mitsubishi_logo.svg/512px-Mitsubishi_logo.svg.png',
+      carImage: 'https://cdn.worldvectorlogo.com/logos/mitsubishi-2.svg',
       postUrl: 'https://t.me/npdetailing/50'
     },
     {
       id: '3',
       carModel: 'Opel Astra H',
-      carImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Opel-logo.svg/512px-Opel-logo.svg.png',
+      carImage: 'https://cdn.worldvectorlogo.com/logos/opel-logo.svg',
       postUrl: 'https://t.me/npdetailing/65'
     },
     {
       id: '4',
       carModel: 'Lada Largus',
-      carImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Lada-logo.svg/512px-Lada-logo.svg.png',
+      carImage: 'https://cdn.worldvectorlogo.com/logos/lada-logo.svg',
       postUrl: 'https://t.me/npdetailing/10'
     },
     {
       id: '5',
       carModel: 'Volkswagen Polo',
-      carImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Volkswagen_logo_2019.svg/512px-Volkswagen_logo_2019.svg.png',
+      carImage: 'https://cdn.worldvectorlogo.com/logos/volkswagen-logo.svg',
       postUrl: 'https://t.me/npdetailing/33'
     }
   ];
