@@ -58,6 +58,14 @@ const PortfolioGrid: React.FC<PortfolioGridProps> = ({ works }) => {
                 src={work.brandLogoUrl}
                 alt={`${work.title.split(' ')[0]} logo`}
                 className="w-10 h-10 object-contain"
+                onError={(e) => {
+                  // Если изображение не загрузилось, показываем текст вместо логотипа
+                  e.currentTarget.style.display = 'none';
+                  const parent = e.currentTarget.parentElement;
+                  if (parent) {
+                    parent.innerHTML = `<span class="text-xs font-bold text-black">${work.title.split(' ')[0].charAt(0)}</span>`;
+                  }
+                }}
               />
             </div>
           </div>
