@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { PageKey } from '../App';
-import { Car, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 // No longer importing BrandLogos components here
 
