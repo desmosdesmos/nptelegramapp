@@ -48,7 +48,7 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
       window.Telegram.WebApp.openTelegramLink(`tg://call?phone=${phoneNumber}`);
     } else {
       // Fallback to tel: link
-      window.location.href = `tel:${phoneNumber}`;
+      window.open(`tel:${phoneNumber}`, '_self');
     }
   };
 
