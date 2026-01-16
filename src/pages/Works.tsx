@@ -27,7 +27,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
       carImage: '',
       brandColor: '#E60000', // Toyota red
       postUrl: 'https://t.me/npdetailing/28',
-      logoPngUrl: 'https://via.placeholder.com/50x50/FF0000/FFFFFF?text=Toyota'
+      logoPngUrl: '/src/assets/logos/toyota-seeklogo.png'
     },
     {
       id: '2',
@@ -35,7 +35,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
       carImage: '',
       brandColor: '#FF0000', // Mitsubishi red
       postUrl: 'https://t.me/npdetailing/50',
-      logoPngUrl: 'https://via.placeholder.com/50x50/FF0000/FFFFFF?text=Mitsubishi'
+      logoPngUrl: '/src/assets/logos/mitsubishi-seeklogo.png'
     },
     {
       id: '3',
@@ -43,7 +43,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
       carImage: '',
       brandColor: '#000000', // Opel black
       postUrl: 'https://t.me/npdetailing/65',
-      logoPngUrl: 'https://via.placeholder.com/50x50/000000/FFFFFF?text=Opel'
+      logoPngUrl: '/src/assets/logos/opel-seeklogo.png'
     },
     {
       id: '4',
@@ -51,7 +51,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
       carImage: '',
       brandColor: '#FF0000', // Lada red
       postUrl: 'https://t.me/npdetailing/10',
-      logoPngUrl: 'https://via.placeholder.com/50x50/FF0000/FFFFFF?text=Lada'
+      logoPngUrl: '/src/assets/logos/lada-sb-seeklogo.png'
     },
     {
       id: '5',
@@ -59,7 +59,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
       carImage: '',
       brandColor: '#008000', // Volkswagen green
       postUrl: 'https://t.me/npdetailing/33',
-      logoPngUrl: 'https://via.placeholder.com/50x50/008000/FFFFFF?text=VW'
+      logoPngUrl: '/src/assets/logos/volkswagen-seeklogo.png'
     }
   ];
 
