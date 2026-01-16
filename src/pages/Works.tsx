@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { PageKey } from '../App';
 import { Car, ArrowLeft } from 'lucide-react';
+import { ToyotaLogo, MitsubishiLogo, OpelLogo, VolkswagenLogo, LadaLogo } from '../components/BrandLogos';
 
 
 interface WorkItem {
@@ -75,6 +76,26 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
     window.open(url, '_blank');
   };
 
+  // Функция для получения SVG логотипа по названию бренда
+  const getBrandLogo = (brandName: string) => {
+    switch (brandName.toLowerCase()) {
+      case 'toyota':
+        return <ToyotaLogo />;
+      case 'mitsubishi':
+        return <MitsubishiLogo />;
+      case 'opel':
+        return <OpelLogo />;
+      case 'volkswagen':
+        return <VolkswagenLogo />;
+      case 'lada':
+        return <LadaLogo />;
+      default:
+        return <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+          <span className="text-xs font-bold text-black">{brandName.charAt(0)}</span>
+        </div>;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black text-white p-6 pt-12 pb-44">
       <button
@@ -104,7 +125,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
               <div className="absolute inset-0 backdrop-blur-3xl bg-white/5"></div>
               <div className="relative z-10 flex items-center justify-center w-1/3 h-1/3 rounded-full" style={{ backgroundColor: item.brandColor }}>
-                <span className="text-white font-bold text-xl">{item.carModel.split(' ')[0]}</span>
+                {getBrandLogo(item.carModel.split(' ')[0])}
               </div>
             </div>
             <div className="p-4">
