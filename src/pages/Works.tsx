@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { PageKey } from '../App';
 import { Car, ArrowLeft } from 'lucide-react';
+import { ToyotaLogo, MitsubishiLogo, OpelLogo, VolkswagenLogo, LadaLogo } from '../components/BrandLogos';
 
 interface WorkItem {
   id: string;
