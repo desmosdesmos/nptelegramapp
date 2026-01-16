@@ -2,8 +2,8 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { PageKey } from '../App';
 import { Car, ArrowLeft } from 'lucide-react';
-import { ToyotaLogo, MitsubishiLogo, OpelLogo, VolkswagenLogo, LadaLogo } from '../components/BrandLogos';
 
+// No longer importing BrandLogos components here
 
 interface WorkItem {
   id: string;
@@ -82,29 +82,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
     window.open(url, '_blank');
   };
 
-  // Функция для получения SVG логотипа по названию бренда
-  const getBrandLogo = (item: WorkItem) => {
-    if (item.logoPngUrl) {
-      return <img src={item.logoPngUrl} alt={`${item.carModel} Logo`} className="w-10 h-10 object-contain" />;
-    }
-    const brandName = item.carModel.split(' ')[0].toLowerCase();
-    switch (brandName) {
-      case 'toyota':
-        return <ToyotaLogo />;
-      case 'mitsubishi':
-        return <MitsubishiLogo />;
-      case 'opel':
-        return <OpelLogo />;
-      case 'volkswagen':
-        return <VolkswagenLogo />;
-      case 'lada':
-        return <LadaLogo />;
-      default:
-        return <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-          <span className="text-xs font-bold text-black">{item.carModel.charAt(0)}</span>
-        </div>;
-    }
-  };
+  // Removed getBrandLogo function here
 
   return (
     <div className="min-h-screen bg-black text-white p-6 pt-12 pb-44">
@@ -128,28 +106,25 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
           <motion.div
             key={item.id}
             variants={cardVariants}
-            className="relative overflow-hidden rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl cursor-pointer hover:-translate-y-1 transition-transform duration-300 shadow-lg"
+            className="relative flex flex-col justify-between h-72 overflow-hidden rounded-2xl bg-gray-900 border border-white/10 backdrop-blur-sm cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1" // Adjusted overall card styles
             onClick={() => openPost(item.postUrl)}
           >
-            <div className="aspect-video overflow-hidden flex items-center justify-center bg-gradient-to-br from-gray-900 to-black/80">
-              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-              <div className="absolute inset-0 backdrop-blur-3xl bg-white/5"></div>
-              <div className="relative z-10 flex items-center justify-center w-1/3 h-1/3 rounded-full overflow-hidden">
-                {/* Blurred background */}
-                <div className="absolute inset-0" style={{ backgroundColor: item.brandColor, filter: 'blur(10px)' }}></div>
-                {/* Logo on top */}
-                <div className="relative z-20">
-                  {getBrandLogo(item)}
+            {/* Main content area for the logo */}
+            <div className="flex-grow flex items-center justify-center p-4 relative z-10">
+              {item.logoPngUrl && ( // Directly render PNG logo if available
+                <img src={item.logoPngUrl} alt={`${item.carModel} Logo`} className="w-32 h-32 object-contain" />
+              )}
+              {/* Fallback if no PNG logo */}
+              {!item.logoPngUrl && (
+                <div className="w-32 h-32 flex items-center justify-center text-xl font-bold text-white/50 bg-gray-700/50 rounded-full">
+                  {item.carModel.split(' ')[0].charAt(0)}
                 </div>
-              </div>
+              )}
             </div>
-            <div className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/20 rounded-full backdrop-blur-sm">
-                  <Car className="w-5 h-5 text-cyan-300" />
-                </div>
-                <h3 className="text-lg font-bold text-white">{item.carModel}</h3>
-              </div>
+
+            {/* Footer with blurred background */}
+            <div className="relative z-20 p-4 bg-white/10 backdrop-blur-md border-t border-white/20">
+              <h3 className="text-lg font-bold text-white text-center">{item.carModel}</h3>
             </div>
           </motion.div>
         ))}
