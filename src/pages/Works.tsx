@@ -4,11 +4,6 @@ import { PageKey } from '../App';
 import { Car, ArrowLeft } from 'lucide-react';
 import { ToyotaLogo, MitsubishiLogo, OpelLogo, VolkswagenLogo, LadaLogo } from '../components/BrandLogos';
 
-import toyotaLogo from '../assets/logos/toyota-seeklogo.png';
-import mitsubishiLogo from '../assets/logos/mitsubishi-seeklogo.png';
-import opelLogo from '../assets/logos/opel-seeklogo.png';
-import ladaLogo from '../assets/logos/lada-sb-seeklogo.png';
-import volkswagenLogo from '../assets/logos/volkswagen-seeklogo.png';
 
 interface WorkItem {
   id: string;
@@ -32,7 +27,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
       carImage: '',
       brandColor: '#E60000', // Toyota red
       postUrl: 'https://t.me/npdetailing/28',
-      logoPngUrl: toyotaLogo
+      logoPngUrl: new URL('../assets/logos/toyota-seeklogo.png', import.meta.url).href
     },
     {
       id: '2',
@@ -40,7 +35,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
       carImage: '',
       brandColor: '#FF0000', // Mitsubishi red
       postUrl: 'https://t.me/npdetailing/50',
-      logoPngUrl: mitsubishiLogo
+      logoPngUrl: new URL('../assets/logos/mitsubishi-seeklogo.png', import.meta.url).href
     },
     {
       id: '3',
@@ -48,7 +43,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
       carImage: '',
       brandColor: '#000000', // Opel black
       postUrl: 'https://t.me/npdetailing/65',
-      logoPngUrl: opelLogo
+      logoPngUrl: new URL('../assets/logos/opel-seeklogo.png', import.meta.url).href
     },
     {
       id: '4',
@@ -56,7 +51,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
       carImage: '',
       brandColor: '#FF0000', // Lada red
       postUrl: 'https://t.me/npdetailing/10',
-      logoPngUrl: ladaLogo
+      logoPngUrl: new URL('../assets/logos/lada-sb-seeklogo.png', import.meta.url).href
     },
     {
       id: '5',
@@ -64,7 +59,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
       carImage: '',
       brandColor: '#008000', // Volkswagen green
       postUrl: 'https://t.me/npdetailing/33',
-      logoPngUrl: volkswagenLogo
+      logoPngUrl: new URL('../assets/logos/volkswagen-seeklogo.png', import.meta.url).href
     }
   ];
 
