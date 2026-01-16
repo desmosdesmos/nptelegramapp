@@ -103,7 +103,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
               <div className="absolute inset-0 backdrop-blur-3xl bg-white/5"></div>
               <div className="relative z-10 flex items-center justify-center w-1/3 h-1/3 rounded-full" style={{ backgroundColor: item.brandColor }}>
-                <span className="text-white font-bold text-xl">{item.carModel.split(' ')[0]}</span>
+                {getBrandLogo(item.carModel.split(' ')[0])}
               </div>
             </div>
             <div className="p-4">
