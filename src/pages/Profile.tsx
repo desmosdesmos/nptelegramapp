@@ -45,7 +45,7 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
     // Try different methods to initiate a call
     if (window.Telegram?.WebApp) {
       // If in Telegram WebApp, try to use the openTelegramLink method
-      window.Telegram.WebApp.openTelegramLink(`tg://call?phone=${phoneNumber}`);
+      window.Telegram.WebApp.openTelegramLink(`https://t.me/${phoneNumber}`); // Open Telegram chat with the number
     } else {
       // Fallback to tel: link
       window.location.href = `tel:${phoneNumber}`;
