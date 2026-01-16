@@ -11,6 +11,7 @@ interface WorkItem {
   carImage: string;
   postUrl: string;
   brandColor?: string;
+  logoPngUrl?: string; // Added for PNG logo
 }
 
 interface WorksProps {
@@ -25,35 +26,40 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
       carModel: 'Toyota Isis',
       carImage: '',
       brandColor: '#E60000', // Toyota red
-      postUrl: 'https://t.me/npdetailing/28'
+      postUrl: 'https://t.me/npdetailing/28',
+      logoPngUrl: 'https://via.placeholder.com/50x50/FF0000/FFFFFF?text=Toyota'
     },
     {
       id: '2',
       carModel: 'Mitsubishi Lancer X',
       carImage: '',
       brandColor: '#FF0000', // Mitsubishi red
-      postUrl: 'https://t.me/npdetailing/50'
+      postUrl: 'https://t.me/npdetailing/50',
+      logoPngUrl: 'https://via.placeholder.com/50x50/FF0000/FFFFFF?text=Mitsubishi'
     },
     {
       id: '3',
       carModel: 'Opel Astra H',
       carImage: '',
       brandColor: '#000000', // Opel black
-      postUrl: 'https://t.me/npdetailing/65'
+      postUrl: 'https://t.me/npdetailing/65',
+      logoPngUrl: 'https://via.placeholder.com/50x50/000000/FFFFFF?text=Opel'
     },
     {
       id: '4',
       carModel: 'Lada Largus',
       carImage: '',
       brandColor: '#FF0000', // Lada red
-      postUrl: 'https://t.me/npdetailing/10'
+      postUrl: 'https://t.me/npdetailing/10',
+      logoPngUrl: 'https://via.placeholder.com/50x50/FF0000/FFFFFF?text=Lada'
     },
     {
       id: '5',
       carModel: 'Volkswagen Polo',
       carImage: '',
       brandColor: '#008000', // Volkswagen green
-      postUrl: 'https://t.me/npdetailing/33'
+      postUrl: 'https://t.me/npdetailing/33',
+      logoPngUrl: 'https://via.placeholder.com/50x50/008000/FFFFFF?text=VW'
     }
   ];
 
@@ -77,8 +83,12 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
   };
 
   // Функция для получения SVG логотипа по названию бренда
-  const getBrandLogo = (brandName: string) => {
-    switch (brandName.toLowerCase()) {
+  const getBrandLogo = (item: WorkItem) => {
+    if (item.logoPngUrl) {
+      return <img src={item.logoPngUrl} alt={`${item.carModel} Logo`} className="w-10 h-10 object-contain" />;
+    }
+    const brandName = item.carModel.split(' ')[0].toLowerCase();
+    switch (brandName) {
       case 'toyota':
         return <ToyotaLogo />;
       case 'mitsubishi':
@@ -91,7 +101,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
         return <LadaLogo />;
       default:
         return <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-          <span className="text-xs font-bold text-black">{brandName.charAt(0)}</span>
+          <span className="text-xs font-bold text-black">{item.carModel.charAt(0)}</span>
         </div>;
     }
   };
@@ -124,8 +134,13 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
             <div className="aspect-video overflow-hidden flex items-center justify-center bg-gradient-to-br from-gray-900 to-black/80">
               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
               <div className="absolute inset-0 backdrop-blur-3xl bg-white/5"></div>
-              <div className="relative z-10 flex items-center justify-center w-1/3 h-1/3 rounded-full" style={{ backgroundColor: item.brandColor }}>
-                {getBrandLogo(item.carModel.split(' ')[0])}
+              <div className="relative z-10 flex items-center justify-center w-1/3 h-1/3 rounded-full overflow-hidden">
+                {/* Blurred background */}
+                <div className="absolute inset-0" style={{ backgroundColor: item.brandColor, filter: 'blur(10px)' }}></div>
+                {/* Logo on top */}
+                <div className="relative z-20">
+                  {getBrandLogo(item)}
+                </div>
               </div>
             </div>
             <div className="p-4">
