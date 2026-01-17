@@ -9,6 +9,7 @@ interface ProfileProps {
 
 const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
   const [copied, setCopied] = useState(false);
+  const [phoneCopied, setPhoneCopied] = useState(false);
   const telegramUser = getTelegramUser();
 
   const copyCode = () => {
@@ -39,17 +40,10 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
   };
 
   const handlePhoneClick = () => {
-    // Initiate a phone call
     const phoneNumber = '+79063163114';
-
-    // Try different methods to initiate a call
-    if (window.Telegram?.WebApp) {
-      // If in Telegram WebApp, try to use the openTelegramLink method
-      window.Telegram.WebApp.openTelegramLink(`https://t.me/${phoneNumber}`); // Open Telegram chat with the number
-    } else {
-      // Fallback to tel: link
-      window.location.href = `tel:${phoneNumber}`;
-    }
+    navigator.clipboard.writeText(phoneNumber);
+    setPhoneCopied(true);
+    setTimeout(() => setPhoneCopied(false), 2000);
   };
 
   return (
@@ -141,7 +135,7 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
             className="w-full p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-3 hover:bg-white/10 transition-colors"
           >
             <Phone className="w-6 h-6 text-green-400" />
-            <span>Позвонить</span>
+            <span>{phoneCopied ? 'Номер телефона скопирован!' : 'Позвонить'}</span>
           </button>
         </div>
       </div>

@@ -13,7 +13,7 @@ const Contacts = () => {
 
   const handleTelegramChannelClick = () => {
     hapticFeedback('light');
-    openTelegramLink('https://t.me/yanvtg');
+    openTelegramLink('https://t.me/npdetailing');
   };
 
   const handlePhoneClick = () => {
