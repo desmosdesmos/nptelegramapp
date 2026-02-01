@@ -143,28 +143,29 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           transform: `rotate(${rotation}deg)`,
           transition: spinning ? 'transform 4s cubic-bezier(0.15, 0, 0.15, 1)' : 'transform 0.3s ease-out',
           background: 'radial-gradient(circle, #2c3e50 0%, #1a1a1a 70%)',
-          boxShadow: '0 0 20px rgba(0, 255, 255, 0.5), inset 0 0 20px rgba(0, 255, 255, 0.3)',
+          boxShadow: 'inset 0 0 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.3)',
         }}
       >
-        {/* Внешний обод с металлической текстурой */}
+        {/* Внешний обод с мягким металлическим эффектом */}
         <circle
           cx="150"
           cy="150"
           r="148"
           fill="none"
           stroke="url(#metalGradient)"
-          strokeWidth="4"
+          strokeWidth="1"
+          strokeOpacity="0.2"
           style={{
-            filter: 'drop-shadow(0 0 5px rgba(0, 255, 255, 0.7))'
+            filter: 'drop-shadow(0 0 8px rgba(0, 255, 255, 0.3))'
           }}
         />
 
-        {/* Градиент для металлического обода */}
+        {/* Градиент для мягкого металлического обода */}
         <defs>
           <linearGradient id="metalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#aaa" />
-            <stop offset="50%" stopColor="#eee" />
-            <stop offset="100%" stopColor="#aaa" />
+            <stop offset="0%" stopColor="#666" />
+            <stop offset="50%" stopColor="#aaa" />
+            <stop offset="100%" stopColor="#666" />
           </linearGradient>
 
           {/* Градиент для неонового свечения */}
@@ -192,10 +193,10 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
               <path
                 d={pathData}
                 fill={hoveredSector === index ? '#3c3c5a' : color}
-                stroke="#00ffff" // Неоново-циановая граница
-                strokeWidth="2"
+                stroke="rgba(255, 255, 255, 0.1)"
+                strokeWidth="0.5"
                 style={{
-                  filter: 'drop-shadow(0 0 5px rgba(0, 255, 255, 0.7))',
+                  filter: 'drop-shadow(0 0 3px rgba(0, 255, 255, 0.1))',
                   transition: 'fill 0.3s ease'
                 }}
                 onMouseEnter={() => setHoveredSector(index)}
@@ -213,6 +214,8 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
                 fontWeight="bold"
                 stroke="#00ffff"
                 strokeWidth="0.3"
+                opacity="0.9"
+                letterSpacing="0.05em"
                 style={{
                   transform: hoveredSector === index ? 'scale(1.05)' : 'scale(1)',
                   transition: 'transform 0.3s ease'
@@ -229,7 +232,8 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
                 fontSize="8"
                 fill="white"
                 fontWeight="500"
-                letterSpacing="0.2"
+                letterSpacing="0.05em"
+                opacity="0.9"
               >
                 {shortenPrizeName(prize.name)}
               </text>
@@ -237,24 +241,51 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           );
         })}
 
-        {/* Центральное колесо (кнопка "Spin") */}
+        {/* Центральное колесо (кнопка "SPIN") */}
         <circle
           cx="150"
           cy="150"
           r="32"
           fill="url(#centerGradient)"
-          stroke="#00ffff"
-          strokeWidth="2"
+          stroke="rgba(255, 255, 255, 0.1)"
+          strokeWidth="1"
           style={{
-            filter: 'drop-shadow(0 0 12px rgba(0, 255, 255, 0.9))'
+            filter: 'drop-shadow(0 0 12px rgba(0, 255, 255, 0.5))'
           }}
         />
+        
+        {/* Пульсирующее светящееся кольцо вокруг центра */}
+        <circle
+          cx="150"
+          cy="150"
+          r="34"
+          fill="none"
+          stroke="#00ffff"
+          strokeWidth="2"
+          strokeOpacity="0.3"
+          style={{
+            animation: spinning ? 'pulse 1.5s infinite' : 'none',
+            filter: 'drop-shadow(0 0 10px rgba(0, 255, 255, 0.7))'
+          }}
+        />
+        
         <defs>
           <radialGradient id="centerGradient" cx="30%" cy="30%" r="70%">
-            <stop offset="0%" stopColor="#3c3c5a" />
-            <stop offset="100%" stopColor="#1a1a1a" />
+            <stop offset="0%" stopColor="#d0d0d0" />
+            <stop offset="50%" stopColor="#a0a0a0" />
+            <stop offset="100%" stopColor="#303030" />
           </radialGradient>
+          
+          {/* Анимация пульсации */}
+          <style>{`
+            @keyframes pulse {
+              0% { stroke-opacity: 0.3; }
+              50% { stroke-opacity: 0.7; }
+              100% { stroke-opacity: 0.3; }
+            }
+          `}</style>
         </defs>
+        
         <text
           x="150"
           y="155"
@@ -265,6 +296,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           fontWeight="bold"
           stroke="#000"
           strokeWidth="1"
+          letterSpacing="0.05em"
         >
           SPIN
         </text>
@@ -341,7 +373,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div
         ref={containerRef}
-        className="bg-[#0a0a0a] backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-3xl p-6 max-w-md w-full border border-cyan-500/30 shadow-2xl shadow-cyan-500/20"
+        className="bg-[#0a0a0a] backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-3xl p-6 max-w-md w-full border border-cyan-500/20 shadow-2xl shadow-cyan-500/10"
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-white font-system">Ежедневное колесо фортуны</h2>
@@ -358,9 +390,20 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           <div className="relative">
             {renderWheel()}
 
-            {/* Указатель */}
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2 z-10">
-              <div className="w-0 h-0 border-l-[15px] border-r-[15px] border-t-[20px] border-l-transparent border-r-transparent border-t-[#00ffff] shadow-[0_0_10px_2px_rgba(0,255,255,0.7)]"></div>
+            {/* Указатель (изящный треугольник с закругленными углами) */}
+            <div className="absolute top-[-12px] left-1/2 transform -translate-x-1/2 z-20">
+              <svg width="24" height="12" viewBox="0 0 24 12" className="overflow-visible">
+                <polygon
+                  points="12,0 24,6 12,12 0,6"
+                  fill="none"
+                  stroke="#00ffff"
+                  strokeWidth="2"
+                  strokeLinejoin="round"
+                  style={{
+                    filter: 'drop-shadow(0 0 5px #00ffff)'
+                  }}
+                />
+              </svg>
             </div>
           </div>
 
@@ -375,7 +418,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
             disabled={!canSpin || spinning}
             className={`mt-6 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 ${
               canSpin && !spinning
-                ? 'bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] text-[#00ffff] border border-cyan-500/50 shadow-lg shadow-[#00ffff]/30 hover:shadow-[#00ffff]/50 transform hover:scale-105 active:scale-95'
+                ? 'bg-gradient-to-br from-[#2a2a2a] to-[#1a1a1a] text-[#00ffff] border border-cyan-500/30 shadow-lg shadow-[#00ffff]/20 hover:shadow-[#00ffff]/40 transform hover:scale-105 active:scale-95'
                 : 'bg-gray-800 text-gray-400 cursor-not-allowed'
             }`}
           >
@@ -384,7 +427,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
           {/* Результат последнего вращения */}
           {lastResult && (
-            <div className="mt-6 p-4 bg-black/30 backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-2xl border border-cyan-500/30 w-full text-center">
+            <div className="mt-6 p-4 bg-black/30 backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-2xl border border-cyan-500/20 w-full text-center">
               <h3 className="text-lg font-bold text-white mb-2">Ваш приз:</h3>
               <div className="flex items-center justify-center gap-2">
                 <span className="text-3xl">{lastResult.prize.icon}</span>
