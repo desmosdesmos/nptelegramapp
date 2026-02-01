@@ -13,6 +13,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
   const [rotation, setRotation] = useState(0);
   const [lastResult, setLastResult] = useState<WheelSpinResult | null>(null);
   const [canSpin, setCanSpin] = useState(true);
+  const [showTimer, setShowTimer] = useState(false);
   const [dailyStreak, setDailyStreak] = useState(0);
   const [hoveredSector, setHoveredSector] = useState<number | null>(null);
   const [showFullResult, setShowFullResult] = useState(false);
@@ -25,7 +26,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
   // Угол каждого сектора
   const sectorAngle = 360 / numSectors;
 
-  // Проверяем, можно ли крутить сегодня
+  // Проверяем, можно ли крутить сегодня и показывать таймер
   useEffect(() => {
     // Получаем информацию о пользователе Telegram
     const telegramUser = getTelegramUser();
@@ -33,6 +34,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
     const lastSpinDate = localStorage.getItem('wheel_last_spin_date');
     const today = new Date().toISOString().split('T')[0];
+    const now = new Date();
 
     if (!isTester && lastSpinDate === today) {
       setCanSpin(false);
@@ -41,8 +43,18 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
       if (lastResultStr) {
         setLastResult(JSON.parse(lastResultStr));
       }
+      // Показываем таймер только если прошло менее 24 часов с последнего вращения
+      const lastSpinTime = localStorage.getItem('wheel_last_spin_time');
+      if (lastSpinTime) {
+        const spinTimestamp = parseInt(lastSpinTime, 10);
+        const hoursSinceSpin = (now.getTime() - spinTimestamp) / (1000 * 60 * 60);
+        setShowTimer(hoursSinceSpin < 24);
+      } else {
+        setShowTimer(true);
+      }
     } else {
       setCanSpin(true);
+      setShowTimer(false);
     }
 
     // Загружаем серию дней
@@ -323,8 +335,9 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         // Для обычных пользователей ограничиваем
         setCanSpin(false);
 
-        // Сохраняем дату вращения для обычных пользователей
+        // Сохраняем дату и время вращения для обычных пользователей
         localStorage.setItem('wheel_last_spin_date', new Date().toISOString().split('T')[0]);
+        localStorage.setItem('wheel_last_spin_time', Date.now().toString());
       }
 
       // Сохраняем результат
@@ -388,6 +401,12 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-white font-system">Ежедневное колесо фортуны</h2>
+          {showTimer && (
+            <div className="flex items-center gap-2 px-3 py-1 bg-black/50 rounded-full border border-cyan-500/30">
+              <span className="text-cyan-300 text-sm">Следующий прокрут:</span>
+              <span className="text-white font-medium text-sm">через 24ч</span>
+            </div>
+          )}
           <button
             onClick={onClose}
             className="text-white/70 hover:text-white transition-colors text-xl"
