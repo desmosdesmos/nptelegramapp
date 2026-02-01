@@ -78,7 +78,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
       const prize = wheelPrizes[i];
       const startAngle = (i * sectorAngle * Math.PI) / 180;
       const endAngle = ((i + 1) * sectorAngle * Math.PI) / 180;
-      
+
       // Выбираем цвет в зависимости от редкости
       let fillColor = '#8B5CF6'; // purple-500 по умолчанию
       switch (prize.rarity) {
@@ -95,7 +95,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           fillColor = '#FBBF24'; // yellow-400
           break;
       }
-      
+
       // Рисуем сектор
       ctx.beginPath();
       ctx.moveTo(0, 0);
@@ -103,23 +103,51 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
       ctx.closePath();
       ctx.fillStyle = fillColor;
       ctx.fill();
-      
+
       // Рисуем границу
       ctx.strokeStyle = '#1E293B'; // slate-800
       ctx.lineWidth = 2;
       ctx.stroke();
-      
+
       // Рисуем текст
       ctx.save();
       ctx.rotate(startAngle + sectorAngle * Math.PI / 360);
       ctx.textAlign = 'right';
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = 'bold 12px Arial';
-      
+      ctx.font = 'bold 10px Arial';
+
       // Поворачиваем текст к центру
       const textRadius = radius * 0.7;
-      ctx.fillText(prize.icon, textRadius - 20, 5);
-      
+
+      // Рисуем иконку
+      ctx.fillText(prize.icon, textRadius - 30, -5);
+
+      // Рисуем название приза
+      ctx.font = 'bold 8px Arial';
+      ctx.fillStyle = '#FFFFFF';
+
+      // Разбиваем текст на несколько строк, если он длинный
+      const maxTextWidth = 40;
+      const text = prize.name;
+      const words = text.split(' ');
+      let line = '';
+      let lineCount = 0;
+
+      for (let j = 0; j < words.length; j++) {
+        const testLine = line + words[j] + ' ';
+        const metrics = ctx.measureText(testLine);
+
+        if (metrics.width > maxTextWidth && j > 0) {
+          ctx.fillText(line, textRadius - 30, 5 + (lineCount * 10));
+          line = words[j] + ' ';
+          lineCount++;
+        } else {
+          line = testLine;
+        }
+      }
+
+      ctx.fillText(line, textRadius - 30, 5 + (lineCount * 10));
+
       ctx.restore();
     }
     
@@ -231,43 +259,43 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div 
+      <div
         ref={containerRef}
         className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-6 max-w-md w-full border border-white/20 shadow-2xl"
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-white">Ежедневное колесо фортуны</h2>
-          <button 
+          <button
             onClick={onClose}
             className="text-white/70 hover:text-white transition-colors"
           >
             ✕
           </button>
         </div>
-        
+
         <div className="relative flex flex-col items-center">
           {/* Колесо */}
           <div className="relative">
-            <canvas 
+            <canvas
               ref={canvasRef}
               className="rounded-full border-4 border-yellow-400 shadow-lg"
-              style={{ 
+              style={{
                 transform: `rotate(${rotation}deg)`,
                 transition: spinning ? 'transform 5s cubic-bezier(0.34, 1.56, 0.64, 1)' : 'none'
               }}
             />
-            
+
             {/* Указатель */}
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2 z-10">
               <div className="w-0 h-0 border-l-[15px] border-r-[15px] border-t-[20px] border-l-transparent border-r-transparent border-t-yellow-400"></div>
             </div>
           </div>
-          
+
           {/* Информация о серии */}
           <div className="mt-4 text-center">
             <p className="text-white/80">Дней подряд: <span className="font-bold text-yellow-400">{dailyStreak}</span></p>
           </div>
-          
+
           {/* Кнопка вращения */}
           <button
             onClick={spinWheel}
@@ -280,7 +308,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           >
             {spinning ? 'Крутится...' : canSpin ? 'Крутить колесо!' : 'Попробуйте завтра'}
           </button>
-          
+
           {/* Результат последнего вращения */}
           {lastResult && (
             <div className="mt-6 p-4 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-2xl border border-white/10 w-full text-center">
