@@ -1,17 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { House, Calendar, Sparkles, User } from 'lucide-react';
 import { hapticFeedback } from './utils/telegram';
-
-// Import all pages
-import Home from './pages/Home';
-import Booking from './pages/Booking';
-import Works from './pages/Works';
-import Contacts from './pages/Contacts';
-import Services from './pages/Services';
-import Reviews from './pages/Reviews';
-import Profile from './pages/Profile';
-import ErrorBoundary from './ErrorBoundary';
+import { getReferralCodeFromUrl, saveReferrerInfo, isValidReferralCode, isNewReferral, incrementTotalReferrals, saveReferralInfo } from './utils/referral';
+import { getTelegramUser } from './utils/telegram';
 
 // Define a type for the page keys
 export type PageKey = 'Home' | 'Booking' | 'Works' | 'Contacts' | 'Services' | 'Reviews' | 'Profile';
@@ -33,6 +25,34 @@ function App() {
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [shouldRenderDock, setShouldRenderDock] = useState(false);
   const CurrentPageComponent = appPages[page].component;
+
+  // Check for referral code on app load
+  useEffect(() => {
+    const referralCode = getReferralCodeFromUrl();
+    console.log('App loaded with referral code:', referralCode);
+
+    if (referralCode && isValidReferralCode(referralCode)) {
+      // Save referrer info
+      saveReferrerInfo(referralCode);
+
+      // Check if this is a new referral visit
+      if (isNewReferral()) {
+        // Increment total referrals counter for the referrer
+        incrementTotalReferrals(referralCode);
+
+        // Save referral info
+        const telegramUser = getTelegramUser();
+        if (telegramUser) {
+          const referralCodeForUser = `USER${String(telegramUser.id).slice(-6)}`;
+          saveReferralInfo(referralCodeForUser, referralCode);
+        }
+
+        console.log(`New referral: user came via link ${referralCode}. Incrementing "Total Referrals" counter.`);
+      }
+    } else {
+      console.log('No valid referral code found in URL');
+    }
+  }, []);
 
   // Track viewport height changes to detect keyboard visibility
   React.useEffect(() => {
