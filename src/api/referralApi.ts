@@ -19,7 +19,7 @@ export const getUserReferralInfo = async (): Promise<ReferralInfo> => {
 
     // Генерируем постоянный реферальный код на основе ID пользователя
     const referralCode = `USER${String(telegramUser.id).slice(-6)}`;
-    const referralLink = `https://t.me/npdetailing?start=${referralCode}`;
+    const referralLink = `${window.location.origin}?ref=${referralCode}`;
 
     const response = await fetch(`${API_BASE_URL}/referrals/${telegramUser.id}`, {
       method: 'GET',
@@ -56,7 +56,7 @@ export const getUserReferralInfo = async (): Promise<ReferralInfo> => {
     // Возвращаем mock-данные при сетевой ошибке
     const telegramUser = getTelegramUser();
     const referralCode = telegramUser ? `USER${String(telegramUser.id).slice(-6)}` : `USER${Math.floor(Math.random() * 1000000)}`;
-    const referralLink = `https://t.me/npdetailing?start=${referralCode}`;
+    const referralLink = `${window.location.origin}?ref=${referralCode}`;
 
     return {
       referralCode,
@@ -113,8 +113,10 @@ export const getUserReferralStats = async (): Promise<ReferralStats> => {
 /**
  * Поделиться реферальной ссылкой
  */
-export const shareReferralCode = () => {
-  const shareText = `Привет! Переходи по моей ссылке для записи на комплексную химчистку в @nptime_bot и получай скидку 500₽. А я получу 300₽ на карту за рекомендацию ❤️`;
+export const shareReferralCode = (referralCode: string) => {
+  // Создаем ссылку на веб-приложение с реферальным кодом
+  const referralLink = `${window.location.origin}?ref=${referralCode}`;
+  const shareText = `Привет! Переходи по моей ссылке для записи на комплексную химчистку и получай скидку 500₽. А я получу 300₽ на карту за рекомендацию ❤️\n\n${referralLink}`;
 
   if (navigator.share) {
     navigator.share({
