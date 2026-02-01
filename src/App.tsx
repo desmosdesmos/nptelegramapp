@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { House, Calendar, Sparkles, User } from 'lucide-react';
 import { hapticFeedback } from './utils/telegram';
+
+// Import all pages
+import Home from './pages/Home';
+import Booking from './pages/Booking';
+import Works from './pages/Works';
+import Contacts from './pages/Contacts';
+import Services from './pages/Services';
+import Reviews from './pages/Reviews';
+import Profile from './pages/Profile';
+import ErrorBoundary from './ErrorBoundary';
 import { getReferralCodeFromUrl, saveReferrerInfo, isValidReferralCode, isNewReferral, incrementTotalReferrals, saveReferralInfo } from './utils/referral';
 import { getTelegramUser } from './utils/telegram';
 
