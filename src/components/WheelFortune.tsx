@@ -84,13 +84,11 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     const startAngle = (index * sectorAngle * Math.PI) / 180;
     const endAngle = ((index + 1) * sectorAngle * Math.PI) / 180;
 
-    // Рассчитываем точки для сектора
     const x1 = 150 + radius * Math.cos(startAngle);
     const y1 = 150 + radius * Math.sin(startAngle);
     const x2 = 150 + radius * Math.cos(endAngle);
     const y2 = 150 + radius * Math.sin(endAngle);
 
-    // Создаем путь для сектора
     return `M 150 150 L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z`;
   };
 
@@ -118,8 +116,33 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     return { x, y };
   };
 
+  // Функция для сокращения названия приза
+  const shortenPrizeName = (name: string): string => {
+    const mappings: Record<string, string> = {
+      '10 баллов': '10 б',
+      '20 баллов': '20 б',
+      '50 баллов': '50 б',
+      '100 баллов': '100 б',
+      '200 баллов': '200 б',
+      '500 баллов': '500 б',
+      '1000 баллов': '1K б',
+      '2000 баллов': '2K б',
+      '1% скидка': '1% с',
+      '2% скидка': '2% с',
+      '3% скидка': '3% с',
+      '5% скидка': '5% с',
+      'Бесплатная озонация': 'Озон',
+      'Бесплатное обеспыливание': 'Обпыл',
+      'Бесплатная полная химчистка': 'Химч'
+    };
+    
+    return mappings[name] || name;
+  };
+
   // Рисуем колесо с помощью SVG
   const renderWheel = () => {
+    const radius = 140;
+
     return (
       <svg
         ref={svgRef}
@@ -167,12 +190,12 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
         {/* Сектора колеса */}
         {wheelPrizes.map((prize, index) => {
-          const pathData = calculateSectorPath(index, 140);
+          const pathData = calculateSectorPath(index, radius);
           const color = getSectorColor(prize.rarity);
 
-          // Получаем позицию для иконки
-          const iconPos = getTextPosition(index, 140 * 0.68);
-
+          // Получаем позицию для иконки и подписи
+          const iconPos = getTextPosition(index, radius * 0.65);
+          const labelPos = getTextPosition(index, radius * 0.52);
 
           return (
             <g key={index}>
@@ -193,23 +216,35 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
               {/* Иконка в секторе */}
               <text
                 x={iconPos.x}
-                y={iconPos.y}
+                y={iconPos.y - 6}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                fontSize="14"
+                fontSize="12"
                 fill="white"
                 fontWeight="bold"
                 stroke="#00ffff"
-                strokeWidth="0.5"
+                strokeWidth="0.3"
                 style={{
-                  transform: hoveredSector === index ? 'scale(1.1)' : 'scale(1)',
+                  transform: hoveredSector === index ? 'scale(1.05)' : 'scale(1)',
                   transition: 'transform 0.3s ease'
                 }}
               >
                 {prize.icon}
               </text>
 
-              {/* Название приза в секторе */}
+              {/* Подпись приза в секторе */}
+              <text
+                x={labelPos.x}
+                y={labelPos.y + 10}
+                textAnchor="middle"
+                fontSize="8"
+                fill="white"
+                fontWeight="500"
+                letterSpacing="0.2"
+                transform={`rotate(${index * sectorAngle + sectorAngle / 2}, ${labelPos.x}, ${labelPos.y})`}
+              >
+                {shortenPrizeName(prize.name)}
+              </text>
             </g>
           );
         })}
