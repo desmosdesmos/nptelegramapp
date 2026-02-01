@@ -5,6 +5,7 @@ const TOTAL_REFERRALS_KEY = 'simple_referral_total';
 const BOOKED_REFERRALS_KEY = 'simple_referral_booked';
 const REFERRAL_CODE_KEY = 'simple_referral_code';
 const VISITED_USERS_KEY = 'simple_visited_users';
+const REFERRALS_BY_CODE_KEY = 'simple_referrals_by_code'; // Новый ключ для хранения рефералов по коду
 
 // Получить текущие значения счетчиков
 export const getReferralCounts = () => {
@@ -13,17 +14,17 @@ export const getReferralCounts = () => {
   return { total, booked };
 };
 
-// Увеличить счетчик "Привлечено"
+// Увеличить счетчик "Привлечено" для конкретного реферера
 export const incrementTotalReferrals = (referrerCode: string) => {
   // Получаем текущий счетчик
   const currentTotal = parseInt(localStorage.getItem(TOTAL_REFERRALS_KEY) || '0', 10);
-  
+
   // Увеличиваем на 1
   const newTotal = currentTotal + 1;
-  
-  // Сохраняем
+
+  // Сохраняем общий счетчик
   localStorage.setItem(TOTAL_REFERRALS_KEY, newTotal.toString());
-  
+
   // Сохраняем информацию о пользователе, чтобы не считать повторно
   const visitedUsers = JSON.parse(localStorage.getItem(VISITED_USERS_KEY) || '[]');
   const telegramUser = getTelegramUser();
@@ -35,10 +36,21 @@ export const incrementTotalReferrals = (referrerCode: string) => {
     });
     localStorage.setItem(VISITED_USERS_KEY, JSON.stringify(visitedUsers));
   }
-  
+
+  // Сохраняем реферала под кодом реферера
+  const referralsByCode = JSON.parse(localStorage.getItem(REFERRALS_BY_CODE_KEY) || '{}');
+  if (!referralsByCode[referrerCode]) {
+    referralsByCode[referrerCode] = [];
+  }
+  referralsByCode[referrerCode].push({
+    userId: telegramUser?.id || 'unknown',
+    timestamp: Date.now()
+  });
+  localStorage.setItem(REFERRALS_BY_CODE_KEY, JSON.stringify(referralsByCode));
+
   // Уведомляем о событии
   window.dispatchEvent(new CustomEvent('referralUpdate'));
-  
+
   console.log(`Incremented total referrals to: ${newTotal}`);
 };
 
@@ -46,16 +58,16 @@ export const incrementTotalReferrals = (referrerCode: string) => {
 export const incrementBookedReferrals = () => {
   // Получаем текущий счетчик
   const currentBooked = parseInt(localStorage.getItem(BOOKED_REFERRALS_KEY) || '0', 10);
-  
+
   // Увеличиваем на 1
   const newBooked = currentBooked + 1;
-  
+
   // Сохраняем
   localStorage.setItem(BOOKED_REFERRALS_KEY, newBooked.toString());
-  
+
   // Уведомляем о событии
   window.dispatchEvent(new CustomEvent('referralUpdate'));
-  
+
   console.log(`Incremented booked referrals to: ${newBooked}`);
 };
 
@@ -63,11 +75,11 @@ export const incrementBookedReferrals = () => {
 export const hasUserBeenCounted = () => {
   const visitedUsers = JSON.parse(localStorage.getItem(VISITED_USERS_KEY) || '[]');
   const telegramUser = getTelegramUser();
-  
+
   if (!telegramUser) {
     return false;
   }
-  
+
   return visitedUsers.some((user: any) => user.userId === telegramUser.id);
 };
 
@@ -81,7 +93,17 @@ export const getCurrentUserReferralCode = (): string | null => {
   return localStorage.getItem(REFERRAL_CODE_KEY);
 };
 
-// Получить информацию о рефералах
+// Получить список рефералов для текущего пользователя (если он реферер)
+export const getMyReferrals = (): Array<{ userId: string; timestamp: number }> => {
+  const myCode = getCurrentUserReferralCode();
+
+  if (!myCode) return [];
+
+  const referralsByCode = JSON.parse(localStorage.getItem(REFERRALS_BY_CODE_KEY) || '{}');
+  return referralsByCode[myCode] || [];
+};
+
+// Получить информацию о рефералах (для админки/отладки)
 export const getReferralDetails = () => {
   const visitedUsers = JSON.parse(localStorage.getItem(VISITED_USERS_KEY) || '[]');
   return visitedUsers;
