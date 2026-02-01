@@ -82,10 +82,6 @@ function App() {
         // Remove the pending code
         localStorage.removeItem('pending_referrer_code');
 
-        // Force update referral state and notify all components about the update
-        forceReferralStateUpdate();
-        window.dispatchEvent(new CustomEvent('referralUpdate'));
-
         console.log(`Processed pending referrer: ${pendingReferrerCode} for user ${referralCodeForUser}`);
       }
     };
@@ -101,10 +97,6 @@ function App() {
     };
   }, []);
 
-  // Setup activity tracking to process referrals when user becomes active
-  useEffect(() => {
-    setupActivityTracking();
-  }, []);
 
   // Track viewport height changes to detect keyboard visibility
   React.useEffect(() => {
