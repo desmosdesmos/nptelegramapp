@@ -2,7 +2,43 @@ import { WheelPrize } from '../types/wheel';
 
 // Конфигурация призов для колеса фортуны
 export const wheelPrizes: WheelPrize[] = [
-  // Обычные призы (60% шанс)
+  // Мелкие бонусы (99.99% шанс)
+  {
+    id: 'points-10',
+    name: '10 баллов',
+    type: 'points',
+    value: 10,
+    rarity: 'common',
+    description: 'Добавлено 10 баллов к вашему счету',
+    icon: '⭐'
+  },
+  {
+    id: 'points-20',
+    name: '20 баллов',
+    type: 'points',
+    value: 20,
+    rarity: 'common',
+    description: 'Добавлено 20 баллов к вашему счету',
+    icon: '⭐'
+  },
+  {
+    id: 'points-30',
+    name: '30 баллов',
+    type: 'points',
+    value: 30,
+    rarity: 'common',
+    description: 'Добавлено 30 баллов к вашему счету',
+    icon: '⭐'
+  },
+  {
+    id: 'points-40',
+    name: '40 баллов',
+    type: 'points',
+    value: 40,
+    rarity: 'common',
+    description: 'Добавлено 40 баллов к вашему счету',
+    icon: '⭐'
+  },
   {
     id: 'points-50',
     name: '50 баллов',
@@ -13,6 +49,42 @@ export const wheelPrizes: WheelPrize[] = [
     icon: '⭐'
   },
   {
+    id: 'discount-1',
+    name: '1% скидка',
+    type: 'discount',
+    value: 1,
+    rarity: 'common',
+    description: '1% скидка на следующую услугу',
+    icon: '🏷️'
+  },
+  {
+    id: 'discount-2',
+    name: '2% скидка',
+    type: 'discount',
+    value: 2,
+    rarity: 'common',
+    description: '2% скидка на следующую услугу',
+    icon: '🏷️'
+  },
+  {
+    id: 'discount-3',
+    name: '3% скидка',
+    type: 'discount',
+    value: 3,
+    rarity: 'common',
+    description: '3% скидка на следующую услугу',
+    icon: '🏷️'
+  },
+  {
+    id: 'discount-4',
+    name: '4% скидка',
+    type: 'discount',
+    value: 4,
+    rarity: 'common',
+    description: '4% скидка на следующую услугу',
+    icon: '🏷️'
+  },
+  {
     id: 'discount-5',
     name: '5% скидка',
     type: 'discount',
@@ -21,93 +93,46 @@ export const wheelPrizes: WheelPrize[] = [
     description: '5% скидка на следующую услугу',
     icon: '🏷️'
   },
-  {
-    id: 'points-100',
-    name: '100 баллов',
-    type: 'points',
-    value: 100,
-    rarity: 'common',
-    description: 'Добавлено 100 баллов к вашему счету',
-    icon: '⭐'
-  },
+
+  // Средние призы (3% шанс)
   {
     id: 'free-ozonation',
     name: 'Бесплатная озонация',
     type: 'free_service',
     value: 'ozonation',
-    rarity: 'common',
+    rarity: 'rare',
     description: 'Бесплатная услуга озонации при следующем визите',
     icon: '💨'
   },
-
-  // Редкие призы (30% шанс)
   {
-    id: 'discount-10',
-    name: '10% скидка',
-    type: 'discount',
-    value: 10,
+    id: 'free-vacuuming',
+    name: 'Бесплатное обеспыливание',
+    type: 'free_service',
+    value: 'vacuuming',
     rarity: 'rare',
-    description: '10% скидка на следующую услугу',
-    icon: '🏷️'
+    description: 'Бесплатное обеспыливание салона при следующем визите',
+    icon: '🧹'
   },
+
+  // Дорогие призы (0% шанс)
   {
-    id: 'points-200',
-    name: '200 баллов',
-    type: 'points',
-    value: 200,
-    rarity: 'rare',
-    description: 'Добавлено 200 баллов к вашему счету',
-    icon: '⭐'
+    id: 'free-full-cleaning',
+    name: 'Бесплатная полная химчистка',
+    type: 'free_service',
+    value: 'full_cleaning',
+    rarity: 'epic',
+    description: 'Бесплатная полная химчистка салона',
+    icon: '🚗'
   },
   {
     id: 'free-ceiling',
     name: 'Бесплатный потолок',
     type: 'free_service',
     value: 'ceiling',
-    rarity: 'rare',
+    rarity: 'epic',
     description: 'Бесплатная химчистка потолка при следующем визите',
     icon: '☁️'
   },
-  {
-    id: 'bonus-seat',
-    name: 'Бесплатное сиденье',
-    type: 'bonus_option',
-    value: 'seat',
-    rarity: 'rare',
-    description: 'Бесплатная химчистка одного сиденья',
-    icon: '🧽'
-  },
-
-  // Эпические призы (8% шанс)
-  {
-    id: 'discount-15',
-    name: '15% скидка',
-    type: 'discount',
-    value: 15,
-    rarity: 'epic',
-    description: '15% скидка на следующую услугу',
-    icon: '🏷️'
-  },
-  {
-    id: 'points-500',
-    name: '500 баллов',
-    type: 'points',
-    value: 500,
-    rarity: 'epic',
-    description: 'Добавлено 500 баллов к вашему счету',
-    icon: '⭐'
-  },
-  {
-    id: 'free-full-cleaning',
-    name: '20% скидка на полную химчистку',
-    type: 'discount',
-    value: 20,
-    rarity: 'epic',
-    description: '20% скидка на полную химчистку салона',
-    icon: '🚗'
-  },
-
-  // Легендарные призы (2% шанс)
   {
     id: 'vip-service',
     name: 'VIP-услуга',
@@ -130,8 +155,8 @@ export const wheelPrizes: WheelPrize[] = [
 
 // Вероятности выпадения призов по редкости
 export const rarityWeights = {
-  common: 60,    // 60% шанс
-  rare: 30,      // 30% шанс
-  epic: 8,       // 8% шанс
-  legendary: 2   // 2% шанс
+  common: 99.99,    // 99.99% шанс на мелкие бонусы
+  rare: 3,          // 3% шанс на средние призы
+  epic: 0,          // 0% шанс на дорогие призы
+  legendary: 0      // 0% шанс на легендарные призы
 };

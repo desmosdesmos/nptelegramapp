@@ -182,21 +182,35 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
   // Функция для получения случайного индекса приза с учетом редкости
   const getRandomPrizeIndex = (): number => {
-    // Определяем уровень редкости
-    const totalWeight = Object.values(rarityWeights).reduce((sum, weight) => sum + weight, 0);
-    let random = Math.random() * totalWeight;
-    
-    for (const [rarity, weight] of Object.entries(rarityWeights)) {
-      if (random < weight) {
-        // Находим случайный приз этой редкости
-        const prizesOfRarity = wheelPrizes.filter(p => p.rarity === rarity);
-        return wheelPrizes.indexOf(prizesOfRarity[Math.floor(Math.random() * prizesOfRarity.length)]);
+    // Генерируем случайное число от 0 до 100
+    const random = Math.random() * 100;
+
+    // Определяем, к какому типу приза относится результат
+    if (random < 99.99) {
+      // 99.99% шанс на обычные призы (мелкие бонусы)
+      const commonPrizes = wheelPrizes.filter(p => p.rarity === 'common');
+      return wheelPrizes.indexOf(commonPrizes[Math.floor(Math.random() * commonPrizes.length)]);
+    } else if (random < 99.99 + 3) {
+      // 3% шанс на редкие призы (средние призы)
+      const rarePrizes = wheelPrizes.filter(p => p.rarity === 'rare');
+      return wheelPrizes.indexOf(rarePrizes[Math.floor(Math.random() * rarePrizes.length)]);
+    } else if (random < 99.99 + 3 + 0) {
+      // 0% шанс на эпические призы (дорогие призы)
+      const epicPrizes = wheelPrizes.filter(p => p.rarity === 'epic');
+      if (epicPrizes.length > 0) {
+        return wheelPrizes.indexOf(epicPrizes[Math.floor(Math.random() * epicPrizes.length)]);
       }
-      random -= weight;
+    } else {
+      // 0% шанс на легендарные призы
+      const legendaryPrizes = wheelPrizes.filter(p => p.rarity === 'legendary');
+      if (legendaryPrizes.length > 0) {
+        return wheelPrizes.indexOf(legendaryPrizes[Math.floor(Math.random() * legendaryPrizes.length)]);
+      }
     }
-    
-    // Если не удалось определить, возвращаем случайный приз
-    return Math.floor(Math.random() * wheelPrizes.length);
+
+    // Если не удалось определить, возвращаем случайный обычный приз
+    const commonPrizes = wheelPrizes.filter(p => p.rarity === 'common');
+    return wheelPrizes.indexOf(commonPrizes[Math.floor(Math.random() * commonPrizes.length)]);
   };
 
   return (
