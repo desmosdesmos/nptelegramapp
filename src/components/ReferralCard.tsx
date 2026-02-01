@@ -21,7 +21,6 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
       // Получаем данные из новой системы
       const counts = getReferralCounts();
       const referralDetails = getReferralDetails();
-      const currentUserReferralCode = getCurrentUserReferralCode();
 
       // Получаем данные пользователя
       const telegramUser = getTelegramUser();

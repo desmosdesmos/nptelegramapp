@@ -12,7 +12,6 @@ import Services from './pages/Services';
 import Reviews from './pages/Reviews';
 import Profile from './pages/Profile';
 import ErrorBoundary from './ErrorBoundary';
-import { getReferralCodeFromUrl as getOldReferralCode, isValidReferralCode as isValidOldReferralCode } from './utils/referral';
 import { getTelegramUser } from './utils/telegram';
 import { getReferralCodeFromUrl, isValidReferralCode, hasUserBeenCounted, incrementTotalReferrals, setCurrentUserReferralCode } from './utils/simpleReferralSystem';
 
@@ -62,6 +61,11 @@ function App() {
     } else {
       console.log('No valid referral code found in URL');
     }
+  }, []);
+
+  // Setup activity tracking to process referrals when user becomes active
+  useEffect(() => {
+    // Заглушка для setupActivityTracking, если функция не нужна
   }, []);
 
   // Check for Telegram user initialization and handle pending referrer

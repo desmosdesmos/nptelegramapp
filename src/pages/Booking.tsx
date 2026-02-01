@@ -3,7 +3,6 @@ import { ArrowLeft } from 'lucide-react';
 import { PageKey } from '../App';
 import { getTelegramWebApp, hapticFeedback, notificationFeedback, getTelegramUser } from '../utils/telegram';
 import { sendBookingToTelegram, validateBookingForm, type BookingFormData } from '../utils/booking';
-import { getReferralCodeFromUrl as getOldReferralCode, isValidReferralCode as isValidOldReferralCode } from '../utils/referral';
 import { incrementBookedReferrals, getReferralCodeFromUrl, isValidReferralCode } from '../utils/simpleReferralSystem';
 import { mainServices, localCleaningServices, getServiceById, getServiceOptionById } from '../data/services';
 import { getAllBrands, getModelsByBrand } from '../data/carBrands';
