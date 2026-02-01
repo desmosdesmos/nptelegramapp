@@ -38,7 +38,7 @@ function App() {
   const [shouldRenderDock, setShouldRenderDock] = useState(false);
   const CurrentPageComponent = appPages[page].component;
 
-  // Check for referral code on app load
+  // Check for referral code on app load - SYNCHRONOUS UPDATE
   useEffect(() => {
     const referralCode = getReferralCodeFromUrl();
     console.log('App loaded with referral code:', referralCode);
@@ -62,9 +62,16 @@ function App() {
 
       console.log(`Referral visit: user came via link ${referralCode}. Incrementing "Total Referrals" counter.`);
 
-      // Force update referral state and notify all components about the update
-      forceReferralStateUpdate();
-      window.dispatchEvent(new CustomEvent('referralUpdate'));
+      // FORCE IMMEDIATE REFRESH OF ALL COMPONENTS
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('referralUpdate'));
+        forceReferralStateUpdate();
+      }, 100); // Small delay to ensure all state updates are processed
+
+      // ALSO trigger a manual refresh after a bit more time
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('referralUpdate'));
+      }, 500);
     } else {
       console.log('No valid referral code found in URL');
     }

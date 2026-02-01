@@ -68,7 +68,10 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
   // Добавим подписку на кастомное событие для обновления данных
   useEffect(() => {
     const handleCustomUpdate = () => {
-      loadReferralInfo();
+      // Принудительно обновляем данные с небольшой задержкой
+      setTimeout(() => {
+        loadReferralInfo();
+      }, 200);
     };
 
     window.addEventListener('referralUpdate', handleCustomUpdate);
