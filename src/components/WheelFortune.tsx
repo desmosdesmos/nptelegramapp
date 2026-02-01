@@ -170,8 +170,8 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           const color = getSectorColor(prize.rarity);
 
           // Получаем позиции для иконки и текста
-          const iconPos = getTextPosition(index, 140 * 0.65);
-          const textPos = getTextPosition(index, 140 * 0.45);
+          const iconPos = getTextPosition(index, 140 * 0.68);
+          const textPos = getTextPosition(index, 140 * 0.52);
 
           // Рассчитываем угол для поворота текста
           const textAngle = index * sectorAngle + sectorAngle / 2;
@@ -197,7 +197,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
                 y={iconPos.y}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                fontSize="20"
+                fontSize="16"
                 fill="white"
                 fontWeight="bold"
               >
@@ -209,12 +209,13 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
                 x={textPos.x}
                 y={textPos.y}
                 textAnchor="middle"
-                fontSize="8"
+                fontSize="10"
                 fill="white"
-                fontWeight="normal"
+                fontWeight="500"
+                letterSpacing="0.5"
                 transform={`rotate(${correctedTextAngle}, ${textPos.x}, ${textPos.y})`}
               >
-                {prize.name.length > 10 ? `${prize.name.substring(0, 10)}...` : prize.name}
+                {prize.name.length > 14 ? `${prize.name.substring(0, 14)}...` : prize.name}
               </text>
             </g>
           );
