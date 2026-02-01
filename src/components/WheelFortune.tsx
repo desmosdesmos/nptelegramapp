@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { WheelSpinResult } from '../types/wheel';
-import { wheelPrizes, rarityWeights } from '../data/wheelConfig';
+import { wheelPrizes } from '../data/wheelConfig';
 import { hapticFeedback } from '../utils/telegram';
 
 interface WheelFortuneProps {
