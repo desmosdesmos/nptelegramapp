@@ -1,6 +1,31 @@
 import { hapticFeedback, openTelegramLink } from '../utils/telegram';
+import { useState, useEffect } from 'react';
+import { Users, Gift } from 'lucide-react';
+import { getUserReferralStats } from '../api/referralApi';
 
-const Contacts = () => {
+interface ContactsProps {
+  onNavigate: (page: string) => void;
+}
+
+const Contacts: React.FC<ContactsProps> = ({ onNavigate }) => {
+  const [referralStats, setReferralStats] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadReferralStats();
+  }, []);
+
+  const loadReferralStats = async () => {
+    try {
+      const stats = await getUserReferralStats();
+      setReferralStats(stats);
+    } catch (error) {
+      console.error('Error loading referral stats:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleTelegramClick = () => {
     hapticFeedback('light');
     openTelegramLink('https://t.me/yanvtg');
@@ -19,6 +44,12 @@ const Contacts = () => {
   const handlePhoneClick = () => {
     hapticFeedback('light');
     window.location.href = 'tel:+79063163114';
+  };
+
+  const handleReferralClick = () => {
+    hapticFeedback('light');
+    // Перенаправляем пользователя на страницу профиля, где он может увидеть полную информацию о реферальной программе
+    onNavigate('Profile');
   };
 
   const contactItems = [
@@ -48,6 +79,13 @@ const Contacts = () => {
       action: handleTelegramClick,
       actionLabel: 'Написать'
     },
+    {
+      icon: '👥',
+      title: 'Реферальная программа',
+      value: loading ? 'Загрузка...' : `${referralStats?.totalReferrals || 0} привлечено`,
+      action: handleReferralClick,
+      actionLabel: 'Подробнее'
+    },
   ];
 
   return (
@@ -76,6 +114,31 @@ const Contacts = () => {
             </div>
           </div>
 
+          {/* Referral Stats Summary */}
+          {!loading && referralStats && (
+            <div className="p-5 rounded-2xl bg-gradient-to-r from-indigo-500/20 to-purple-600/20 border border-white/10 backdrop-blur-md">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-2 text-white/80 mb-1">
+                    <Users className="w-4 h-4" />
+                    <span className="text-xs">Привлечено</span>
+                  </div>
+                  <p className="text-xl font-bold text-white">{referralStats.totalReferrals}</p>
+                </div>
+                <div className="text-center">
+                  <div className="flex items-center justify-center gap-2 text-white/80 mb-1">
+                    <Gift className="w-4 h-4" />
+                    <span className="text-xs">Бонусов</span>
+                  </div>
+                  <p className="text-xl font-bold text-white">{referralStats.totalBonuses} ₽</p>
+                </div>
+              </div>
+              <p className="text-center text-white/60 text-xs mt-3">
+                Перейдите в профиль для подробной информации
+              </p>
+            </div>
+          )}
+
           {/* Action Buttons */}
           <div className="space-y-4 pt-4">
             <button
@@ -99,4 +162,3 @@ const Contacts = () => {
 };
 
 export default Contacts;
-

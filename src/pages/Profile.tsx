@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { User, Phone, MessageCircle, Copy, Share2, Award } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { User, Phone, MessageCircle, Copy, Share2, Award, Gift, Users } from 'lucide-react';
 import { PageKey } from '../App';
 import { getTelegramUser } from '../utils/telegram';
+import ReferralCard from '../components/ReferralCard';
 
 interface ProfileProps {
   onNavigate: (page: PageKey) => void;
@@ -86,31 +87,34 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* Premium Referral Card */}
-      <div className="w-full p-6 mb-8 rounded-2xl bg-gradient-to-br from-amber-300 via-orange-400 to-amber-500 shadow-xl relative overflow-hidden">
+      {/* Referral Card */}
+      <ReferralCard className="mb-8" />
+
+      {/* Old Promo Card - теперь как дополнительная информация */}
+      <div className="w-full p-6 mb-8 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 shadow-xl relative overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
         <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
 
         <div className="relative z-10">
-          <h2 className="text-2xl md:text-3xl font-bold text-black mb-2">Подари другу 500₽</h2>
-          <p className="text-black/80 mb-4">на комплексную химчистку салона, и получи себе бонусы на повторное посещение</p>
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Подари другу 500₽</h2>
+          <p className="text-white/80 mb-4">на комплексную химчистку салона, и получи себе бонусы на повторное посещение</p>
 
           <div className="bg-white/20 backdrop-blur-sm border-2 border-dashed border-white/30 rounded-xl p-4 mb-6">
-            <p className="text-center text-lg font-bold text-black">NP2026</p>
+            <p className="text-center text-lg font-bold text-white">NP2026</p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={copyCode}
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-black/20 hover:bg-black/30 rounded-xl transition-colors text-black font-medium"
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-white/20 hover:bg-white/30 rounded-xl transition-colors text-white font-medium"
             >
               <Copy className="w-5 h-5" />
               {copied ? 'Скопировано!' : 'Скопировать'}
             </button>
             <button
               onClick={shareCode}
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-black/20 hover:bg-black/30 rounded-xl transition-colors text-black font-medium"
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-white/20 hover:bg-white/30 rounded-xl transition-colors text-white font-medium"
             >
               <Share2 className="w-5 h-5" />
               Отправить
