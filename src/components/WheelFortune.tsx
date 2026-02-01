@@ -163,17 +163,35 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           {/* Сектора колеса (стеклянные лепестки) */}
           {wheelPrizes.map((prize, index) => {
             const pathData = calculateSectorPath(index, radius);
-            // Чередуем цвета: Deep Carbon и Semi-Transparent Black
-            const color = index % 2 === 0 ? '#1c1c1e' : 'rgba(0, 0, 0, 0.5)';
+            // Чередуем цвета: Deep Carbon и Semi-Transparent Black (усиленная видимость)
+            const color = index % 2 === 0
+              ? '#1c1c1e'
+              : 'rgba(20, 20, 30, 0.7)'; // более светлый полупрозрачный чёрный для лучшей читаемости
             
-            // Короткое название для отображения с символом ₽ для бонусов и полными названиями для сервисов
+            // Короткое название для отображения в секторе
             let displayName = prize.name;
-            if (prize.id === 'points-10') displayName = '10₽';
-            if (prize.id === 'points-100') displayName = '100₽';
-            if (prize.id === 'points-1000') displayName = '1000₽';
-            if (prize.id === 'free-pre-sale') displayName = 'Скидка 30%';
-            if (prize.id === 'free-ozonation') displayName = 'Озонация';
-            if (prize.id === 'free-full-cleaning') displayName = 'Комплекс';
+            switch (prize.id) {
+              case 'points-10':
+                displayName = '10₽';
+                break;
+              case 'points-100':
+                displayName = '100₽';
+                break;
+              case 'points-1000':
+                displayName = '1000₽';
+                break;
+              case 'free-pre-sale':
+                displayName = 'Скидка 30%';
+                break;
+              case 'free-ozonation':
+                displayName = 'Озонация';
+                break;
+              case 'free-full-cleaning':
+                displayName = 'Комплекс';
+                break;
+              default:
+                displayName = prize.name; // fallback
+            }
 
             // Получаем позицию для подписи (от центра к краю)
             const labelPos = getTextPosition(index, radius * 0.65);
@@ -208,12 +226,13 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
                   y={labelPos.y}
                   textAnchor="middle"
                   fontSize="12"
-                  fill="white"
+                  fill="rgba(255, 255, 255, 0.98)"
                   fontWeight="700"
                   letterSpacing="0.02em"
-                  opacity="0.95"
+                  opacity="1"
                   transform={transformString}
                   className="font-sans font-bold"
+                  style={{ textShadow: '0 1px 3px rgba(0, 0, 0, 0.5)' }}
                 >
                   {displayName}
                 </text>
