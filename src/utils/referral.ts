@@ -9,8 +9,8 @@ import { getTelegramUser } from './telegram';
  */
 export const getReferralCodeFromUrl = (): string | null => {
   const urlParams = new URLSearchParams(window.location.search);
-  // Проверяем сначала параметр 'ref' (для веб-приложения), затем 'start' (для Telegram)
-  return urlParams.get('ref') || urlParams.get('start');
+  // Проверяем параметр 'start' (для Telegram бота)
+  return urlParams.get('start');
 };
 
 /**

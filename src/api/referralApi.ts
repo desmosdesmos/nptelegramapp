@@ -19,7 +19,7 @@ export const getUserReferralInfo = async (): Promise<ReferralInfo> => {
 
     // Генерируем постоянный реферальный код на основе ID пользователя
     const referralCode = `USER${String(telegramUser.id).slice(-6)}`;
-    const referralLink = `${window.location.origin}?ref=${referralCode}`;
+    const referralLink = `https://t.me/nptime_bot/npfast?start=${referralCode}`;
 
     const response = await fetch(`${API_BASE_URL}/referrals/${telegramUser.id}`, {
       method: 'GET',
@@ -56,7 +56,7 @@ export const getUserReferralInfo = async (): Promise<ReferralInfo> => {
     // Возвращаем mock-данные при сетевой ошибке
     const telegramUser = getTelegramUser();
     const referralCode = telegramUser ? `USER${String(telegramUser.id).slice(-6)}` : `USER${Math.floor(Math.random() * 1000000)}`;
-    const referralLink = `${window.location.origin}?ref=${referralCode}`;
+    const referralLink = `https://t.me/nptime_bot/npfast?start=${referralCode}`;
 
     return {
       referralCode,
@@ -114,8 +114,8 @@ export const getUserReferralStats = async (): Promise<ReferralStats> => {
  * Поделиться реферальной ссылкой
  */
 export const shareReferralCode = (referralCode: string) => {
-  // Создаем ссылку на веб-приложение с реферальным кодом
-  const referralLink = `${window.location.origin}?ref=${referralCode}`;
+  // Создаем ссылку на Telegram бота с реферальным кодом
+  const referralLink = `https://t.me/nptime_bot/npfast?start=${referralCode}`;
   const shareText = `Привет! Переходи по моей ссылке для записи на комплексную химчистку и получай скидку 500₽. А я получу 300₽ на карту за рекомендацию ❤️\n\n${referralLink}`;
 
   if (navigator.share) {
