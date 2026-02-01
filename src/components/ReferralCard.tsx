@@ -38,9 +38,7 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
   };
 
   const handleShareCode = () => {
-    if (referralInfo?.referralCode) {
-      shareReferralCode(referralInfo.referralCode);
-    }
+    shareReferralCode();
   };
 
   if (loading) {

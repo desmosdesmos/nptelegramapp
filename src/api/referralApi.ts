@@ -117,7 +117,7 @@ export const getUserReferralStats = async (): Promise<ReferralStats> => {
 /**
  * Поделиться реферальной ссылкой
  */
-export const shareReferralCode = (referralCode: string) => {
+export const shareReferralCode = () => {
   const shareText = `Привет! Переходи по моей ссылке для записи на комплексную химчистку в @nptime_bot и получай скидку 500₽. А я получу 300₽ на карту за рекомендацию ❤️`;
 
   if (navigator.share) {
