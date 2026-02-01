@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { WheelPrize, WheelSector, WheelSpinResult } from '../types/wheel';
+import { WheelSpinResult } from '../types/wheel';
 import { wheelPrizes, rarityWeights } from '../data/wheelConfig';
 import { hapticFeedback } from '../utils/telegram';
 
@@ -23,13 +23,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
   // Угол каждого сектора
   const sectorAngle = 360 / numSectors;
   
-  // Цвета для разных уровней редкости
-  const rarityColors: Record<string, string> = {
-    common: 'from-blue-400 to-blue-600',
-    rare: 'from-green-400 to-green-600',
-    epic: 'from-purple-400 to-purple-600',
-    legendary: 'from-yellow-400 to-yellow-600'
-  };
 
   // Проверяем, можно ли крутить сегодня
   useEffect(() => {
@@ -135,13 +128,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     ctx.fillStyle = '#1E293B'; // slate-800
     ctx.fill();
     
-    // Рисуем указатель
-    if (containerRef.current) {
-      const centerX = containerRef.current.clientWidth / 2;
-      const pointerSize = 20;
-      
-      // Указатель будет нарисован через CSS
-    }
   }, [rotation]);
 
   const spinWheel = () => {
