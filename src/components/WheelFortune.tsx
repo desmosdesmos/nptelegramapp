@@ -287,12 +287,10 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     const winningIndex = getRandomPrizeIndex();
     
     // КРИТИЧЕСКИЙ ИСПРАВЛЕНИЕ: ручная калибровка углового смещения
-    // На основе тестов: при winningIndex=0 показывается "Комплекс" (индекс 3 или 4)
-    // Значит нужно смещение примерно -108 градусов (3 сектора * 36°) или -144 градусов (4 сектора)
-    // Попробуем -144 градусов (4 сектора назад) для индекса 0 -> индекс 4 ("Предпродажка")
-    // Но нам нужно индекс 0 -> индекс 0, поэтому попробуем +144 градусов (4 сектора вперед)
+    // На основе последнего теста: при winningIndex=1 показывается "Комплекс" (индекс 3)
+    // Разница: 3 - 1 = +2 сектора → нужно смещение -72 градуса (2 сектора назад)
     const sectorCenterAngle = winningIndex * sectorAngle + sectorAngle / 2;
-    const calibrationOffset = 144; // Попробуем +144 градусов (4 сектора вперед)
+    const calibrationOffset = -72; // Смещение -72 градуса (2 сектора назад)
     const targetRotation = rotation + (extraRotations * 360) - sectorCenterAngle + calibrationOffset;
 
     setRotation(targetRotation);
