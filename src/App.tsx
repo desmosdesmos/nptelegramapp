@@ -14,6 +14,9 @@ import Profile from './pages/Profile';
 import ErrorBoundary from './ErrorBoundary';
 import { getTelegramUser } from './utils/telegram';
 import { getReferralCodeFromUrl, isValidReferralCode, hasUserBeenCounted, incrementTotalReferrals, setCurrentUserReferralCode } from './utils/simpleReferralSystem';
+import WheelFortune from './components/WheelFortune';
+import WheelButton from './components/WheelButton';
+import { WheelSpinResult } from './types/wheel';
 
 // Define a type for the page keys
 export type PageKey = 'Home' | 'Booking' | 'Works' | 'Contacts' | 'Services' | 'Reviews' | 'Profile';
@@ -34,6 +37,7 @@ function App() {
   const [page, setPage] = useState<PageKey>('Home');
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [shouldRenderDock, setShouldRenderDock] = useState(false);
+  const [showWheel, setShowWheel] = useState(false);
   const CurrentPageComponent = appPages[page].component;
 
   // Check for referral code on app load - NEW SIMPLE SYSTEM
@@ -164,6 +168,13 @@ function App() {
     );
   };
 
+  // Обработчик выигрыша в колесе
+  const handleWheelWin = (result: WheelSpinResult) => {
+    console.log('Выигрыш в колесе:', result);
+    // Здесь можно добавить логику сохранения выигрыша
+    // и применение его к аккаунту пользователя
+  };
+
   return (
     <div className="min-h-screen bg-black overflow-hidden pb-24">
       <ErrorBoundary>
@@ -192,6 +203,17 @@ function App() {
           <DockButton pageKey="Services" label="Услуги" icon={<Sparkles className='w-6 h-6' />} />
           <DockButton pageKey="Profile" label="Профиль" icon={<User className='w-6 h-6' />} />
         </div>
+      )}
+
+      {/* Кнопка колеса фортуны */}
+      <WheelButton onOpenWheel={() => setShowWheel(true)} />
+
+      {/* Модальное окно колеса фортуны */}
+      {showWheel && (
+        <WheelFortune
+          onWin={handleWheelWin}
+          onClose={() => setShowWheel(false)}
+        />
       )}
     </div>
   );
