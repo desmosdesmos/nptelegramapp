@@ -12,7 +12,7 @@ import Services from './pages/Services';
 import Reviews from './pages/Reviews';
 import Profile from './pages/Profile';
 import ErrorBoundary from './ErrorBoundary';
-import { getReferralCodeFromUrl, saveReferrerInfo, isValidReferralCode, isNewReferral, incrementTotalReferrals, saveReferralInfo } from './utils/referral';
+import { getReferralCodeFromUrl, saveReferrerInfo, isValidReferralCode, incrementTotalReferrals, saveReferralInfo } from './utils/referral';
 import { getTelegramUser } from './utils/telegram';
 import { ReferralProvider } from './contexts/ReferralContext';
 
