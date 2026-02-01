@@ -13,6 +13,7 @@ import Reviews from './pages/Reviews';
 import Profile from './pages/Profile';
 import ErrorBoundary from './ErrorBoundary';
 import { getReferralCodeFromUrl, saveReferrerInfo, isValidReferralCode, incrementTotalReferrals, saveReferralInfo } from './utils/referral';
+import { forceReferralStateUpdate } from './utils/referralState';
 import { getTelegramUser } from './utils/telegram';
 import { ReferralProvider } from './contexts/ReferralContext';
 
@@ -61,7 +62,8 @@ function App() {
 
       console.log(`Referral visit: user came via link ${referralCode}. Incrementing "Total Referrals" counter.`);
 
-      // Dispatch custom event to notify all components about the update
+      // Force update referral state and notify all components about the update
+      forceReferralStateUpdate();
       window.dispatchEvent(new CustomEvent('referralUpdate'));
     } else {
       console.log('No valid referral code found in URL');
@@ -82,7 +84,8 @@ function App() {
         // Remove the pending code
         localStorage.removeItem('pending_referrer_code');
 
-        // Dispatch custom event to notify all components about the update
+        // Force update referral state and notify all components about the update
+        forceReferralStateUpdate();
         window.dispatchEvent(new CustomEvent('referralUpdate'));
 
         console.log(`Processed pending referrer: ${pendingReferrerCode} for user ${referralCodeForUser}`);

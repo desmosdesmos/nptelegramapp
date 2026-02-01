@@ -68,3 +68,8 @@ const notifyListeners = () => {
 
 // Инициализация данных
 loadReferralData();
+
+// Функция для принудительного обновления состояния
+export const forceReferralStateUpdate = () => {
+  loadReferralData();
+};
