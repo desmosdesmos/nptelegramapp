@@ -286,15 +286,17 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     const extraRotations = 3 + Math.floor(Math.random() * 4);
     const winningIndex = getRandomPrizeIndex();
     
-    // КРИТИЧЕСКИЙ ИСПРАВЛЕНИЕ: учет углового смещения для верхнего указателя
-    // В SVG сектора начинаются с правой позиции (0 градусов), но указатель находится в верхней позиции (90 градусов)
-    // Поэтому нужно добавить коррекцию +90 градусов для верхнего положения
+    // КРИТИЧЕСКИЙ ИСПРАВЛЕНИЕ: ручная калибровка углового смещения
+    // На основе тестов: при winningIndex=0 показывается "Комплекс" (индекс 3 или 4)
+    // Значит нужно смещение примерно -108 градусов (3 сектора * 36°) или -144 градусов (4 сектора)
+    // Попробуем -144 градусов (4 сектора назад) для индекса 0 -> индекс 4 ("Предпродажка")
+    // Но нам нужно индекс 0 -> индекс 0, поэтому попробуем +144 градусов (4 сектора вперед)
     const sectorCenterAngle = winningIndex * sectorAngle + sectorAngle / 2;
-    // Центр сектора должен быть в верхней позиции (90 градусов), а не в 0 градусов
-    const targetRotation = rotation + (extraRotations * 360) - sectorCenterAngle + 90;
+    const calibrationOffset = 144; // Попробуем +144 градусов (4 сектора вперед)
+    const targetRotation = rotation + (extraRotations * 360) - sectorCenterAngle + calibrationOffset;
 
     setRotation(targetRotation);
-    setDebugInfo(`Вычислений индекс: ${winningIndex}, приз: ${wheelPrizes[winningIndex].name}, sectorCenterAngle: ${sectorCenterAngle}, targetRotation: ${targetRotation}`);
+    setDebugInfo(`Вычислений индекс: ${winningIndex}, приз: ${wheelPrizes[winningIndex].name}, sectorCenterAngle: ${sectorCenterAngle}, calibrationOffset: ${calibrationOffset}, targetRotation: ${targetRotation}`);
 
     // Анимация вращения
     setTimeout(() => {
