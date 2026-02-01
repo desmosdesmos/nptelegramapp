@@ -267,7 +267,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           strokeWidth="1"
           letterSpacing="0.05em"
         >
-          SPIN
+          NP
         </text>
       </svg>
     );
@@ -366,12 +366,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           </button>
         </div>
 
-        {/* Отладочная информация */}
-        {debugInfo && (
-          <div className="mb-4 p-2 bg-yellow-900/30 border border-yellow-500/50 rounded text-yellow-300 text-sm">
-            DEBUG: {debugInfo}
-          </div>
-        )}
 
         <div className="relative flex flex-col items-center">
           {/* Колесо */}
