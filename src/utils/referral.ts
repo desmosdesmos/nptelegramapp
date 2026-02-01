@@ -93,12 +93,52 @@ export const isNewReferral = (): boolean => {
   // Проверяем, есть ли уже сохраненная информация о реферере для этого пользователя
   const storageKey = `referrer_${telegramUser.id}_visited`;
   const hasVisited = localStorage.getItem(storageKey);
-  
+
   if (!hasVisited) {
     // Помечаем, что пользователь уже посещал приложение
     localStorage.setItem(storageKey, 'true');
     return true;
   }
-  
+
   return false;
+};
+
+/**
+ * Обновить счетчик привлеченных пользователей
+ */
+export const incrementTotalReferrals = (referrerCode: string): void => {
+  // В реальном приложении это будет вызов API для обновления счетчика на сервере
+  // Для демонстрации будем использовать localStorage
+
+  const countKey = `referral_total_count_${referrerCode}`;
+  const currentCount = parseInt(localStorage.getItem(countKey) || '0', 10);
+  localStorage.setItem(countKey, (currentCount + 1).toString());
+};
+
+/**
+ * Обновить счетчик оформленных записей
+ */
+export const incrementBookedReferrals = (referrerCode: string): void => {
+  // В реальном приложении это будет вызов API для обновления счетчика на сервере
+  // Для демонстрации будем использовать localStorage
+
+  const countKey = `referral_booked_count_${referrerCode}`;
+  const currentCount = parseInt(localStorage.getItem(countKey) || '0', 10);
+  localStorage.setItem(countKey, (currentCount + 1).toString());
+};
+
+/**
+ * Получить значение счетчика привлеченных пользователей
+ */
+export const getTotalReferralsCount = (referrerCode: string): number => {
+  const countKey = `referral_total_count_${referrerCode}`;
+  return parseInt(localStorage.getItem(countKey) || '0', 10);
+};
+
+/**
+ * Получить значение счетчика оформленных записей
+ */
+export const getBookedReferralsCount = (referrerCode: string): number => {
+  const countKey = `referral_booked_count_${referrerCode}`;
+  return parseInt(localStorage.getItem(countKey) || '0', 10);
 };

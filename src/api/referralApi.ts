@@ -4,6 +4,7 @@
 
 import { ReferralInfo, ReferralStats } from '../types/referral';
 import { getTelegramUser } from '../utils/telegram';
+import { getTotalReferralsCount, getBookedReferralsCount } from '../utils/referral';
 
 const API_BASE_URL = import.meta.env?.VITE_API_URL || 'http://localhost:3001/api';
 
@@ -46,10 +47,21 @@ export const getUserReferralInfo = async (): Promise<ReferralInfo> => {
     const data = await response.json();
 
     // Обновляем данные с постоянным кодом
-    return {
+    const result = {
       ...data,
       referralCode,
       referralLink
+    };
+
+    // Обновляем данные с учетом локальных значений
+    const localTotalReferrals = getTotalReferralsCount(referralCode);
+    const localBookedReferrals = getBookedReferralsCount(referralCode);
+
+    // Объединяем данные: используем локальные значения, если они больше
+    return {
+      ...result,
+      totalReferrals: Math.max(result.totalReferrals, localTotalReferrals),
+      bookedReferrals: Math.max(result.bookedReferrals || 0, localBookedReferrals)
     };
   } catch (error) {
     console.warn('Network error fetching referral info, returning mock data:', error);

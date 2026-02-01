@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Copy, Share2, Users, Gift, TrendingUp } from 'lucide-react';
 import { getUserReferralInfo, shareReferralCode, copyReferralLink } from '../api/referralApi';
+import { getTelegramUser, getTotalReferralsCount, getBookedReferralsCount } from '../utils/referral';
 
 interface ReferralCardProps {
   className?: string;
@@ -19,7 +20,25 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
     try {
       setLoading(true);
       const data = await getUserReferralInfo();
-      setReferralInfo(data);
+
+      // Обновляем данные с учетом локальных значений
+      const telegramUser = getTelegramUser();
+      if (telegramUser) {
+        const referralCode = `USER${String(telegramUser.id).slice(-6)}`;
+        const localTotalReferrals = getTotalReferralsCount(referralCode);
+        const localBookedReferrals = getBookedReferralsCount(referralCode);
+
+        // Объединяем данные: используем локальные значения, если они больше
+        const updatedData = {
+          ...data,
+          totalReferrals: Math.max(data.totalReferrals, localTotalReferrals),
+          bookedReferrals: Math.max(data.bookedReferrals, localBookedReferrals)
+        };
+
+        setReferralInfo(updatedData);
+      } else {
+        setReferralInfo(data);
+      }
     } catch (error) {
       console.error('Error loading referral info:', error);
     } finally {

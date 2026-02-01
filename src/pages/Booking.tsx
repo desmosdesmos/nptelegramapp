@@ -218,9 +218,11 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
 
       // Проверяем, является ли пользователь новым рефералом
       if (isNewReferral()) {
-        // Здесь можно добавить логику для увеличения счетчика привлеченных
-        // В реальном приложении это будет вызов API для обновления статистики
-        console.log(`Новый реферал: пользователь пришел по ссылке ${referralCode}`);
+        // Увеличиваем счетчик "Привлечено" для реферера
+        import('../utils/referral').then(({ incrementTotalReferrals }) => {
+          incrementTotalReferrals(referralCode);
+          console.log(`Новый реферал: пользователь пришел по ссылке ${referralCode}. Увеличиваем счетчик "Привлечено".`);
+        });
       }
     }
   }, []);
@@ -403,7 +405,11 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
         // Если пользователь пришел по реферальной ссылке, увеличиваем счетчик "Записалось"
         if (formData.referrer) {
           // В реальном приложении здесь будет вызов API для обновления статистики
-          console.log(`Заявка от реферала: ${formData.referrer}. Увеличиваем счетчик "Записалось".`);
+          // Для демонстрации используем локальное хранилище
+          import('../utils/referral').then(({ incrementBookedReferrals }) => {
+            incrementBookedReferrals(formData.referrer!);
+            console.log(`Заявка от реферала: ${formData.referrer}. Увеличиваем счетчик "Записалось".`);
+          });
         }
       } else {
         throw new Error('Ошибка отправки');
