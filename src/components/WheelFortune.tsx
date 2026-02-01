@@ -124,7 +124,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
       'Озонация': 'Озон',
       '1000 баллов': '1K б'
     };
-
+    
     return mappings[name] || name;
   };
 
@@ -221,7 +221,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
                 {prize.icon}
               </text>
 
-              {/* Подпись приза в секторе */}
+              {/* Подпись приза в секторе - без вращения, только позиционирование */}
               <text
                 x={labelPos.x}
                 y={labelPos.y + 10}
@@ -230,7 +230,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
                 fill="white"
                 fontWeight="500"
                 letterSpacing="0.2"
-                transform={`rotate(${index * sectorAngle + sectorAngle / 2}, ${labelPos.x}, ${labelPos.y})`}
               >
                 {shortenPrizeName(prize.name)}
               </text>
