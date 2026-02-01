@@ -286,9 +286,12 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     const extraRotations = 3 + Math.floor(Math.random() * 4);
     const winningIndex = getRandomPrizeIndex();
     
-    // КРИТИЧЕСКИЙ ИСПРАВЛЕНИЕ: корректный расчет targetRotation
-    const sectorStartAngle = winningIndex * sectorAngle;
-    const targetRotation = rotation + (extraRotations * 360) + (360 - sectorStartAngle - sectorAngle / 2);
+    // КРИТИЧЕСКИЙ ИСПРАВЛЕНИЕ: прямой расчет угла для точного позиционирования
+    // Указатель находится в верхней позиции (0 градусов), поэтому нужно повернуть колесо так,
+    // чтобы центр выигрышного сектора оказался в верхней позиции
+    const sectorCenterAngle = winningIndex * sectorAngle + sectorAngle / 2;
+    // Чтобы центр сектора оказался в верхней позиции (0 градусов), нужно повернуть колесо на -sectorCenterAngle
+    const targetRotation = rotation + (extraRotations * 360) - sectorCenterAngle;
 
     setRotation(targetRotation);
     setDebugInfo(`Вычислений индекс: ${winningIndex}, приз: ${wheelPrizes[winningIndex].name}`);
