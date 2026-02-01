@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Copy, Share2, Users, Gift, TrendingUp } from 'lucide-react';
 import { getUserReferralInfo, shareReferralCode, copyReferralLink } from '../api/referralApi';
-import { getTelegramUser, getTotalReferralsCount, getBookedReferralsCount } from '../utils/referral';
+import { getTotalReferralsCount, getBookedReferralsCount } from '../utils/referral';
+import { getTelegramUser } from '../utils/telegram';
 
 interface ReferralCardProps {
   className?: string;
