@@ -286,15 +286,15 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     const extraRotations = 3 + Math.floor(Math.random() * 4);
     const winningIndex = getRandomPrizeIndex();
     
-    // КРИТИЧЕСКИЙ ИСПРАВЛЕНИЕ: прямой расчет угла для точного позиционирования
-    // Указатель находится в верхней позиции (0 градусов), поэтому нужно повернуть колесо так,
-    // чтобы центр выигрышного сектора оказался в верхней позиции
+    // КРИТИЧЕСКИЙ ИСПРАВЛЕНИЕ: учет углового смещения для верхнего указателя
+    // В SVG сектора начинаются с правой позиции (0 градусов), но указатель находится в верхней позиции (90 градусов)
+    // Поэтому нужно добавить коррекцию +90 градусов для верхнего положения
     const sectorCenterAngle = winningIndex * sectorAngle + sectorAngle / 2;
-    // Чтобы центр сектора оказался в верхней позиции (0 градусов), нужно повернуть колесо на -sectorCenterAngle
-    const targetRotation = rotation + (extraRotations * 360) - sectorCenterAngle;
+    // Центр сектора должен быть в верхней позиции (90 градусов), а не в 0 градусов
+    const targetRotation = rotation + (extraRotations * 360) - sectorCenterAngle + 90;
 
     setRotation(targetRotation);
-    setDebugInfo(`Вычислений индекс: ${winningIndex}, приз: ${wheelPrizes[winningIndex].name}`);
+    setDebugInfo(`Вычислений индекс: ${winningIndex}, приз: ${wheelPrizes[winningIndex].name}, sectorCenterAngle: ${sectorCenterAngle}, targetRotation: ${targetRotation}`);
 
     // Анимация вращения
     setTimeout(() => {
