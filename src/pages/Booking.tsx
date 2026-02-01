@@ -447,6 +447,9 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                   newValue: JSON.stringify(referrals),
                   oldValue: JSON.stringify([...referrals]) // это не совсем правильно, но для целей обновления подойдет
                 }));
+
+                // Уведомляем через кастомное событие
+                window.dispatchEvent(new CustomEvent('referralUpdate'));
               }
             }
 

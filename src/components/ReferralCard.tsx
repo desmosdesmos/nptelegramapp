@@ -31,6 +31,19 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
     };
   }, []);
 
+  // Добавим подписку на кастомное событие для обновления данных
+  useEffect(() => {
+    const handleCustomUpdate = () => {
+      loadReferralInfo();
+    };
+
+    window.addEventListener('referralUpdate', handleCustomUpdate);
+
+    return () => {
+      window.removeEventListener('referralUpdate', handleCustomUpdate);
+    };
+  }, []);
+
   const loadReferralInfo = async () => {
     try {
       setLoading(true);

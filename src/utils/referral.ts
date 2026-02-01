@@ -145,6 +145,9 @@ export const saveReferralInfo = (referralCode: string, referrerCode: string): vo
     newValue: JSON.stringify(existingReferrals),
     oldValue: JSON.stringify(existingReferrals.slice(0, -1))
   }));
+
+  // Уведомляем через кастомное событие
+  window.dispatchEvent(new CustomEvent('referralUpdate'));
 };
 
 /**
@@ -172,6 +175,9 @@ export const incrementTotalReferrals = (referrerCode: string): void => {
     newValue: (currentCount + 1).toString(),
     oldValue: currentCount.toString()
   }));
+
+  // Уведомляем через кастомное событие
+  window.dispatchEvent(new CustomEvent('referralUpdate'));
 };
 
 /**
@@ -191,6 +197,9 @@ export const incrementBookedReferrals = (referrerCode: string): void => {
     newValue: (currentCount + 1).toString(),
     oldValue: currentCount.toString()
   }));
+
+  // Уведомляем через кастомное событие
+  window.dispatchEvent(new CustomEvent('referralUpdate'));
 };
 
 /**
