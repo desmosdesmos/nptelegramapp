@@ -14,15 +14,14 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
   const [lastResult, setLastResult] = useState<WheelSpinResult | null>(null);
   const [canSpin, setCanSpin] = useState(true);
   const [dailyStreak, setDailyStreak] = useState(0);
-  
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   // Количество секторов на колесе
   const numSectors = wheelPrizes.length;
   // Угол каждого сектора
   const sectorAngle = 360 / numSectors;
-  
 
   // Проверяем, можно ли крутить сегодня
   useEffect(() => {
@@ -49,159 +48,191 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     setDailyStreak(streak);
   }, []);
 
-  // Рисуем колесо
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    
-    const diameter = 300;
-    const radius = diameter / 2;
-    
-    // Устанавливаем размеры холста
-    canvas.width = diameter;
-    canvas.height = diameter;
-    
-    // Очищаем холст
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Сохраняем состояние
-    ctx.save();
-    
-    // Перемещаем центр в центр холста
-    ctx.translate(radius, radius);
-    
-    // Рисуем секторы
-    for (let i = 0; i < numSectors; i++) {
-      const prize = wheelPrizes[i];
-      const startAngle = (i * sectorAngle * Math.PI) / 180;
-      const endAngle = ((i + 1) * sectorAngle * Math.PI) / 180;
+  // Функция для получения случайного индекса приза с учетом заданных вероятностей
+  const getRandomPrizeIndex = (): number => {
+    // Получаем список призов с заданными вероятностями
+    const specificPrizes = Object.keys(prizeProbabilities);
 
-      // Выбираем цвет в зависимости от редкости
-      let fillColor = '#8B5CF6'; // purple-500 по умолчанию
-      let strokeColor = '#1E293B'; // slate-800 по умолчанию
-      switch (prize.rarity) {
-        case 'common':
-          fillColor = '#3B82F6'; // blue-500
-          strokeColor = '#1E40AF'; // blue-800
-          break;
-        case 'rare':
-          fillColor = '#10B981'; // emerald-500
-          strokeColor = '#065F46'; // emerald-800
-          break;
-        case 'epic':
-          fillColor = '#8B5CF6'; // violet-500
-          strokeColor = '#5B21B6'; // violet-800
-          break;
-        case 'legendary':
-          fillColor = '#F59E0B'; // amber-500
-          strokeColor = '#92400E'; // amber-800
-          break;
-      }
+    // Генерируем случайное число от 0 до 100
+    const random = Math.random() * 100;
 
-      // Рисуем сектор
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.arc(0, 0, radius, startAngle, endAngle);
-      ctx.closePath();
-      ctx.fillStyle = fillColor;
-      ctx.fill();
+    // Проверяем, соответствует ли результат какому-либо конкретному призу
+    let cumulativeProbability = 0;
 
-      // Рисуем градиентную границу для имитации металлического отблеска
-      ctx.strokeStyle = `linear-gradient(${startAngle}rad, ${strokeColor}, #ffffff)`;
-      ctx.lineWidth = 1;
-      ctx.stroke();
+    for (const prizeId of specificPrizes) {
+      const probability = prizeProbabilities[prizeId as keyof typeof prizeProbabilities];
+      cumulativeProbability += probability;
 
-      // Добавляем тонкий внутренний отблеск для имитации металлической текстуры
-      ctx.beginPath();
-      ctx.arc(0, 0, radius * 0.95, startAngle, endAngle);
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
-      ctx.lineWidth = 0.5;
-      ctx.stroke();
-
-      // Рисуем текст
-      ctx.save();
-      ctx.rotate(startAngle + sectorAngle * Math.PI / 360);
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#FFFFFF';
-      ctx.font = 'bold 14px Arial';
-
-      // Поворачиваем текст к центру
-      const textRadius = radius * 0.65;
-
-      // Рисуем иконку
-      ctx.font = 'bold 20px Arial';
-      ctx.shadowColor = '#3B82F6'; // Electric Blue
-      ctx.shadowBlur = 5;
-      ctx.fillText(prize.icon, textRadius * Math.cos(-Math.PI/2), textRadius * Math.sin(-Math.PI/2) - 10);
-
-      // Рисуем название приза
-      ctx.font = 'bold 10px Arial';
-      ctx.shadowColor = '#3B82F6'; // Electric Blue
-      ctx.shadowBlur = 3;
-      const maxWidth = radius * 0.4; // Максимальная ширина текста
-
-      // Функция для разбиения текста на строки
-      const wrapText = (text: string, maxWidth: number): string[] => {
-        const lines = [];
-        const words = text.split(' ');
-
-        let currentLine = words[0];
-
-        for (let i = 1; i < words.length; i++) {
-          const word = words[i];
-          const width = ctx.measureText(currentLine + ' ' + word).width;
-
-          if (width < maxWidth) {
-            currentLine += ' ' + word;
-          } else {
-            lines.push(currentLine);
-            currentLine = word;
-          }
+      if (random <= cumulativeProbability) {
+        // Нашли приз, которому соответствует случайное число
+        const prizeIndex = wheelPrizes.findIndex(p => p.id === prizeId);
+        if (prizeIndex !== -1) {
+          return prizeIndex;
         }
-
-        lines.push(currentLine);
-        return lines;
-      };
-
-      const lines = wrapText(prize.name, maxWidth);
-
-      // Рисуем каждую строку текста
-      for (let i = 0; i < lines.length; i++) {
-        ctx.fillText(lines[i], textRadius * Math.cos(-Math.PI/2), textRadius * Math.sin(-Math.PI/2) + (i * 12));
       }
-
-      ctx.restore();
     }
-    
-    // Восстанавливаем состояние
-    ctx.restore();
-    
-    // Рисуем центральный круг
-    ctx.beginPath();
-    ctx.arc(radius, radius, 20, 0, 2 * Math.PI);
-    ctx.fillStyle = '#1E293B'; // slate-800
-    ctx.fill();
-    
-  }, [rotation]);
+
+    // Если не попали в заданные вероятности, выбираем случайный приз из оставшихся
+    // или возвращаем самый распространенный приз (10 баллов)
+    const defaultPrizeIndex = wheelPrizes.findIndex(p => p.id === 'points-10');
+    return defaultPrizeIndex !== -1 ? defaultPrizeIndex : 0;
+  };
+
+  // Функция для расчета координат сектора
+  const calculateSectorPath = (index: number, radius: number) => {
+    const startAngle = (index * sectorAngle * Math.PI) / 180;
+    const endAngle = ((index + 1) * sectorAngle * Math.PI) / 180;
+
+    const x1 = 150 + radius * Math.cos(startAngle);
+    const y1 = 150 + radius * Math.sin(startAngle);
+    const x2 = 150 + radius * Math.cos(endAngle);
+    const y2 = 150 + radius * Math.sin(endAngle);
+
+    return `M 150 150 L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z`;
+  };
+
+  // Функция для определения цвета сектора в зависимости от редкости
+  const getSectorColor = (rarity: string) => {
+    switch (rarity) {
+      case 'common':
+        return '#2c3e50'; // Темно-серый для обычных призов
+      case 'rare':
+        return '#34495e'; // Средне-темный серый для редких
+      case 'epic':
+        return '#2c3e50'; // Темно-серый для эпических
+      case 'legendary':
+        return '#2c3e50'; // Темно-серый для легендарных
+      default:
+        return '#2c3e50'; // Темно-серый по умолчанию
+    }
+  };
+
+  // Рисуем колесо с помощью SVG
+  const renderWheel = () => {
+    const radius = 140;
+
+    return (
+      <svg
+        ref={svgRef}
+        width="300"
+        height="300"
+        viewBox="0 0 300 300"
+        className="rounded-full border border-transparent shadow-lg"
+        style={{
+          transform: `rotate(${rotation}deg)`,
+          transition: spinning ? 'transform 4s cubic-bezier(0.15, 0, 0.15, 1)' : 'none',
+          background: 'radial-gradient(circle, #2c3e50 0%, #1a1a1a 70%)',
+          boxShadow: '0 0 20px rgba(0, 255, 255, 0.5), inset 0 0 20px rgba(0, 255, 255, 0.3)',
+        }}
+      >
+        {/* Внешний обод с металлической текстурой */}
+        <circle
+          cx="150"
+          cy="150"
+          r="148"
+          fill="none"
+          stroke="url(#metalGradient)"
+          strokeWidth="4"
+          style={{
+            filter: 'drop-shadow(0 0 5px rgba(0, 255, 255, 0.7))'
+          }}
+        />
+
+        {/* Градиент для металлического обода */}
+        <defs>
+          <linearGradient id="metalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#aaa" />
+            <stop offset="50%" stopColor="#eee" />
+            <stop offset="100%" stopColor="#aaa" />
+          </linearGradient>
+
+          {/* Градиент для неонового свечения */}
+          <filter id="neonGlow">
+            <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* Сектора колеса */}
+        {wheelPrizes.map((prize, index) => {
+          const pathData = calculateSectorPath(index, radius);
+          const color = getSectorColor(prize.rarity);
+
+          return (
+            <g key={index}>
+              {/* Сектор */}
+              <path
+                d={pathData}
+                fill={color}
+                stroke="#00ffff" // Неоново-циановая граница
+                strokeWidth="2"
+                style={{
+                  filter: 'drop-shadow(0 0 5px rgba(0, 255, 255, 0.7))'
+                }}
+              />
+
+              {/* Иконка в секторе */}
+              <text
+                x="150"
+                y="150"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fontSize="24"
+                fill="white"
+                fontWeight="bold"
+                transform={`rotate(${index * sectorAngle + sectorAngle / 2}, 150, 150) translate(0, -${radius * 0.6})`}
+              >
+                {prize.icon}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* Центральное колесо (кнопка "Spin") */}
+        <circle
+          cx="150"
+          cy="150"
+          r="30"
+          fill="#1a1a1a"
+          stroke="#00ffff"
+          strokeWidth="2"
+          style={{
+            filter: 'drop-shadow(0 0 8px rgba(0, 255, 255, 0.8))'
+          }}
+        />
+        <text
+          x="150"
+          y="155"
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fontSize="12"
+          fill="#00ffff"
+          fontWeight="bold"
+        >
+          NP
+        </text>
+      </svg>
+    );
+  };
 
   const spinWheel = () => {
     if (!canSpin || spinning) return;
-    
+
     hapticFeedback('medium');
-    
+
     setSpinning(true);
     setLastResult(null);
-    
+
     // Добавляем случайное количество оборотов (3-6) плюс смещение для нужного сектора
     const extraRotations = 3 + Math.floor(Math.random() * 4);
     const winningIndex = getRandomPrizeIndex();
     const targetRotation = rotation + (extraRotations * 360) + (360 - (winningIndex * sectorAngle));
-    
+
     setRotation(targetRotation);
-    
+
     // Анимация вращения
     setTimeout(() => {
       // Выбираем приз
@@ -249,65 +280,14 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
       // Вызываем коллбэк
       onWin(result);
-    }, 5000); // 5 секунд на анимацию
+    }, 4000); // 4 секунды на анимацию
   };
-
-  // Функция для получения случайного индекса приза с учетом заданных вероятностей
-  const getRandomPrizeIndex = (): number => {
-    // Получаем список призов с заданными вероятностями
-    const specificPrizes = Object.keys(prizeProbabilities);
-
-    // Генерируем случайное число от 0 до 100
-    const random = Math.random() * 100;
-
-    // Проверяем, соответствует ли результат какому-либо конкретному призу
-    let cumulativeProbability = 0;
-
-    for (const prizeId of specificPrizes) {
-      const probability = prizeProbabilities[prizeId as keyof typeof prizeProbabilities];
-      cumulativeProbability += probability;
-
-      if (random <= cumulativeProbability) {
-        // Нашли приз, которому соответствует случайное число
-        const prizeIndex = wheelPrizes.findIndex(p => p.id === prizeId);
-        if (prizeIndex !== -1) {
-          return prizeIndex;
-        }
-      }
-    }
-
-    // Если не попали в заданные вероятности, выбираем случайный приз из оставшихся
-    // или возвращаем самый распространенный приз (10 баллов)
-    const defaultPrizeIndex = wheelPrizes.findIndex(p => p.id === 'points-10');
-    return defaultPrizeIndex !== -1 ? defaultPrizeIndex : 0;
-  };
-
-  // Добавляем стили для анимации блика
-  useEffect(() => {
-    // Создаем CSS-анимацию для блика
-    const style = document.createElement('style');
-    style.textContent = `
-      @keyframes sweep {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-    `;
-    document.head.appendChild(style);
-
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div
         ref={containerRef}
-        className="bg-[#1a1a1a] backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-3xl p-6 max-w-md w-full border border-white/10 shadow-2xl"
+        className="bg-[#0a0a0a] backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-3xl p-6 max-w-md w-full border border-cyan-500/30 shadow-2xl shadow-cyan-500/20"
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-white font-system">Ежедневное колесо фортуны</h2>
@@ -322,41 +302,17 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         <div className="relative flex flex-col items-center">
           {/* Колесо */}
           <div className="relative">
-            <canvas
-              ref={canvasRef}
-              className="rounded-full border border-transparent shadow-lg"
-              style={{
-                transform: `rotate(${rotation}deg)`,
-                transition: spinning ? 'transform 5s cubic-bezier(0.15, 0, 0.15, 1)' : 'none',
-                boxShadow: 'inset 0 0 20px rgba(59, 130, 246, 0.3)',
-              }}
-            />
+            {renderWheel()}
 
             {/* Указатель */}
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2 z-10">
-              <div className="w-0 h-0 border-l-[15px] border-r-[15px] border-t-[20px] border-l-transparent border-r-transparent border-t-[#3B82F6]"></div>
+              <div className="w-0 h-0 border-l-[15px] border-r-[15px] border-t-[20px] border-l-transparent border-r-transparent border-t-[#00ffff] shadow-[0_0_10px_2px_rgba(0,255,255,0.7)]"></div>
             </div>
-
-            {/* Эффект блика при вращении */}
-            {spinning && (
-              <div
-                className="absolute top-1/2 left-1/2 w-full h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent transform -translate-y-1/2 animate-spin"
-                style={{
-                  animation: 'sweep 1s linear infinite',
-                  transformOrigin: 'left center',
-                  width: '100%',
-                  height: '2px',
-                  top: '50%',
-                  left: '0',
-                  transform: 'translateY(-50%) rotate(0deg)',
-                }}
-              ></div>
-            )}
           </div>
 
           {/* Информация о серии */}
           <div className="mt-4 text-center">
-            <p className="text-white/80 font-system">Дней подряд: <span className="font-bold text-[#3B82F6]">{dailyStreak}</span></p>
+            <p className="text-white/80 font-system">Дней подряд: <span className="font-bold text-[#00ffff]">{dailyStreak}</span></p>
           </div>
 
           {/* Кнопка вращения */}
@@ -365,19 +321,16 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
             disabled={!canSpin || spinning}
             className={`mt-6 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 ${
               canSpin && !spinning
-                ? 'bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] text-[#3B82F6] border border-white/20 shadow-lg shadow-[#3B82F6]/20 hover:shadow-[#3B82F6]/40 transform hover:scale-105 active:scale-95'
+                ? 'bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] text-[#00ffff] border border-cyan-500/50 shadow-lg shadow-[#00ffff]/30 hover:shadow-[#00ffff]/50 transform hover:scale-105 active:scale-95'
                 : 'bg-gray-800 text-gray-400 cursor-not-allowed'
             }`}
-            style={{
-              backgroundImage: canSpin && !spinning ? 'radial-gradient(circle, #333 0%, #000 70%)' : undefined,
-            }}
           >
             {spinning ? 'Крутится...' : canSpin ? 'Крутить колесо!' : 'Попробуйте завтра'}
           </button>
 
           {/* Результат последнего вращения */}
           {lastResult && (
-            <div className="mt-6 p-4 bg-white/5 backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-2xl border border-white/10 w-full text-center">
+            <div className="mt-6 p-4 bg-black/30 backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-2xl border border-cyan-500/30 w-full text-center">
               <h3 className="text-lg font-bold text-white mb-2">Ваш приз:</h3>
               <div className="flex items-center justify-center gap-2">
                 <span className="text-3xl">{lastResult.prize.icon}</span>
