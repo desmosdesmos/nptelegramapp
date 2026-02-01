@@ -286,15 +286,21 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     const extraRotations = 3 + Math.floor(Math.random() * 4);
     const winningIndex = getRandomPrizeIndex();
     
-    // КРИТИЧЕСКИЙ ИСПРАВЛЕНИЕ: ручная калибровка углового смещения
-    // На основе последнего теста: при winningIndex=0 показывается "1000 бонусов" (индекс 5)
-    // Разница: 5 - 0 = +5 секторов → нужно смещение -180 градусов (5 секторов назад)
+    // ФИНАЛЬНОЕ ИСПРАВЛЕНИЕ: прямой расчет угла с нормализацией
+    // Указатель в верхней позиции (90 градусов), сектора начинаются с 0 градусов (правая позиция)
+    // Центр сектора с индексом i находится под углом: i * sectorAngle + sectorAngle/2
+    // Чтобы центр сектора оказался в верхней позиции (90 градусов), нужно повернуть на: 90 - (i * sectorAngle + sectorAngle/2)
     const sectorCenterAngle = winningIndex * sectorAngle + sectorAngle / 2;
-    const calibrationOffset = -180; // Смещение -180 градусов (5 секторов назад)
-    const targetRotation = rotation + (extraRotations * 360) - sectorCenterAngle + calibrationOffset;
+    const targetRotation = 90 - sectorCenterAngle;
 
-    setRotation(targetRotation);
-    setDebugInfo(`Вычислений индекс: ${winningIndex}, приз: ${wheelPrizes[winningIndex].name}, sectorCenterAngle: ${sectorCenterAngle}, calibrationOffset: ${calibrationOffset}, targetRotation: ${targetRotation}`);
+    // Нормализуем угол в диапазон [0, 360)
+    const normalizedRotation = ((targetRotation % 360) + 360) % 360;
+    
+    // Добавляем случайные обороты для анимации
+    const finalRotation = normalizedRotation + extraRotations * 360;
+
+    setRotation(finalRotation);
+    setDebugInfo(`Вычислений индекс: ${winningIndex}, приз: ${wheelPrizes[winningIndex].name}, sectorCenterAngle: ${sectorCenterAngle}, targetRotation: ${targetRotation}, normalized: ${normalizedRotation}, final: ${finalRotation}`);
 
     // Анимация вращения
     setTimeout(() => {
