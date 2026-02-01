@@ -15,6 +15,7 @@ export interface BookingFormData {
   date: string;
   time?: string;
   comment: string;
+  referrer?: string; // Код пользователя, который пригласил
   quantities?: { [serviceId: string]: number };
 }
 
@@ -63,6 +64,7 @@ export const sendBookingToTelegram = async (formData: BookingFormData): Promise<
     additionalOptionsNames.length > 0 ? `➕ *Дополнительно:* ${additionalOptionsNames.join(', ')}` : null,
     `📅 *Дата:* ${formData.date}`,
     formData.comment ? `💬 *Комментарий:* ${formData.comment}` : null,
+    formData.referrer ? `🎁 *Приглашен пользователем:* ${formData.referrer}` : null,
     `🔗 *Клиент:* ${userLink}`
   ].filter(Boolean).join('\n');
 

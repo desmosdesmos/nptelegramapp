@@ -3,6 +3,7 @@ import { ArrowLeft } from 'lucide-react';
 import { PageKey } from '../App';
 import { getTelegramWebApp, hapticFeedback, notificationFeedback, getTelegramUser } from '../utils/telegram';
 import { sendBookingToTelegram, validateBookingForm, type BookingFormData } from '../utils/booking';
+import { getReferralCodeFromUrl, saveReferrerInfo, isValidReferralCode } from '../utils/referral';
 import { mainServices, localCleaningServices, getServiceById, getServiceOptionById } from '../data/services';
 import { getAllBrands, getModelsByBrand } from '../data/carBrands';
 import type { Service } from '../types/services';
@@ -148,11 +149,12 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
     phone: '+7',
     carBrand: '',
     carModel: '',
-    services: [], 
+    services: [],
     additionalOptions: [],
     date: '',
     time: '', // Not used in this simplified UI
     comment: '',
+    referrer: undefined,
   });
 
   const [quantities, setQuantities] = useState<{ [serviceId: string]: number }>({});
@@ -202,6 +204,19 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       }
     };
   }, [tg]);
+
+  // Проверяем реферальный код при загрузке компонента
+  useEffect(() => {
+    const referralCode = getReferralCodeFromUrl();
+    if (referralCode && isValidReferralCode(referralCode)) {
+      setFormData(prev => ({
+        ...prev,
+        referrer: referralCode
+      }));
+      // Сохраняем информацию о реферере
+      saveReferrerInfo(referralCode);
+    }
+  }, []);
     
   const handleChange = (field: keyof Omit<BookingFormData, 'quantities'>, value: any) => {
     hapticFeedback('light'); // Added haptic feedback for input changes
@@ -360,7 +375,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
 
   const handleSubmit = useCallback(async () => {
     hapticFeedback('heavy'); // Strong haptic feedback for form submission
-    
+
     const fullFormData: BookingFormData = { ...formData, quantities };
     const validation = validateBookingForm(fullFormData);
 
@@ -415,6 +430,18 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       </button>
 
       <h1 className="text-3xl font-bold mb-8 text-center">Онлайн-запись</h1>
+
+      {/* Отображение информации о реферере */}
+      {formData.referrer && (
+        <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-600/20 border border-white/10 backdrop-blur-md">
+          <div className="flex items-center gap-2 text-white">
+            <span className="text-lg">🎁</span>
+            <p className="text-sm">
+              Вы перешли по ссылке пользователя <span className="font-semibold">{formData.referrer}</span>
+            </p>
+          </div>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto">
         {/* Contact Info */}
