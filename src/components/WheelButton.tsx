@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Gift } from 'lucide-react';
+import { getTelegramUser } from '../utils/telegram';
 
 interface WheelButtonProps {
   onOpenWheel: () => void;
@@ -11,31 +12,42 @@ const WheelButton: React.FC<WheelButtonProps> = ({ onOpenWheel }) => {
 
   useEffect(() => {
     const checkSpinAvailability = () => {
-      const lastSpinDate = localStorage.getItem('wheel_last_spin_date');
-      const today = new Date().toISOString().split('T')[0];
-      
-      if (lastSpinDate === today) {
-        // Узнаем, когда можно будет крутить снова
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        tomorrow.setHours(0, 0, 0, 0);
-        
-        const timeDiff = tomorrow.getTime() - new Date().getTime();
-        const hours = Math.floor(timeDiff / (1000 * 60 * 60));
-        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-        
-        setTimeUntilNextSpin(`${hours}ч ${minutes}м`);
-        setCanSpin(false);
-      } else {
+      // Получаем информацию о пользователе Telegram
+      const telegramUser = getTelegramUser();
+      const isTester = telegramUser && telegramUser.username === 'yanvtg';
+
+      if (isTester) {
+        // Для тестера всегда можно крутить
         setCanSpin(true);
         setTimeUntilNextSpin('');
+      } else {
+        // Для обычных пользователей проверяем дату
+        const lastSpinDate = localStorage.getItem('wheel_last_spin_date');
+        const today = new Date().toISOString().split('T')[0];
+
+        if (lastSpinDate === today) {
+          // Узнаем, когда можно будет крутить снова
+          const tomorrow = new Date();
+          tomorrow.setDate(tomorrow.getDate() + 1);
+          tomorrow.setHours(0, 0, 0, 0);
+
+          const timeDiff = tomorrow.getTime() - new Date().getTime();
+          const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+          const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+
+          setTimeUntilNextSpin(`${hours}ч ${minutes}м`);
+          setCanSpin(false);
+        } else {
+          setCanSpin(true);
+          setTimeUntilNextSpin('');
+        }
       }
     };
 
     checkSpinAvailability();
     // Проверяем каждую минуту
     const interval = setInterval(checkSpinAvailability, 60000);
-    
+
     return () => clearInterval(interval);
   }, []);
 

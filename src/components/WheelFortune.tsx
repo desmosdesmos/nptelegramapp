@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { WheelSpinResult } from '../types/wheel';
 import { wheelPrizes } from '../data/wheelConfig';
-import { hapticFeedback } from '../utils/telegram';
+import { hapticFeedback, getTelegramUser } from '../utils/telegram';
 
 interface WheelFortuneProps {
   onWin: (result: WheelSpinResult) => void;
@@ -26,10 +26,14 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
   // Проверяем, можно ли крутить сегодня
   useEffect(() => {
+    // Получаем информацию о пользователе Telegram
+    const telegramUser = getTelegramUser();
+    const isTester = telegramUser && telegramUser.username === 'yanvtg';
+
     const lastSpinDate = localStorage.getItem('wheel_last_spin_date');
     const today = new Date().toISOString().split('T')[0];
-    
-    if (lastSpinDate === today) {
+
+    if (!isTester && lastSpinDate === today) {
       setCanSpin(false);
       // Показываем результат последнего вращения
       const lastResultStr = localStorage.getItem('wheel_last_result');
@@ -39,7 +43,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     } else {
       setCanSpin(true);
     }
-    
+
     // Загружаем серию дней
     const streak = parseInt(localStorage.getItem('wheel_daily_streak') || '0', 10);
     setDailyStreak(streak);
@@ -154,27 +158,42 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         sectorIndex: winningIndex,
         timestamp: Date.now()
       };
-      
+
       setLastResult(result);
       setSpinning(false);
-      setCanSpin(false);
-      
+
+      // Получаем информацию о пользователе Telegram
+      const telegramUser = getTelegramUser();
+      const isTester = telegramUser && telegramUser.username === 'yanvtg';
+
+      if (isTester) {
+        // Для тестера не ограничиваем вращение
+        setCanSpin(true);
+      } else {
+        // Для обычных пользователей ограничиваем
+        setCanSpin(false);
+
+        // Сохраняем дату вращения для обычных пользователей
+        localStorage.setItem('wheel_last_spin_date', new Date().toISOString().split('T')[0]);
+      }
+
       // Сохраняем результат
       localStorage.setItem('wheel_last_result', JSON.stringify(result));
-      localStorage.setItem('wheel_last_spin_date', new Date().toISOString().split('T')[0]);
-      
-      // Обновляем серию
-      const today = new Date().toISOString().split('T')[0];
-      const lastSpinDate = localStorage.getItem('wheel_last_spin_date_prev');
-      let newStreak = dailyStreak;
-      
-      if (!lastSpinDate || lastSpinDate !== today) {
-        newStreak++;
-        localStorage.setItem('wheel_daily_streak', newStreak.toString());
-        setDailyStreak(newStreak);
-        localStorage.setItem('wheel_last_spin_date_prev', today);
+
+      // Обновляем серию для обычных пользователей
+      if (!isTester) {
+        const today = new Date().toISOString().split('T')[0];
+        const lastSpinDate = localStorage.getItem('wheel_last_spin_date_prev');
+        let newStreak = dailyStreak;
+
+        if (!lastSpinDate || lastSpinDate !== today) {
+          newStreak++;
+          localStorage.setItem('wheel_daily_streak', newStreak.toString());
+          setDailyStreak(newStreak);
+          localStorage.setItem('wheel_last_spin_date_prev', today);
+        }
       }
-      
+
       // Вызываем коллбэк
       onWin(result);
     }, 5000); // 5 секунд на анимацию
