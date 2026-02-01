@@ -8,7 +8,7 @@ interface ReferralCardProps {
 }
 
 const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
-  const { referralInfo, loading: contextLoading, refreshReferralInfo } = useReferral();
+  const { referralInfo, loading: contextLoading } = useReferral();
   const [copied, setCopied] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
