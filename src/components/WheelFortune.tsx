@@ -286,17 +286,17 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     const extraRotations = 3 + Math.floor(Math.random() * 4);
     const winningIndex = getRandomPrizeIndex();
     
-    // ФИНАЛЬНАЯ ДИАГНОСТИКА: прямая проверка позиционирования
-    // Вместо сложных расчетов, используем простой подход:
-    // При вращении колесо должно остановиться так, чтобы сектор с индексом winningIndex был под указателем
-    // Попробуем фиксированное значение для тестирования
-    const testRotation = 60; // Тестовое значение из предыдущего debug
+    // ФИНАЛЬНОЕ РЕШЕНИЕ: прямой расчет на основе диагностики
+    // Из диагностики: при rotation=60° реальный индекс=5, но нужно winningIndex=0
+    // Значит формула: rotation = 360 - winningIndex * sectorAngle
+    const targetRotation = 360 - winningIndex * sectorAngle;
 
-    // Для диагностики: покажем реальный индекс сектора под указателем
-    const realSectorIndex = Math.floor((360 - testRotation % 360) / sectorAngle) % numSectors;
+    // Нормализуем и добавляем обороты
+    const normalizedRotation = ((targetRotation % 360) + 360) % 360;
+    const finalRotation = normalizedRotation + extraRotations * 360;
 
-    setRotation(testRotation + extraRotations * 360);
-    setDebugInfo(`ДИАГНОСТИКА: вычислен индекс=${winningIndex}, реальный индекс под указателем=${realSectorIndex}, приз=${wheelPrizes[winningIndex].name}, testRotation=${testRotation}`);
+    setRotation(finalRotation);
+    setDebugInfo(`ФИНАЛЬНАЯ КАЛИБРОВКА: вычислен индекс=${winningIndex}, targetRotation=${targetRotation}, normalized=${normalizedRotation}, final=${finalRotation}, приз=${wheelPrizes[winningIndex].name}`);
 
     // Анимация вращения
     setTimeout(() => {
