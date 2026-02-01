@@ -41,11 +41,11 @@ export const wheelPrizes: WheelPrize[] = [
   },
   {
     id: 'free-pre-sale',
-    name: 'Предпродажка',
+    name: 'Скидка 30%',
     type: 'free_service',
     value: 'pre_sale',
     rarity: 'epic',
-    description: 'Бесплатная предпродажная подготовка автомобиля',
+    description: 'Скидка 30% на следующую услугу',
     icon: ''
   },
   {
