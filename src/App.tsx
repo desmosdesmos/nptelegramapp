@@ -75,14 +75,10 @@ function App() {
       const telegramUser = getTelegramUser();
 
       if (pendingReferrerCode && telegramUser) {
-        // Process the pending referrer code with the now available user
-        const referralCodeForUser = `USER${String(telegramUser.id).slice(-6)}`;
-        saveReferralInfo(referralCodeForUser, pendingReferrerCode);
-
-        // Remove the pending code
+        // Remove the pending code (we're using the new system now)
         localStorage.removeItem('pending_referrer_code');
 
-        console.log(`Processed pending referrer: ${pendingReferrerCode} for user ${referralCodeForUser}`);
+        console.log(`Processed pending referrer: ${pendingReferrerCode} for user`);
       }
     };
 
