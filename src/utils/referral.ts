@@ -63,12 +63,12 @@ export const wasRegisteredViaReferral = (): boolean => {
 };
 
 /**
- * Проверить, является ли услуга, которую выбрал пользователь,
+ * Проверить, является ли услуга, которую выбрал пользователь, 
  * квалифицирующей для начисления реферального бонуса
  */
 export const isQualifyingService = (serviceType: string): boolean => {
   // В данном случае, только комплексная химчистка дает право на бонус
-  return serviceType.toLowerCase().includes('комплексн') &&
+  return serviceType.toLowerCase().includes('комплексн') && 
          serviceType.toLowerCase().includes('химчистк');
 };
 
@@ -79,4 +79,26 @@ export const isValidReferralCode = (code: string): boolean => {
   // Проверяем, соответствует ли код формату USER + 6 цифр
   const referralCodePattern = /^USER\d{6}$/;
   return referralCodePattern.test(code);
+};
+
+/**
+ * Проверить, является ли пользователь новым рефералом (первый визит по реферальной ссылке)
+ */
+export const isNewReferral = (): boolean => {
+  const telegramUser = getTelegramUser();
+  if (!telegramUser) {
+    return false;
+  }
+
+  // Проверяем, есть ли уже сохраненная информация о реферере для этого пользователя
+  const storageKey = `referrer_${telegramUser.id}_visited`;
+  const hasVisited = localStorage.getItem(storageKey);
+  
+  if (!hasVisited) {
+    // Помечаем, что пользователь уже посещал приложение
+    localStorage.setItem(storageKey, 'true');
+    return true;
+  }
+  
+  return false;
 };

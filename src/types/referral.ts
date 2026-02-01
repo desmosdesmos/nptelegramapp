@@ -6,6 +6,7 @@ export interface ReferralInfo {
   referralCode: string; // Простой код в формате USER123
   referralLink: string;
   totalReferrals: number; // Общее количество привлеченных
+  confirmedReferrals: number; // Количество подтвержденных (с выполненной работой) рефералов
   totalBonuses: number; // Общая сумма выплаченных бонусов в рублях
   referrals: Referral[]; // Детали по каждому рефералу
 }
@@ -22,6 +23,7 @@ export interface Referral {
 
 export interface ReferralStats {
   totalReferrals: number;
+  confirmedReferrals: number; // Количество подтвержденных (с выполненной работой) рефералов
   totalBonuses: number;
-  completedReferrals: number; // Количество завершенных рефералов (с оплатой)
+  pendingBonuses: number; // Бонусы, ожидающие подтверждения
 }

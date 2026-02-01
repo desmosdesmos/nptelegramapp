@@ -37,6 +37,7 @@ export const getUserReferralInfo = async (): Promise<ReferralInfo> => {
         referralCode,
         referralLink,
         totalReferrals: 0,
+        confirmedReferrals: 0,
         totalBonuses: 0,
         referrals: []
       };
@@ -62,6 +63,7 @@ export const getUserReferralInfo = async (): Promise<ReferralInfo> => {
       referralCode,
       referralLink,
       totalReferrals: 0,
+      confirmedReferrals: 0,
       totalBonuses: 0,
       referrals: []
     };
@@ -92,8 +94,9 @@ export const getUserReferralStats = async (): Promise<ReferralStats> => {
 
       return {
         totalReferrals: 0,
+        confirmedReferrals: 0,
         totalBonuses: 0,
-        completedReferrals: 0
+        pendingBonuses: 0
       };
     }
 
@@ -104,8 +107,9 @@ export const getUserReferralStats = async (): Promise<ReferralStats> => {
     // Возвращаем mock-данные при сетевой ошибке
     return {
       totalReferrals: 0,
+      confirmedReferrals: 0,
       totalBonuses: 0,
-      completedReferrals: 0
+      pendingBonuses: 0
     };
   }
 };
@@ -116,7 +120,7 @@ export const getUserReferralStats = async (): Promise<ReferralStats> => {
 export const shareReferralCode = (referralCode: string) => {
   // Создаем ссылку на Telegram бота с реферальным кодом
   const referralLink = `https://t.me/nptime_bot/npfast?start=${referralCode}`;
-  const shareText = `Привет! Переходи по моей ссылке для записи на комплексную химчистку и получай скидку 500₽. А я получу 300₽ на карту за рекомендацию ❤️\n\n${referralLink}`;
+  const shareText = `Привет! Переходи по моей ссылке для записи на комплексную химчистку и получай озонирование салона совершенно бесплатно! ❤️\n\n${referralLink}`;
 
   if (navigator.share) {
     navigator.share({

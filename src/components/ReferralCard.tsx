@@ -85,7 +85,7 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
 
         <div className="bg-white/20 backdrop-blur-sm border-2 border-dashed border-white/30 rounded-xl p-4 mb-6">
           <p className="text-center text-lg font-bold text-white break-all">{referralInfo?.referralCode || 'Загрузка...'}</p>
-          <p className="text-center text-white/70 text-sm mt-2">Поделись этой ссылкой с друзьями</p>
+          <p className="text-center text-white/70 text-sm mt-2">Ваш реферальный код</p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3">
