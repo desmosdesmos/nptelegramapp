@@ -166,13 +166,14 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
             // Чередуем цвета: Deep Carbon и Semi-Transparent Black
             const color = index % 2 === 0 ? '#1c1c1e' : 'rgba(0, 0, 0, 0.5)';
             
-            // Короткое название для отображения с символом ₽ для бонусов
+            // Короткое название для отображения с символом ₽ для бонусов и полными названиями для сервисов
             let displayName = prize.name;
             if (prize.id === 'points-10') displayName = '10₽';
             if (prize.id === 'points-100') displayName = '100₽';
             if (prize.id === 'points-1000') displayName = '1000₽';
-            if (prize.id === 'free-pre-sale') displayName = 'Скидка';
-            if (prize.id === 'ozone') displayName = 'Озон';
+            if (prize.id === 'free-pre-sale') displayName = 'Скидка 30%';
+            if (prize.id === 'free-ozonation') displayName = 'Озонация';
+            if (prize.id === 'free-full-cleaning') displayName = 'Комплекс';
 
             // Получаем позицию для подписи (от центра к краю)
             const labelPos = getTextPosition(index, radius * 0.65);
