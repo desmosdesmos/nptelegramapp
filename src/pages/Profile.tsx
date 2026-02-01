@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { User, Phone, MessageCircle, Copy, Share2, Award, Gift, Users } from 'lucide-react';
+import React, { useState } from 'react';
+import { User, Phone, MessageCircle, Copy, Share2, Award } from 'lucide-react';
 import { PageKey } from '../App';
 import { getTelegramUser } from '../utils/telegram';
 import ReferralCard from '../components/ReferralCard';
