@@ -109,9 +109,16 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
       ctx.fillStyle = fillColor;
       ctx.fill();
 
-      // Рисуем границу
-      ctx.strokeStyle = strokeColor;
-      ctx.lineWidth = 2;
+      // Рисуем градиентную границу для имитации металлического отблеска
+      ctx.strokeStyle = `linear-gradient(${startAngle}rad, ${strokeColor}, #ffffff)`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Добавляем тонкий внутренний отблеск для имитации металлической текстуры
+      ctx.beginPath();
+      ctx.arc(0, 0, radius * 0.95, startAngle, endAngle);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+      ctx.lineWidth = 0.5;
       ctx.stroke();
 
       // Рисуем текст
@@ -126,10 +133,14 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
       // Рисуем иконку
       ctx.font = 'bold 20px Arial';
+      ctx.shadowColor = '#3B82F6'; // Electric Blue
+      ctx.shadowBlur = 5;
       ctx.fillText(prize.icon, textRadius * Math.cos(-Math.PI/2), textRadius * Math.sin(-Math.PI/2) - 10);
 
       // Рисуем название приза
       ctx.font = 'bold 10px Arial';
+      ctx.shadowColor = '#3B82F6'; // Electric Blue
+      ctx.shadowBlur = 3;
       const maxWidth = radius * 0.4; // Максимальная ширина текста
 
       // Функция для разбиения текста на строки
@@ -271,14 +282,35 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     return defaultPrizeIndex !== -1 ? defaultPrizeIndex : 0;
   };
 
+  // Добавляем стили для анимации блика
+  useEffect(() => {
+    // Создаем CSS-анимацию для блика
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes sweep {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-indigo-900/90 to-purple-900/90 backdrop-blur-xl flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div
         ref={containerRef}
-        className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-6 max-w-md w-full border-2 border-yellow-400 border-amber-500 shadow-2xl shadow-yellow-500/20"
+        className="bg-[#1a1a1a] backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-3xl p-6 max-w-md w-full border border-white/10 shadow-2xl"
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">Ежедневное колесо фортуны</h2>
+          <h2 className="text-2xl font-bold text-white font-system">Ежедневное колесо фортуны</h2>
           <button
             onClick={onClose}
             className="text-white/70 hover:text-white transition-colors text-xl"
@@ -292,40 +324,60 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           <div className="relative">
             <canvas
               ref={canvasRef}
-              className="rounded-full border-4 border-yellow-400 shadow-2xl shadow-yellow-500/30"
+              className="rounded-full border border-transparent shadow-lg"
               style={{
                 transform: `rotate(${rotation}deg)`,
-                transition: spinning ? 'transform 5s cubic-bezier(0.34, 1.56, 0.64, 1)' : 'none'
+                transition: spinning ? 'transform 5s cubic-bezier(0.15, 0, 0.15, 1)' : 'none',
+                boxShadow: 'inset 0 0 20px rgba(59, 130, 246, 0.3)',
               }}
             />
 
             {/* Указатель */}
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2 z-10">
-              <div className="w-0 h-0 border-l-[20px] border-r-[20px] border-t-[25px] border-l-transparent border-r-transparent border-t-yellow-400 shadow-lg"></div>
+              <div className="w-0 h-0 border-l-[15px] border-r-[15px] border-t-[20px] border-l-transparent border-r-transparent border-t-[#3B82F6]"></div>
             </div>
+
+            {/* Эффект блика при вращении */}
+            {spinning && (
+              <div
+                className="absolute top-1/2 left-1/2 w-full h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent transform -translate-y-1/2 animate-spin"
+                style={{
+                  animation: 'sweep 1s linear infinite',
+                  transformOrigin: 'left center',
+                  width: '100%',
+                  height: '2px',
+                  top: '50%',
+                  left: '0',
+                  transform: 'translateY(-50%) rotate(0deg)',
+                }}
+              ></div>
+            )}
           </div>
 
           {/* Информация о серии */}
           <div className="mt-4 text-center">
-            <p className="text-white/80">Дней подряд: <span className="font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">{dailyStreak}</span></p>
+            <p className="text-white/80 font-system">Дней подряд: <span className="font-bold text-[#3B82F6]">{dailyStreak}</span></p>
           </div>
 
           {/* Кнопка вращения */}
           <button
             onClick={spinWheel}
             disabled={!canSpin || spinning}
-            className={`mt-6 px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 ${
+            className={`mt-6 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 ${
               canSpin && !spinning
-                ? 'bg-gradient-to-r from-yellow-400 to-amber-500 text-black hover:from-yellow-300 hover:to-amber-400 transform hover:scale-105 active:scale-95 shadow-lg shadow-yellow-500/30'
-                : 'bg-gradient-to-r from-gray-600 to-gray-700 text-gray-300 cursor-not-allowed'
+                ? 'bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] text-[#3B82F6] border border-white/20 shadow-lg shadow-[#3B82F6]/20 hover:shadow-[#3B82F6]/40 transform hover:scale-105 active:scale-95'
+                : 'bg-gray-800 text-gray-400 cursor-not-allowed'
             }`}
+            style={{
+              backgroundImage: canSpin && !spinning ? 'radial-gradient(circle, #333 0%, #000 70%)' : undefined,
+            }}
           >
             {spinning ? 'Крутится...' : canSpin ? 'Крутить колесо!' : 'Попробуйте завтра'}
           </button>
 
           {/* Результат последнего вращения */}
           {lastResult && (
-            <div className="mt-6 p-4 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-2xl border border-white/10 w-full text-center">
+            <div className="mt-6 p-4 bg-white/5 backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-2xl border border-white/10 w-full text-center">
               <h3 className="text-lg font-bold text-white mb-2">Ваш приз:</h3>
               <div className="flex items-center justify-center gap-2">
                 <span className="text-3xl">{lastResult.prize.icon}</span>
