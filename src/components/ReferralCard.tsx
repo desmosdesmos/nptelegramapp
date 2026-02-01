@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Copy, Share2, Users, Gift, TrendingUp, ChevronDown, ChevronUp } from 'lucide-react';
-import { getUserReferralInfo, shareReferralCode, copyReferralLink } from '../api/referralApi';
-import { getTotalReferralsCount, getBookedReferralsCount } from '../utils/referral';
-import { getTelegramUser } from '../utils/telegram';
+import { shareReferralCode, copyReferralLink } from '../api/referralApi';
 import { useReferral } from '../contexts/ReferralContext';
 
 interface ReferralCardProps {
