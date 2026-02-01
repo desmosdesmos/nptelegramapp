@@ -123,6 +123,29 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
         </div>
       </div>
 
+      {/* Referral Program Info */}
+      <div className="w-full p-5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md mb-8">
+        <h3 className="text-xl font-bold text-white mb-3">Как работает реферальная программа?</h3>
+        <ul className="space-y-2 text-white/80">
+          <li className="flex items-start gap-2">
+            <span className="text-green-400 mt-1">✓</span>
+            <span>Поделись своей реферальной ссылкой с друзьями</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-green-400 mt-1">✓</span>
+            <span>Твой друг записывается на комплексную химчистку через твою ссылку</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-green-400 mt-1">✓</span>
+            <span>После оказания услуги ты получаешь 300₽ на карту</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-green-400 mt-1">✓</span>
+            <span>Без ограничений - сколько приведёшь, столько и получишь</span>
+          </li>
+        </ul>
+      </div>
+
       {/* Contacts Section */}
       <div className="w-full">
         <h3 className="text-lg font-semibold mb-4">Связаться с нами</h3>

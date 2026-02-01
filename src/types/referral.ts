@@ -15,7 +15,9 @@ export interface Referral {
   name: string;
   dateJoined: string; // ISO строка даты
   bonusAmount: number; // Размер бонуса за этого реферала
-  status: 'active' | 'inactive'; // Статус реферала
+  status: 'active' | 'inactive' | 'completed'; // Статус реферала
+  serviceType?: string; // Тип услуги, например 'комплексная химчистка'
+  rewardPaid: boolean; // Получен ли уже бонус
 }
 
 export interface ReferralStats {

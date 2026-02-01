@@ -60,3 +60,13 @@ export const getSavedReferrerInfo = () => {
 export const wasRegisteredViaReferral = (): boolean => {
   return getSavedReferrerInfo() !== null;
 };
+
+/**
+ * Проверить, является ли услуга, которую выбрал пользователь, 
+ * квалифицирующей для начисления реферального бонуса
+ */
+export const isQualifyingService = (serviceType: string): boolean => {
+  // В данном случае, только комплексная химчистка дает право на бонус
+  return serviceType.toLowerCase().includes('комплексн') && 
+         serviceType.toLowerCase().includes('химчистк');
+};

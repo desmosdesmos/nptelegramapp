@@ -33,7 +33,7 @@ export const getUserReferralInfo = async (): Promise<ReferralInfo> => {
         referralCode: `REF${Math.floor(Math.random() * 1000000)}`,
         referralLink: `https://t.me/npdetailing?start=REF${Math.floor(Math.random() * 1000000)}`,
         totalReferrals: Math.floor(Math.random() * 5),
-        totalBonuses: Math.floor(Math.random() * 5) * 500,
+        totalBonuses: Math.floor(Math.random() * 5) * 300, // Теперь 300 за каждого
         referrals: []
       };
     }
@@ -47,7 +47,7 @@ export const getUserReferralInfo = async (): Promise<ReferralInfo> => {
       referralCode: `REF${Math.floor(Math.random() * 1000000)}`,
       referralLink: `https://t.me/npdetailing?start=REF${Math.floor(Math.random() * 1000000)}`,
       totalReferrals: Math.floor(Math.random() * 5),
-      totalBonuses: Math.floor(Math.random() * 5) * 500,
+      totalBonuses: Math.floor(Math.random() * 5) * 300, // Теперь 300 за каждого
       referrals: []
     };
   }
@@ -77,7 +77,7 @@ export const getUserReferralStats = async (): Promise<ReferralStats> => {
 
       return {
         totalReferrals: Math.floor(Math.random() * 5),
-        totalBonuses: Math.floor(Math.random() * 5) * 500,
+        totalBonuses: Math.floor(Math.random() * 5) * 300, // Теперь 300 за каждого
         monthlyReferrals: Math.floor(Math.random() * 3),
         pendingBonuses: 0
       };
@@ -90,7 +90,7 @@ export const getUserReferralStats = async (): Promise<ReferralStats> => {
     // Возвращаем mock-данные при сетевой ошибке
     return {
       totalReferrals: Math.floor(Math.random() * 5),
-      totalBonuses: Math.floor(Math.random() * 5) * 500,
+      totalBonuses: Math.floor(Math.random() * 5) * 300, // Теперь 300 за каждого
       monthlyReferrals: Math.floor(Math.random() * 3),
       pendingBonuses: 0
     };
@@ -101,7 +101,7 @@ export const getUserReferralStats = async (): Promise<ReferralStats> => {
  * Поделиться реферальным кодом
  */
 export const shareReferralCode = (referralCode: string) => {
-  const shareText = `Привет! Воспользуйся моим промокодом "${referralCode}" при первой записи в @nptime_bot и получи скидку 500₽. А я получу бонус за рекомендацию ❤️`;
+  const shareText = `Привет! Воспользуйся моим промокодом "${referralCode}" при записи на комплексную химчистку в @nptime_bot и получи скидку 500₽. А я получу 300₽ на карту за рекомендацию ❤️`;
 
   if (navigator.share) {
     navigator.share({
@@ -131,7 +131,7 @@ export const copyReferralLink = async (referralLink: string): Promise<boolean> =
 /**
  * Начислить бонус за реферала
  */
-export const awardBonusForReferral = async (referrerId: string, referralId: string, bonusAmount: number): Promise<boolean> => {
+export const awardBonusForReferral = async (referrerId: string, referralId: string, bonusAmount: number, serviceType?: string): Promise<boolean> => {
   try {
     const response = await fetch(`${API_BASE_URL}/referrals/award-bonus`, {
       method: 'POST',
@@ -142,7 +142,9 @@ export const awardBonusForReferral = async (referrerId: string, referralId: stri
       body: JSON.stringify({
         referrerId,
         referralId,
-        bonusAmount
+        bonusAmount,
+        serviceType,
+        rewardPaid: false // Пока не выплачен
       })
     });
 
