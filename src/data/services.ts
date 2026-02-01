@@ -77,7 +77,6 @@ export const localCleaningServices: ServiceCategory[] = [
         id: 'seat',
         name: 'Сиденье',
         price: 1500,
-        unitLabel: 'за шт.',
         icon: '🧽',
       },
       {

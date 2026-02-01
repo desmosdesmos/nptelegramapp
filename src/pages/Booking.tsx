@@ -579,13 +579,26 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
               <div className="pl-4 border-l-2 border-white/10 space-y-3 pt-4">
                  <label className="block text-sm font-medium text-gray-400 mb-2">Дополнительные опции</label>
                 {selectedMainService.additionalOptions.map(option => (
-                  <label key={option.id} className="flex items-center p-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl text-white hover:bg-white/10 cursor-pointer transition-colors">
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => {
+                      hapticFeedback('light');
+                      handleOptionToggle(option.id);
+                    }}
+                    className={`flex items-center p-3 rounded-2xl border border-white/10 backdrop-blur-xl text-white transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-105 active:scale-90 w-full
+                      ${formData.additionalOptions.includes(option.id)
+                        ? 'bg-gradient-to-br from-blue-600/20 to-purple-600/20 border-blue-500/50 shadow-lg'
+                        : 'bg-white/5 hover:bg-white/10'}`}
+                  >
                     <div className="relative">
                       <input
                         type="checkbox"
                         checked={formData.additionalOptions.includes(option.id)}
-                        onChange={() => handleOptionToggle(option.id)}
-                        className="w-5 h-5 appearance-none border-2 border-white/30 rounded-md flex items-center justify-center transition-all duration-300 checked:bg-gradient-to-br checked:from-blue-500 checked:to-purple-500 checked:border-transparent cursor-pointer"
+                        readOnly
+                        className="w-5 h-5 appearance-none border-2 rounded-md flex items-center justify-center
+                          checked:bg-gradient-to-br checked:from-blue-500 checked:to-purple-500 checked:border-transparent"
+                        style={{ borderColor: formData.additionalOptions.includes(option.id) ? 'transparent' : 'rgba(255,255,255,0.3)' }}
                       />
                       {formData.additionalOptions.includes(option.id) && (
                         <svg className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3 h-3 text-white pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -600,7 +613,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
                       </div>
                       <span className="font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 whitespace-nowrap flex-shrink-0 text-right">+{option.price.toLocaleString('ru-RU')}&nbsp;₽</span>
                     </div>
-                  </label>
+                  </button>
                 ))}
               </div>
             )}
