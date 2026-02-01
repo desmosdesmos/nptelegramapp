@@ -93,23 +93,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     return `M 150 150 L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z`;
   };
 
-  // Функция для определения цвета сектора в зависимости от редкости
-  const getSectorColor = (rarity: string) => {
-    switch (rarity) {
-      case 'common':
-        return '#2c3e50'; // Темно-серый для обычных призов
-      case 'rare':
-        return '#34495e'; // Средне-темный серый для редких
-      case 'epic':
-        return '#3c3c5a'; // Темно-фиолетовый для эпических
-      case 'legendary':
-        return '#5a3c5a'; // Темно-пурпурный для легендарных
-      default:
-        return '#2c3e50'; // Темно-серый по умолчанию
-    }
-  };
-
-  // Функция для получения координат для размещения текста и иконки
+  // Функция для получения координат для размещения текста (от центра к краю)
   const getTextPosition = (index: number, offset: number) => {
     const angle = (index * sectorAngle + sectorAngle / 2) * Math.PI / 180;
     const x = 150 + offset * Math.cos(angle);
@@ -117,160 +101,210 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     return { x, y };
   };
 
-  // Рисуем колесо с помощью SVG
+  // Рисуем колесо с помощью SVG в стиле Futuristic Automotive Dashboard
   const renderWheel = () => {
     const radius = 140;
 
     return (
-      <svg
-        ref={svgRef}
-        width="300"
-        height="300"
-        viewBox="0 0 300 300"
-        className="rounded-full border border-transparent shadow-lg"
-        style={{
-          transform: `rotate(${rotation}deg)`,
-          transition: spinning ? 'transform 4s cubic-bezier(0.15, 0, 0.15, 1)' : 'transform 0.3s ease-out',
-          background: 'radial-gradient(circle, #2c3e50 0%, #1a1a1a 70%)',
-          boxShadow: 'inset 0 0 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.3)',
-        }}
-      >
-        {/* Внешний обод с мягким металлическим эффектом */}
-        <circle
-          cx="150"
-          cy="150"
-          r="148"
-          fill="none"
-          stroke="url(#metalGradient)"
-          strokeWidth="1"
-          strokeOpacity="0.2"
+      <div className="relative">
+        {/* Подсветочное пятно под колесом (плавающий эффект) */}
+        <div 
+          className="absolute inset-0 rounded-full blur-3xl opacity-30"
           style={{
-            filter: 'drop-shadow(0 0 8px rgba(0, 255, 255, 0.3))'
+            background: 'radial-gradient(circle, #00f0ff 0%, transparent 70%)',
+            transform: 'translateZ(-10px)',
           }}
         />
 
-        {/* Градиент для мягкого металлического обода */}
-        <defs>
-          <linearGradient id="metalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#666" />
-            <stop offset="50%" stopColor="#aaa" />
-            <stop offset="100%" stopColor="#666" />
-          </linearGradient>
-
-          {/* Градиент для неонового свечения */}
-          <filter id="neonGlow">
-            <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
-
-        {/* Сектора колеса */}
-        {wheelPrizes.map((prize, index) => {
-          const pathData = calculateSectorPath(index, radius);
-          const color = getSectorColor(prize.rarity);
-
-          // Получаем позицию для подписи с оптимизацией для 6 секторов
-          const labelPos = getTextPosition(index, radius * 0.58);
-          // Корректируем Y-позицию для лучшего отображения при 6 секторах
-          const adjustedY = labelPos.y + (numSectors === 6 ? 14 : 10);
-
-          return (
-            <g key={index}>
-              {/* Сектор */}
-              <path
-                d={pathData}
-                fill={hoveredSector === index ? '#3c3c5a' : color}
-                stroke="rgba(255, 255, 255, 0.1)"
-                strokeWidth="0.5"
-                style={{
-                  filter: 'drop-shadow(0 0 3px rgba(0, 255, 255, 0.1))',
-                  transition: 'fill 0.3s ease'
-                }}
-                onMouseEnter={() => setHoveredSector(index)}
-                onMouseLeave={() => setHoveredSector(null)}
-              />
-
-              {/* Подпись приза в секторе - только текст, без иконок */}
-              <text
-                x={labelPos.x}
-                y={adjustedY}
-                textAnchor="middle"
-                fontSize="11"
-                fill="white"
-                fontWeight="500"
-                letterSpacing="0.05em"
-                opacity="0.95"
-              >
-                {prize.name}
-              </text>
-            </g>
-          );
-        })}
-
-        {/* Центральное колесо (кнопка "NP") */}
-        <circle
-          cx="150"
-          cy="150"
-          r="32"
-          fill="url(#centerGradient)"
-          stroke="rgba(255, 255, 255, 0.1)"
-          strokeWidth="1"
+        <svg
+          ref={svgRef}
+          width="300"
+          height="300"
+          viewBox="0 0 300 300"
+          className="rounded-full"
           style={{
-            filter: 'drop-shadow(0 0 12px rgba(0, 255, 255, 0.5))'
+            transform: `rotate(${rotation}deg)`,
+            transition: spinning ? 'transform 4s cubic-bezier(0.15, 0, 0.15, 1)' : 'transform 0.3s ease-out',
+            background: 'transparent',
+            boxShadow: 'inset 0 0 40px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 240, 255, 0.2)',
           }}
-        />
-        
-        {/* Пульсирующее светящееся кольцо вокруг центра */}
-        <circle
-          cx="150"
-          cy="150"
-          r="34"
-          fill="none"
-          stroke="#00ffff"
-          strokeWidth="2"
-          strokeOpacity="0.2"
-          style={{
-            animation: spinning ? 'pulse 2s infinite' : 'none',
-            filter: 'drop-shadow(0 0 12px rgba(0, 255, 255, 0.6))'
-          }}
-        />
-        
-        <defs>
-          <radialGradient id="centerGradient" cx="30%" cy="30%" r="70%">
-            <stop offset="0%" stopColor="#e0e0e0" />
-            <stop offset="40%" stopColor="#c0c0c0" />
-            <stop offset="70%" stopColor="#808080" />
-            <stop offset="100%" stopColor="#202020" />
-          </radialGradient>
-          
-          {/* Анимация пульсации */}
-          <style>{`
-            @keyframes pulse {
-              0% { stroke-opacity: 0.2; }
-              50% { stroke-opacity: 0.6; }
-              100% { stroke-opacity: 0.2; }
-            }
-          `}</style>
-        </defs>
-        
-        <text
-          x="150"
-          y="155"
-          textAnchor="middle"
-          dominantBaseline="middle"
-          fontSize="16"
-          fill="#00ffff"
-          fontWeight="bold"
-          stroke="#000"
-          strokeWidth="1"
-          letterSpacing="0.05em"
         >
-          NP
-        </text>
-      </svg>
+          {/* Внешний металлический обод (4px) */}
+          <circle
+            cx="150"
+            cy="150"
+            r="148"
+            fill="none"
+            stroke="url(#metalGradient)"
+            strokeWidth="4"
+            style={{
+              filter: 'drop-shadow(0 0 15px rgba(0, 240, 255, 0.3))'
+            }}
+          />
+
+          {/* Градиент для металлического обода */}
+          <defs>
+            <linearGradient id="metalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#4a4a4a" />
+              <stop offset="50%" stopColor="#ffffff" />
+              <stop offset="100%" stopColor="#4a4a4a" />
+            </linearGradient>
+
+            {/* Неоновое свечение для указателя */}
+            <filter id="neonGlow">
+              <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          {/* Сектора колеса (стеклянные лепестки) */}
+          {wheelPrizes.map((prize, index) => {
+            const pathData = calculateSectorPath(index, radius);
+            // Чередуем цвета: Deep Carbon и Semi-Transparent Black
+            const color = index % 2 === 0 ? '#1c1c1e' : 'rgba(0, 0, 0, 0.5)';
+            
+            // Короткое название для отображения
+            let displayName = prize.name;
+            if (prize.id === 'points-10') displayName = '10';
+            if (prize.id === 'points-100') displayName = '100';
+            if (prize.id === 'points-1000') displayName = '1000';
+            if (prize.id === 'free-pre-sale') displayName = 'Скидка';
+            if (prize.id === 'ozone') displayName = 'Озон';
+
+            // Получаем позицию для подписи (от центра к краю)
+            const labelPos = getTextPosition(index, radius * 0.65);
+            // Угол для поворота текста (чтобы шел от центра к краю)
+            const textAngle = (index * sectorAngle + sectorAngle / 2) * (Math.PI / 180);
+
+            return (
+              <g key={index}>
+                {/* Сектор с тонкой обводкой (эффект стеклянных лепестков) */}
+                <path
+                  d={pathData}
+                  fill={hoveredSector === index ? '#2a2a2e' : color}
+                  stroke="rgba(255, 255, 255, 0.1)"
+                  strokeWidth="0.8"
+                  style={{
+                    filter: 'drop-shadow(0 0 3px rgba(0, 240, 255, 0.05))',
+                    transition: 'fill 0.3s ease'
+                  }}
+                  onMouseEnter={() => setHoveredSector(index)}
+                  onMouseLeave={() => setHoveredSector(null)}
+                />
+
+                {/* Текст внутри сектора (от центра к краю) */}
+                <text
+                  x={labelPos.x}
+                  y={labelPos.y}
+                  textAnchor="middle"
+                  fontSize="12"
+                  fill="white"
+                  fontWeight="700"
+                  letterSpacing="0.02em"
+                  opacity="0.95"
+                  transform={`rotate(${textAngle * 180 / Math.PI} ${labelPos.x} ${labelPos.y})`}
+                  className="font-sans font-bold"
+                >
+                  {displayName}
+                </text>
+              </g>
+            );
+          })}
+
+          {/* Центральная кнопка (The Hub) - плоская, утопленная */}
+          <circle
+            cx="150"
+            cy="150"
+            r="36"
+            fill="url(#hubGradient)"
+            stroke="rgba(255, 255, 255, 0.1)"
+            strokeWidth="1"
+            style={{
+              filter: 'drop-shadow(0 0 15px rgba(0, 240, 255, 0.4))',
+            }}
+          />
+
+          {/* Неоновое пульсирующее кольцо вокруг центра */}
+          <circle
+            cx="150"
+            cy="150"
+            r="40"
+            fill="none"
+            stroke="#00f0ff"
+            strokeWidth="2"
+            strokeOpacity="0.6"
+            style={{
+              animation: spinning ? 'pulse 2s infinite' : 'none',
+              filter: 'drop-shadow(0 0 20px rgba(0, 240, 255, 0.7))',
+            }}
+          />
+
+          {/* Градиент для центральной кнопки */}
+          <defs>
+            <radialGradient id="hubGradient" cx="30%" cy="30%" r="70%">
+              <stop offset="0%" stopColor="#3a3a4a" />
+              <stop offset="40%" stopColor="#2a2a3a" />
+              <stop offset="70%" stopColor="#1a1a2a" />
+              <stop offset="100%" stopColor="#0d0d1a" />
+            </radialGradient>
+
+            {/* Анимация пульсации */}
+            <style>{`
+              @keyframes pulse {
+                0% { stroke-opacity: 0.3; filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.4)); }
+                50% { stroke-opacity: 0.8; filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.8)); }
+                100% { stroke-opacity: 0.3; filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.4)); }
+              }
+            `}</style>
+          </defs>
+
+          {/* Текст "SPIN" в центре (металлический) */}
+          <text
+            x="150"
+            y="155"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fontSize="16"
+            fill="url(#metalTextGradient)"
+            fontWeight="700"
+            letterSpacing="0.05em"
+            className="font-sans font-bold"
+          >
+            SPIN
+          </text>
+
+          {/* Градиент для металлического текста */}
+          <defs>
+            <linearGradient id="metalTextGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#e0e0e0" />
+              <stop offset="50%" stopColor="#ffffff" />
+              <stop offset="100%" stopColor="#c0c0c0" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+        {/* Указатель (The Pointer) - перевернутый треугольник с неоновым свечением */}
+        <div 
+          className="absolute top-[-16px] left-1/2 transform -translate-x-1/2 z-30"
+          style={{
+            filter: 'drop-shadow(0 8px 15px rgba(0, 240, 255, 0.6))',
+          }}
+        >
+          <svg width="32" height="16" viewBox="0 0 32 16" className="overflow-visible">
+            <polygon
+              points="16,0 32,8 16,16 0,8"
+              fill="#00f0ff"
+              stroke="rgba(255, 255, 255, 0.3)"
+              strokeWidth="1"
+              strokeLinejoin="round"
+              filter="url(#neonGlow)"
+            />
+          </svg>
+        </div>
+      </div>
     );
   };
 
@@ -313,21 +347,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
       setSpinning(false);
       setShowFullResult(true); // Показываем полноэкранный результат
 
-      // Получаем информацию о пользователе Telegram
-      const telegramUser = getTelegramUser();
-      const isTester = telegramUser && telegramUser.username === 'yanvtg';
-
-      if (isTester) {
-        // Для тестера не ограничиваем вращение
-        setCanSpin(true);
-      } else {
-        // Для обычных пользователей ограничиваем
-        setCanSpin(false);
-
-        // Сохраняем дату вращения для обычных пользователей
-        localStorage.setItem('wheel_last_spin_date', new Date().toISOString().split('T')[0]);
-      }
-
       // Сохраняем результат
       localStorage.setItem('wheel_last_result', JSON.stringify(result));
 
@@ -347,6 +366,21 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           type: result.prize.type,
           description: result.prize.description
         });
+      }
+
+      // Получаем информацию о пользователе Telegram
+      const telegramUser = getTelegramUser();
+      const isTester = telegramUser && telegramUser.username === 'yanvtg';
+
+      if (isTester) {
+        // Для тестера не ограничиваем вращение
+        setCanSpin(true);
+      } else {
+        // Для обычных пользователей ограничиваем
+        setCanSpin(false);
+
+        // Сохраняем дату вращения для обычных пользователей
+        localStorage.setItem('wheel_last_spin_date', new Date().toISOString().split('T')[0]);
       }
 
       // Обновляем серию для обычных пользователей
@@ -403,7 +437,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div
         ref={containerRef}
-        className="bg-[#0a0a0a] backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-3xl p-6 max-w-md w-full border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-y-auto max-h-[90vh]"
+        className="bg-black/20 backdrop-filter backdrop-blur-32 bg-opacity-70 rounded-3xl p-6 max-w-md w-full border border-white/10 shadow-xl shadow-white/5 backdrop-saturate-150"
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-white font-system">Ежедневное колесо фортуны</h2>
@@ -419,22 +453,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           {/* Колесо */}
           <div className="relative">
             {renderWheel()}
-
-            {/* Указатель (изящный треугольник с закругленными углами) */}
-            <div className="absolute top-[-14px] left-1/2 transform -translate-x-1/2 z-20">
-              <svg width="28" height="14" viewBox="0 0 28 14" className="overflow-visible">
-                <polygon
-                  points="14,0 28,7 14,14 0,7"
-                  fill="none"
-                  stroke="#00ffff"
-                  strokeWidth="2"
-                  strokeLinejoin="round"
-                  style={{
-                    filter: 'drop-shadow(0 0 6px #00ffff), drop-shadow(0 0 12px rgba(0, 255, 255, 0.5))'
-                  }}
-                />
-              </svg>
-            </div>
           </div>
 
           {/* Информация о серии */}
@@ -446,16 +464,16 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           <button
             onClick={spinWheel}
             disabled={!canSpin || spinning}
-            className={`mt-6 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 ${
+            className={`mt-6 px-6 py-3.5 rounded-2xl font-medium text-base transition-all duration-300 ${
               canSpin && !spinning
-                ? 'bg-gradient-to-br from-[#2a2a2a] to-[#1a1a1a] text-[#00ffff] border border-cyan-500/30 shadow-lg shadow-[#00ffff]/20 hover:shadow-[#00ffff]/40 transform hover:scale-105 active:scale-95'
-                : 'bg-gray-800 text-gray-400 cursor-not-allowed'
+                ? 'bg-white/10 backdrop-blur-sm text-white border border-white/20 hover:bg-white/15 hover:border-white/30 transform hover:scale-105 active:scale-95'
+                : 'bg-black/30 text-white/50 cursor-not-allowed'
             }`}
           >
             {spinning ? 'Крутится...' : canSpin ? 'Крутить колесо!' : 'Попробуйте завтра'}
           </button>
 
-          {/* Результат последнего вращения (для старых браузеров/резерв) */}
+          {/* Результат последнего вращения (резерв) */}
           {lastResult && !showFullResult && (
             <div className="mt-6 mb-8 p-4 bg-black/30 backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-2xl border border-cyan-500/20 w-full text-center">
               <h3 className="text-lg font-bold text-white mb-2">Ваш приз:</h3>
@@ -466,10 +484,10 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
             </div>
           )}
         </div>
-      </div>
 
-      {/* Полноэкранный результат */}
-      {showFullResult && <FullScreenResult />}
+        {/* Полноэкранный результат */}
+        {showFullResult && <FullScreenResult />}
+      </div>
     </div>
   );
 };
