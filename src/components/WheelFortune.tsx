@@ -21,8 +21,18 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Жёсткий список из 6 призов для гарантии отображения всех секторов
+  const fixedPrizes = [
+    { id: 'points-10', name: '10 бонусов' },
+    { id: 'points-100', name: '100 бонусов' },
+    { id: 'free-ozonation', name: 'Озонация' },
+    { id: 'free-full-cleaning', name: 'Комплекс' },
+    { id: 'free-pre-sale', name: 'Скидка 30%' },
+    { id: 'points-1000', name: '1000 бонусов' }
+  ];
+
   // Количество секторов на колесе
-  const numSectors = wheelPrizes.length;
+  const numSectors = fixedPrizes.length;
   // Угол каждого сектора
   const sectorAngle = 360 / numSectors;
 
@@ -105,6 +115,16 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
   const renderWheel = () => {
     const radius = 140;
 
+    // Жёсткий список из 6 призов для гарантии отображения всех секторов
+    const fixedPrizes = [
+      { id: 'points-10', name: '10 бонусов' },
+      { id: 'points-100', name: '100 бонусов' },
+      { id: 'free-ozonation', name: 'Озонация' },
+      { id: 'free-full-cleaning', name: 'Комплекс' },
+      { id: 'free-pre-sale', name: 'Скидка 30%' },
+      { id: 'points-1000', name: '1000 бонусов' }
+    ];
+
     return (
       <div className="relative">
         {/* Подсветочное пятно под колесом (плавающий эффект) */}
@@ -161,13 +181,13 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           </defs>
 
           {/* Сектора колеса (стеклянные лепестки) */}
-          {wheelPrizes.map((prize, index) => {
+          {fixedPrizes.map((prize, index) => {
             const pathData = calculateSectorPath(index, radius);
             // Чередуем цвета: Deep Carbon и Semi-Transparent Black (усиленная видимость)
             const color = index % 2 === 0
               ? '#1c1c1e'
               : 'rgba(20, 20, 30, 0.7)'; // более светлый полупрозрачный чёрный для лучшей читаемости
-            
+
             // Короткое название для отображения в секторе
             let displayName = prize.name;
             switch (prize.id) {
