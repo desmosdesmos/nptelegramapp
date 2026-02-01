@@ -217,23 +217,6 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
         ...prev,
         referrer: referralCode
       }));
-      // Сохраняем информацию о реферере
-      saveReferrerInfo(referralCode);
-
-      // Проверяем, является ли пользователь новым рефералом
-      if (isNewReferral()) {
-        // Увеличиваем счетчик "Привлечено" для реферера
-        import('../utils/referral').then(({ incrementTotalReferrals, saveReferralInfo }) => {
-          incrementTotalReferrals(referralCode);
-          // Сохраняем информацию о реферале
-          const telegramUser = getTelegramUser();
-          if (telegramUser) {
-            const referralCodeForUser = `USER${String(telegramUser.id).slice(-6)}`;
-            saveReferralInfo(referralCodeForUser, referralCode);
-          }
-          console.log(`Новый реферал: пользователь пришел по ссылке ${referralCode}. Увеличиваем счетчик "Привлечено".`);
-        });
-      }
     } else {
       console.log('Реферальный код не найден или невалиден');
     }
