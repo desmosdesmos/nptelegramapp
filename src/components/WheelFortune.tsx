@@ -83,11 +83,13 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     const startAngle = (index * sectorAngle * Math.PI) / 180;
     const endAngle = ((index + 1) * sectorAngle * Math.PI) / 180;
 
+    // Рассчитываем точки для сектора
     const x1 = 150 + radius * Math.cos(startAngle);
     const y1 = 150 + radius * Math.sin(startAngle);
     const x2 = 150 + radius * Math.cos(endAngle);
     const y2 = 150 + radius * Math.sin(endAngle);
 
+    // Создаем путь для сектора
     return `M 150 150 L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z`;
   };
 
@@ -99,12 +101,20 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
       case 'rare':
         return '#34495e'; // Средне-темный серый для редких
       case 'epic':
-        return '#2c3e50'; // Темно-серый для эпических
+        return '#3c3c5a'; // Темно-фиолетовый для эпических
       case 'legendary':
-        return '#2c3e50'; // Темно-серый для легендарных
+        return '#5a3c5a'; // Темно-пурпурный для легендарных
       default:
         return '#2c3e50'; // Темно-серый по умолчанию
     }
+  };
+
+  // Функция для получения координат для размещения текста и иконки
+  const getTextPosition = (index: number, radius: number, offset: number) => {
+    const angle = (index * sectorAngle + sectorAngle / 2) * Math.PI / 180;
+    const x = 150 + offset * Math.cos(angle);
+    const y = 150 + offset * Math.sin(angle);
+    return { x, y };
   };
 
   // Рисуем колесо с помощью SVG
@@ -120,7 +130,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         className="rounded-full border border-transparent shadow-lg"
         style={{
           transform: `rotate(${rotation}deg)`,
-          transition: spinning ? 'transform 4s cubic-bezier(0.15, 0, 0.15, 1)' : 'none',
+          transition: spinning ? 'transform 4s cubic-bezier(0.15, 0, 0.15, 1)' : 'transform 0.3s ease-out',
           background: 'radial-gradient(circle, #2c3e50 0%, #1a1a1a 70%)',
           boxShadow: '0 0 20px rgba(0, 255, 255, 0.5), inset 0 0 20px rgba(0, 255, 255, 0.3)',
         }}
@@ -161,6 +171,15 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           const pathData = calculateSectorPath(index, radius);
           const color = getSectorColor(prize.rarity);
 
+          // Получаем позиции для иконки и текста
+          const iconPos = getTextPosition(index, radius, radius * 0.65);
+          const textPos = getTextPosition(index, radius, radius * 0.45);
+
+          // Рассчитываем угол для поворота текста
+          const textAngle = index * sectorAngle + sectorAngle / 2;
+          // Корректируем угол, чтобы текст был удобочитаем
+          const correctedTextAngle = textAngle > 90 && textAngle < 270 ? textAngle + 180 : textAngle;
+
           return (
             <g key={index}>
               {/* Сектор */}
@@ -176,27 +195,26 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
               {/* Иконка в секторе */}
               <text
-                x="150"
-                y="150"
+                x={iconPos.x}
+                y={iconPos.y}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                fontSize="24"
+                fontSize="20"
                 fill="white"
                 fontWeight="bold"
-                transform={`rotate(${index * sectorAngle + sectorAngle / 2}, 150, 150) translate(0, -${radius * 0.65})`}
               >
                 {prize.icon}
               </text>
 
               {/* Название приза в секторе */}
               <text
-                x="150"
-                y="150"
+                x={textPos.x}
+                y={textPos.y}
                 textAnchor="middle"
                 fontSize="8"
                 fill="white"
                 fontWeight="normal"
-                transform={`rotate(${index * sectorAngle + sectorAngle / 2}, 150, 150) translate(0, -${radius * 0.5}) rotate(${-(index * sectorAngle + sectorAngle / 2)})`}
+                transform={`rotate(${correctedTextAngle}, ${textPos.x}, ${textPos.y})`}
               >
                 {prize.name.length > 10 ? `${prize.name.substring(0, 10)}...` : prize.name}
               </text>
