@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Phone, MessageCircle, Copy, Share2, Award } from 'lucide-react';
+import { User, Phone, MessageCircle, Award } from 'lucide-react';
 import { PageKey } from '../App';
 import { getTelegramUser } from '../utils/telegram';
 import ReferralCard from '../components/ReferralCard';
@@ -9,31 +9,8 @@ interface ProfileProps {
 }
 
 const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
-  const [copied, setCopied] = useState(false);
   const [phoneCopied, setPhoneCopied] = useState(false);
   const telegramUser = getTelegramUser();
-
-  const copyCode = () => {
-    navigator.clipboard.writeText('NP2026');
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000); // Reset copied state after 2 seconds
-  };
-
-  const shareCode = () => {
-    const shareText = 'Промокод на 500₽ в NP: NP2026. Используй его при первой записи в @nptime_bot и получай скидку ❤️';
-
-    if (navigator.share) {
-      navigator.share({
-        title: 'Промокод для автосервиса',
-        text: shareText
-        // Убрали url, чтобы отправлялся только текст
-      }).catch(console.error);
-    } else {
-      // Fallback: just copy to clipboard
-      navigator.clipboard.writeText(shareText);
-      alert('Текст промокода скопирован в буфер обмена!');
-    }
-  };
 
   const handleTelegramClick = () => {
     // Open Telegram with a predefined message
