@@ -1,7 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, useReducer } from 'react';
-import { getUserReferralInfo } from '../api/referralApi';
-import { getTotalReferralsCount, getBookedReferralsCount, getReferralsInfo } from '../utils/referral';
-import { getTelegramUser } from '../utils/telegram';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { getReferralState, addReferralListener, loadReferralData } from '../utils/referralState';
 
 interface ReferralContextType {
   referralInfo: any;
@@ -11,87 +9,49 @@ interface ReferralContextType {
 
 const ReferralContext = createContext<ReferralContextType | undefined>(undefined);
 
-// Редуктор для принудительного обновления
-const forceUpdateReducer = (state: number, action: any) => {
-  if (action.type === 'FORCE_UPDATE') {
-    return state + 1;
-  }
-  return state;
-};
-
 export const ReferralProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [referralInfo, setReferralInfo] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [, forceUpdate] = useReducer(forceUpdateReducer, 0);
 
-  const loadReferralInfo = async () => {
-    try {
-      setLoading(true);
-      const data = await getUserReferralInfo();
-
-      // Обновляем данные с учетом локальных значений
-      const telegramUser = getTelegramUser();
-      if (telegramUser) {
-        const referralCode = `USER${String(telegramUser.id).slice(-6)}`;
-        const localTotalReferrals = getTotalReferralsCount(referralCode);
-        const localBookedReferrals = getBookedReferralsCount(referralCode);
-
-        // Получаем информацию о рефералах
-        const localReferrals = getReferralsInfo(referralCode);
-
-        // Объединяем данные: используем локальные значения, если они больше
-        const updatedData = {
-          ...data,
-          totalReferrals: Math.max(data.totalReferrals || 0, localTotalReferrals),
-          bookedReferrals: Math.max(data.bookedReferrals || 0, localBookedReferrals),
-          referrals: [...(data.referrals || []), ...localReferrals]
-        };
-
-        setReferralInfo(updatedData);
-      } else {
-        setReferralInfo(data);
-      }
-    } catch (error) {
-      console.error('Error loading referral info:', error);
-    } finally {
+  // Обновляем данные при изменении глобального состояния
+  useEffect(() => {
+    // Устанавливаем начальное состояние
+    const initialState = getReferralState();
+    if (initialState) {
+      setReferralInfo(initialState);
       setLoading(false);
+    } else {
+      // Если данных еще нет, ждем их загрузки
+      const interval = setInterval(() => {
+        const state = getReferralState();
+        if (state) {
+          setReferralInfo(state);
+          setLoading(false);
+          clearInterval(interval);
+        }
+      }, 100);
     }
-  };
 
-  // Загружаем данные при инициализации
-  useEffect(() => {
-    loadReferralInfo();
+    // Добавляем слушатель для обновлений
+    const unsubscribe = addReferralListener(() => {
+      setReferralInfo(getReferralState());
+    });
 
-    // Добавляем слушатель для изменений в localStorage
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key && e.key.startsWith('referral_')) {
-        loadReferralInfo();
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
-
-  // Добавим подписку на кастомное событие для обновления данных
-  useEffect(() => {
+    // Подписываемся на кастомное событие для обновления данных
     const handleCustomUpdate = () => {
-      loadReferralInfo();
-      forceUpdate({ type: 'FORCE_UPDATE' }); // Принудительно обновляем состояние
+      loadReferralData();
     };
 
     window.addEventListener('referralUpdate', handleCustomUpdate);
 
     return () => {
+      unsubscribe();
       window.removeEventListener('referralUpdate', handleCustomUpdate);
     };
   }, []);
 
   const refreshReferralInfo = () => {
-    loadReferralInfo();
+    loadReferralData();
   };
 
   return (

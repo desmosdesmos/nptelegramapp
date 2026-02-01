@@ -59,6 +59,9 @@ function App() {
         }
 
         console.log(`New referral: user came via link ${referralCode}. Incrementing "Total Referrals" counter.`);
+
+        // Dispatch custom event to notify all components about the update
+        window.dispatchEvent(new CustomEvent('referralUpdate'));
       }
     } else {
       console.log('No valid referral code found in URL');
