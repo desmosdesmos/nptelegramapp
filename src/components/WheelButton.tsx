@@ -52,24 +52,18 @@ const WheelButton: React.FC<WheelButtonProps> = ({ onOpenWheel }) => {
   }, []);
 
   return (
-    <button
-      onClick={onOpenWheel}
-      disabled={!canSpin}
-      className={`fixed bottom-24 right-4 z-40 w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 ${
-        canSpin
-          ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 animate-bounce'
-          : 'bg-gray-600'
-      }`}
-    >
-      <div className="relative">
-        <Gift className="w-8 h-8 text-black" />
-        {!canSpin && timeUntilNextSpin && (
-          <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center">
-            {timeUntilNextSpin}
+    <>
+      {canSpin && (
+        <button
+          onClick={onOpenWheel}
+          className="fixed bottom-24 right-4 z-40 w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 animate-bounce"
+        >
+          <div className="relative">
+            <Gift className="w-8 h-8 text-black" />
           </div>
-        )}
-      </div>
-    </button>
+        </button>
+      )}
+    </>
   );
 };
 
