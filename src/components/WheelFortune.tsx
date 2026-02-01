@@ -110,7 +110,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
   };
 
   // Функция для получения координат для размещения текста и иконки
-  const getTextPosition = (index: number, radius: number, offset: number) => {
+  const getTextPosition = (index: number, offset: number) => {
     const angle = (index * sectorAngle + sectorAngle / 2) * Math.PI / 180;
     const x = 150 + offset * Math.cos(angle);
     const y = 150 + offset * Math.sin(angle);
@@ -119,8 +119,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
   // Рисуем колесо с помощью SVG
   const renderWheel = () => {
-    const radius = 140;
-
     return (
       <svg
         ref={svgRef}
@@ -168,12 +166,12 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
         {/* Сектора колеса */}
         {wheelPrizes.map((prize, index) => {
-          const pathData = calculateSectorPath(index, radius);
+          const pathData = calculateSectorPath(index, 140);
           const color = getSectorColor(prize.rarity);
 
           // Получаем позиции для иконки и текста
-          const iconPos = getTextPosition(index, radius, radius * 0.65);
-          const textPos = getTextPosition(index, radius, radius * 0.45);
+          const iconPos = getTextPosition(index, 140 * 0.65);
+          const textPos = getTextPosition(index, 140 * 0.45);
 
           // Рассчитываем угол для поворота текста
           const textAngle = index * sectorAngle + sectorAngle / 2;
