@@ -81,18 +81,23 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
       // Выбираем цвет в зависимости от редкости
       let fillColor = '#8B5CF6'; // purple-500 по умолчанию
+      let strokeColor = '#1E293B'; // slate-800 по умолчанию
       switch (prize.rarity) {
         case 'common':
-          fillColor = '#60A5FA'; // blue-400
+          fillColor = '#3B82F6'; // blue-500
+          strokeColor = '#1E40AF'; // blue-800
           break;
         case 'rare':
-          fillColor = '#34D399'; // green-400
+          fillColor = '#10B981'; // emerald-500
+          strokeColor = '#065F46'; // emerald-800
           break;
         case 'epic':
-          fillColor = '#A855F7'; // purple-500
+          fillColor = '#8B5CF6'; // violet-500
+          strokeColor = '#5B21B6'; // violet-800
           break;
         case 'legendary':
-          fillColor = '#FBBF24'; // yellow-400
+          fillColor = '#F59E0B'; // amber-500
+          strokeColor = '#92400E'; // amber-800
           break;
       }
 
@@ -105,48 +110,57 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
       ctx.fill();
 
       // Рисуем границу
-      ctx.strokeStyle = '#1E293B'; // slate-800
+      ctx.strokeStyle = strokeColor;
       ctx.lineWidth = 2;
       ctx.stroke();
 
       // Рисуем текст
       ctx.save();
       ctx.rotate(startAngle + sectorAngle * Math.PI / 360);
-      ctx.textAlign = 'right';
+      ctx.textAlign = 'center';
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = 'bold 10px Arial';
+      ctx.font = 'bold 14px Arial';
 
       // Поворачиваем текст к центру
-      const textRadius = radius * 0.7;
+      const textRadius = radius * 0.65;
 
       // Рисуем иконку
-      ctx.fillText(prize.icon, textRadius - 30, -5);
+      ctx.font = 'bold 20px Arial';
+      ctx.fillText(prize.icon, textRadius * Math.cos(-Math.PI/2), textRadius * Math.sin(-Math.PI/2) - 10);
 
       // Рисуем название приза
-      ctx.font = 'bold 8px Arial';
-      ctx.fillStyle = '#FFFFFF';
+      ctx.font = 'bold 10px Arial';
+      const maxWidth = radius * 0.4; // Максимальная ширина текста
 
-      // Разбиваем текст на несколько строк, если он длинный
-      const maxTextWidth = 40;
-      const text = prize.name;
-      const words = text.split(' ');
-      let line = '';
-      let lineCount = 0;
+      // Функция для разбиения текста на строки
+      const wrapText = (text: string, maxWidth: number): string[] => {
+        const lines = [];
+        const words = text.split(' ');
 
-      for (let j = 0; j < words.length; j++) {
-        const testLine = line + words[j] + ' ';
-        const metrics = ctx.measureText(testLine);
+        let currentLine = words[0];
 
-        if (metrics.width > maxTextWidth && j > 0) {
-          ctx.fillText(line, textRadius - 30, 5 + (lineCount * 10));
-          line = words[j] + ' ';
-          lineCount++;
-        } else {
-          line = testLine;
+        for (let i = 1; i < words.length; i++) {
+          const word = words[i];
+          const width = ctx.measureText(currentLine + ' ' + word).width;
+
+          if (width < maxWidth) {
+            currentLine += ' ' + word;
+          } else {
+            lines.push(currentLine);
+            currentLine = word;
+          }
         }
-      }
 
-      ctx.fillText(line, textRadius - 30, 5 + (lineCount * 10));
+        lines.push(currentLine);
+        return lines;
+      };
+
+      const lines = wrapText(prize.name, maxWidth);
+
+      // Рисуем каждую строку текста
+      for (let i = 0; i < lines.length; i++) {
+        ctx.fillText(lines[i], textRadius * Math.cos(-Math.PI/2), textRadius * Math.sin(-Math.PI/2) + (i * 12));
+      }
 
       ctx.restore();
     }
@@ -258,16 +272,16 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-gradient-to-br from-indigo-900/90 to-purple-900/90 backdrop-blur-xl flex items-center justify-center z-50 p-4">
       <div
         ref={containerRef}
-        className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-6 max-w-md w-full border border-white/20 shadow-2xl"
+        className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-6 max-w-md w-full border-2 border-yellow-400 border-amber-500 shadow-2xl shadow-yellow-500/20"
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-white">Ежедневное колесо фортуны</h2>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">Ежедневное колесо фортуны</h2>
           <button
             onClick={onClose}
-            className="text-white/70 hover:text-white transition-colors"
+            className="text-white/70 hover:text-white transition-colors text-xl"
           >
             ✕
           </button>
@@ -278,7 +292,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           <div className="relative">
             <canvas
               ref={canvasRef}
-              className="rounded-full border-4 border-yellow-400 shadow-lg"
+              className="rounded-full border-4 border-yellow-400 shadow-2xl shadow-yellow-500/30"
               style={{
                 transform: `rotate(${rotation}deg)`,
                 transition: spinning ? 'transform 5s cubic-bezier(0.34, 1.56, 0.64, 1)' : 'none'
@@ -287,13 +301,13 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
             {/* Указатель */}
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-2 z-10">
-              <div className="w-0 h-0 border-l-[15px] border-r-[15px] border-t-[20px] border-l-transparent border-r-transparent border-t-yellow-400"></div>
+              <div className="w-0 h-0 border-l-[20px] border-r-[20px] border-t-[25px] border-l-transparent border-r-transparent border-t-yellow-400 shadow-lg"></div>
             </div>
           </div>
 
           {/* Информация о серии */}
           <div className="mt-4 text-center">
-            <p className="text-white/80">Дней подряд: <span className="font-bold text-yellow-400">{dailyStreak}</span></p>
+            <p className="text-white/80">Дней подряд: <span className="font-bold bg-gradient-to-r from-yellow-400 to-amber-500 bg-clip-text text-transparent">{dailyStreak}</span></p>
           </div>
 
           {/* Кнопка вращения */}
@@ -302,8 +316,8 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
             disabled={!canSpin || spinning}
             className={`mt-6 px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-300 ${
               canSpin && !spinning
-                ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-black hover:from-yellow-400 hover:to-yellow-500 transform hover:scale-105 active:scale-95'
-                : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                ? 'bg-gradient-to-r from-yellow-400 to-amber-500 text-black hover:from-yellow-300 hover:to-amber-400 transform hover:scale-105 active:scale-95 shadow-lg shadow-yellow-500/30'
+                : 'bg-gradient-to-r from-gray-600 to-gray-700 text-gray-300 cursor-not-allowed'
             }`}
           >
             {spinning ? 'Крутится...' : canSpin ? 'Крутить колесо!' : 'Попробуйте завтра'}
@@ -314,8 +328,8 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
             <div className="mt-6 p-4 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-2xl border border-white/10 w-full text-center">
               <h3 className="text-lg font-bold text-white mb-2">Ваш приз:</h3>
               <div className="flex items-center justify-center gap-2">
-                <span className="text-2xl">{lastResult.prize.icon}</span>
-                <span className="text-white font-medium">{lastResult.prize.name}</span>
+                <span className="text-3xl">{lastResult.prize.icon}</span>
+                <span className="text-white font-medium text-xl">{lastResult.prize.name}</span>
               </div>
               <p className="text-white/80 text-sm mt-1">{lastResult.prize.description}</p>
             </div>
