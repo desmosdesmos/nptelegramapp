@@ -93,21 +93,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     return `M 150 150 L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z`;
   };
 
-  // Функция для определения цвета сектора в зависимости от редкости
-  const getSectorColor = (rarity: string) => {
-    switch (rarity) {
-      case 'common':
-        return '#2c3e50'; // Темно-серый для обычных призов
-      case 'rare':
-        return '#34495e'; // Средне-темный серый для редких
-      case 'epic':
-        return '#3c3c5a'; // Темно-фиолетовый для эпических
-      case 'legendary':
-        return '#5a3c5a'; // Темно-пурпурный для легендарных
-      default:
-        return '#2c3e50'; // Темно-серый по умолчанию
-    }
-  };
 
   // Функция для получения координат для размещения текста и иконки
   const getTextPosition = (index: number, offset: number) => {
@@ -117,7 +102,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     return { x, y };
   };
 
-  // Рисуем колесо с помощью SVG
+  // Рисуем колесо с помощью SVG в стиле iOS 16+
   const renderWheel = () => {
     const radius = 140;
 
@@ -127,82 +112,84 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         width="300"
         height="300"
         viewBox="0 0 300 300"
-        className="rounded-full border border-transparent shadow-lg"
+        className="rounded-full border border-white/10"
         style={{
           transform: `rotate(${rotation}deg)`,
           transition: spinning ? 'transform 4s cubic-bezier(0.15, 0, 0.15, 1)' : 'transform 0.3s ease-out',
-          background: 'radial-gradient(circle, #2c3e50 0%, #1a1a1a 70%)',
-          boxShadow: 'inset 0 0 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.3)',
+          background: 'radial-gradient(circle, #1a1a2e 0%, #0d0d1a 70%)',
+          boxShadow: 'inset 0 0 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(100, 181, 246, 0.15)',
         }}
       >
-        {/* Внешний обод с мягким металлическим эффектом */}
+        {/* Внешний обод с мягким градиентом */}
         <circle
           cx="150"
           cy="150"
           r="148"
           fill="none"
-          stroke="url(#metalGradient)"
+          stroke="url(#softBorderGradient)"
           strokeWidth="1"
-          strokeOpacity="0.2"
+          strokeOpacity="0.3"
           style={{
-            filter: 'drop-shadow(0 0 8px rgba(0, 255, 255, 0.3))'
+            filter: 'drop-shadow(0 0 12px rgba(100, 181, 246, 0.1))'
           }}
         />
 
-        {/* Градиент для мягкого металлического обода */}
+        {/* Градиент для мягкого обода */}
         <defs>
-          <linearGradient id="metalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#666" />
-            <stop offset="50%" stopColor="#aaa" />
-            <stop offset="100%" stopColor="#666" />
+          <linearGradient id="softBorderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#4a4a6a" />
+            <stop offset="50%" stopColor="#3a3a5a" />
+            <stop offset="100%" stopColor="#2a2a4a" />
           </linearGradient>
 
-          {/* Градиент для неонового свечения */}
-          <filter id="neonGlow">
-            <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
+          {/* Мягкий градиент для центра */}
+          <radialGradient id="centerGradient" cx="30%" cy="30%" r="70%">
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="40%" stopColor="#e0e0f0" />
+            <stop offset="70%" stopColor="#b0b0d0" />
+            <stop offset="100%" stopColor="#606080" />
+          </radialGradient>
         </defs>
 
-        {/* Сектора колеса */}
+        {/* Сектора колеса с мягкими цветами */}
         {wheelPrizes.map((prize, index) => {
           const pathData = calculateSectorPath(index, radius);
-          const color = getSectorColor(prize.rarity);
+          // Мягкие цвета вместо резких
+          const color = prize.rarity === 'common' ? '#3a3a5a' :
+                       prize.rarity === 'rare' ? '#4a4a6a' :
+                       prize.rarity === 'epic' ? '#5a5a8a' :
+                       '#6a6ab0';
 
-          // Получаем позицию для подписи с оптимизацией для 6 секторов
+          // Получаем позицию для подписи
           const labelPos = getTextPosition(index, radius * 0.58);
-          // Корректируем Y-позицию для лучшего отображения при 6 секторах
           const adjustedY = labelPos.y + (numSectors === 6 ? 14 : 10);
 
           return (
             <g key={index}>
-              {/* Сектор */}
+              {/* Сектор с мягким переходом */}
               <path
                 d={pathData}
-                fill={hoveredSector === index ? '#3c3c5a' : color}
-                stroke="rgba(255, 255, 255, 0.1)"
-                strokeWidth="0.5"
+                fill={hoveredSector === index ? '#7a7ac0' : color}
+                stroke="rgba(255, 255, 255, 0.05)"
+                strokeWidth="0.3"
                 style={{
-                  filter: 'drop-shadow(0 0 3px rgba(0, 255, 255, 0.1))',
+                  filter: 'drop-shadow(0 0 4px rgba(100, 181, 246, 0.05))',
                   transition: 'fill 0.3s ease'
                 }}
                 onMouseEnter={() => setHoveredSector(index)}
                 onMouseLeave={() => setHoveredSector(null)}
               />
 
-              {/* Подпись приза в секторе - только текст, без иконок */}
+              {/* Подпись приза - мягкий белый цвет */}
               <text
                 x={labelPos.x}
                 y={adjustedY}
                 textAnchor="middle"
-                fontSize="11"
-                fill="white"
+                fontSize="10"
+                fill="rgba(255, 255, 255, 0.85)"
                 fontWeight="500"
-                letterSpacing="0.05em"
-                opacity="0.95"
+                letterSpacing="0.03em"
+                opacity="0.9"
               >
                 {prize.name}
               </text>
@@ -217,55 +204,46 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           r="32"
           fill="url(#centerGradient)"
           stroke="rgba(255, 255, 255, 0.1)"
-          strokeWidth="1"
+          strokeWidth="0.8"
           style={{
-            filter: 'drop-shadow(0 0 12px rgba(0, 255, 255, 0.5))'
+            filter: 'drop-shadow(0 0 10px rgba(100, 181, 246, 0.2))'
           }}
         />
-        
-        {/* Пульсирующее светящееся кольцо вокруг центра */}
+
+        {/* Мягкое кольцо вокруг центра */}
         <circle
           cx="150"
           cy="150"
           r="34"
           fill="none"
-          stroke="#00ffff"
-          strokeWidth="2"
-          strokeOpacity="0.2"
+          stroke="rgba(100, 181, 246, 0.3)"
+          strokeWidth="1.5"
+          strokeOpacity="0.4"
           style={{
             animation: spinning ? 'pulse 2s infinite' : 'none',
-            filter: 'drop-shadow(0 0 12px rgba(0, 255, 255, 0.6))'
+            filter: 'drop-shadow(0 0 8px rgba(100, 181, 246, 0.1))'
           }}
         />
-        
-        <defs>
-          <radialGradient id="centerGradient" cx="30%" cy="30%" r="70%">
-            <stop offset="0%" stopColor="#e0e0e0" />
-            <stop offset="40%" stopColor="#c0c0c0" />
-            <stop offset="70%" stopColor="#808080" />
-            <stop offset="100%" stopColor="#202020" />
-          </radialGradient>
-          
-          {/* Анимация пульсации */}
-          <style>{`
-            @keyframes pulse {
-              0% { stroke-opacity: 0.2; }
-              50% { stroke-opacity: 0.6; }
-              100% { stroke-opacity: 0.2; }
-            }
-          `}</style>
-        </defs>
-        
+
+        {/* Анимация пульсации */}
+        <style>{`
+          @keyframes pulse {
+            0% { stroke-opacity: 0.2; }
+            50% { stroke-opacity: 0.4; }
+            100% { stroke-opacity: 0.2; }
+          }
+        `}</style>
+
         <text
           x="150"
           y="155"
           textAnchor="middle"
           dominantBaseline="middle"
-          fontSize="16"
-          fill="#00ffff"
-          fontWeight="bold"
-          stroke="#000"
-          strokeWidth="1"
+          fontSize="14"
+          fill="rgba(255, 255, 255, 0.95)"
+          fontWeight="600"
+          stroke="rgba(0, 0, 0, 0.2)"
+          strokeWidth="0.5"
           letterSpacing="0.05em"
         >
           NP
@@ -403,7 +381,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div
         ref={containerRef}
-        className="bg-[#0a0a0a] backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-3xl p-6 max-w-md w-full border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-y-auto max-h-[90vh]"
+        className="bg-black/20 backdrop-filter backdrop-blur-32 bg-opacity-70 rounded-3xl p-6 max-w-md w-full border border-white/10 shadow-xl shadow-white/5 backdrop-saturate-150"
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-white font-system">Ежедневное колесо фортуны</h2>
@@ -446,10 +424,10 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           <button
             onClick={spinWheel}
             disabled={!canSpin || spinning}
-            className={`mt-6 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 ${
+            className={`mt-6 px-6 py-3.5 rounded-2xl font-medium text-base transition-all duration-300 ${
               canSpin && !spinning
-                ? 'bg-gradient-to-br from-[#2a2a2a] to-[#1a1a1a] text-[#00ffff] border border-cyan-500/30 shadow-lg shadow-[#00ffff]/20 hover:shadow-[#00ffff]/40 transform hover:scale-105 active:scale-95'
-                : 'bg-gray-800 text-gray-400 cursor-not-allowed'
+                ? 'bg-white/10 backdrop-blur-sm text-white border border-white/20 hover:bg-white/15 hover:border-white/30 transform hover:scale-105 active:scale-95'
+                : 'bg-black/30 text-white/50 cursor-not-allowed'
             }`}
           >
             {spinning ? 'Крутится...' : canSpin ? 'Крутить колесо!' : 'Попробуйте завтра'}
