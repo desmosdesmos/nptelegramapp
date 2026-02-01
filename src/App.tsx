@@ -54,6 +54,9 @@ function App() {
       if (telegramUser) {
         const referralCodeForUser = `USER${String(telegramUser.id).slice(-6)}`;
         saveReferralInfo(referralCodeForUser, referralCode);
+      } else {
+        // If no Telegram user is available yet, save the referrer code for later use
+        localStorage.setItem('pending_referrer_code', referralCode);
       }
 
       console.log(`Referral visit: user came via link ${referralCode}. Incrementing "Total Referrals" counter.`);
@@ -63,6 +66,38 @@ function App() {
     } else {
       console.log('No valid referral code found in URL');
     }
+  }, []);
+
+  // Check for Telegram user initialization and handle pending referrer
+  useEffect(() => {
+    const checkAndHandlePendingReferrer = () => {
+      const pendingReferrerCode = localStorage.getItem('pending_referrer_code');
+      const telegramUser = getTelegramUser();
+
+      if (pendingReferrerCode && telegramUser) {
+        // Process the pending referrer code with the now available user
+        const referralCodeForUser = `USER${String(telegramUser.id).slice(-6)}`;
+        saveReferralInfo(referralCodeForUser, pendingReferrerCode);
+
+        // Remove the pending code
+        localStorage.removeItem('pending_referrer_code');
+
+        // Dispatch custom event to notify all components about the update
+        window.dispatchEvent(new CustomEvent('referralUpdate'));
+
+        console.log(`Processed pending referrer: ${pendingReferrerCode} for user ${referralCodeForUser}`);
+      }
+    };
+
+    // Check immediately
+    checkAndHandlePendingReferrer();
+
+    // Check periodically in case Telegram user becomes available later
+    const interval = setInterval(checkAndHandlePendingReferrer, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   // Track viewport height changes to detect keyboard visibility
