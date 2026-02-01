@@ -21,7 +21,7 @@ export const mainServices: ServiceCategory[] = [
           {
             id: 'ceiling',
             name: 'Потолок',
-            price: 999,
+            price: 1999,
             // Убрали эмодзи, ServiceIcon будет использовать логику определения иконки по названию
           },
           {
@@ -76,7 +76,8 @@ export const localCleaningServices: ServiceCategory[] = [
       {
         id: 'seat',
         name: 'Сиденье',
-        price: 1000,
+        price: 1500,
+        unitLabel: 'за шт.',
         icon: '🧽',
       },
       {
