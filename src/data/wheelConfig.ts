@@ -1,6 +1,6 @@
 import { WheelPrize } from '../types/wheel';
 
-// Конфигурация призов для колеса фортуны (упрощенная версия с 4 ключевыми призами)
+// Конфигурация призов для колеса фортуны (упрощенная версия с 5 ключевыми призами)
 export const wheelPrizes: WheelPrize[] = [
   // Призы с конкретными шансами
   {
@@ -10,15 +10,6 @@ export const wheelPrizes: WheelPrize[] = [
     value: 10,
     rarity: 'common',
     description: 'Добавлено 10 бонусов к вашему счету',
-    icon: ''
-  },
-  {
-    id: 'points-50',
-    name: '50 бонусов',
-    type: 'points',
-    value: 50,
-    rarity: 'common',
-    description: 'Добавлено 50 бонусов к вашему счету',
     icon: ''
   },
   {
@@ -38,13 +29,32 @@ export const wheelPrizes: WheelPrize[] = [
     rarity: 'legendary',
     description: 'Добавлено 1000 бонусов к вашему счету',
     icon: ''
+  },
+  {
+    id: 'free-full-cleaning',
+    name: 'Комплекс',
+    type: 'free_service',
+    value: 'full_cleaning',
+    rarity: 'epic',
+    description: 'Бесплатная полная химчистка салона',
+    icon: ''
+  },
+  {
+    id: 'free-pre-sale',
+    name: 'Предпродажная подготовка',
+    type: 'free_service',
+    value: 'pre_sale',
+    rarity: 'epic',
+    description: 'Бесплатная предпродажная подготовка автомобиля',
+    icon: ''
   }
 ];
 
-// Вероятности выпадения конкретных призов (для 4 секторов)
+// Вероятности выпадения конкретных призов (для 5 секторов)
 export const prizeProbabilities = {
-  'points-10': 60,          // 60% шанс - самый частый приз
-  'points-50': 25,          // 25% шанс - средний приз
-  'free-ozonation': 10,     // 10% шанс - редкий приз
-  'points-1000': 5          // 5% шанс - легендарный приз
+  'points-10': 50,          // 50% шанс - самый частый приз
+  'free-ozonation': 20,     // 20% шанс - редкий приз
+  'points-1000': 10,        // 10% шанс - легендарный приз
+  'free-full-cleaning': 15, // 15% шанс - эпический приз
+  'free-pre-sale': 5        // 5% шанс - редкий приз
 };

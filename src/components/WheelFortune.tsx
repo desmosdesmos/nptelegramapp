@@ -189,7 +189,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
                 onMouseLeave={() => setHoveredSector(null)}
               />
 
-              {/* Подпись приза в секторе - без иконок, только текст */}
+              {/* Подпись приза в секторе - только текст, без иконок */}
               <text
                 x={labelPos.x}
                 y={labelPos.y + 10}
