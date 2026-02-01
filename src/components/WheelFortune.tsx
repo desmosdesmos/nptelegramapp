@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { WheelSpinResult } from '../types/wheel';
 import { wheelPrizes, prizeProbabilities } from '../data/wheelConfig';
 import { hapticFeedback, getTelegramUser } from '../utils/telegram';
+import { addPoints, addPrize } from '../utils/rewardsSystem';
 
 interface WheelFortuneProps {
   onWin: (result: WheelSpinResult) => void;
@@ -329,6 +330,24 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
       // Сохраняем результат
       localStorage.setItem('wheel_last_result', JSON.stringify(result));
+
+      // Добавляем награду в систему
+      if (result.prize.type === 'points') {
+        let points = 0;
+        if (typeof result.prize.value === 'string') {
+          points = parseInt(result.prize.value.replace('points-', ''), 10);
+        } else if (typeof result.prize.value === 'number') {
+          points = result.prize.value;
+        }
+        addPoints(points);
+      } else if (result.prize.type === 'free_service') {
+        addPrize({
+          id: result.prize.id,
+          name: result.prize.name,
+          type: result.prize.type,
+          description: result.prize.description
+        });
+      }
 
       // Обновляем серию для обычных пользователей
       if (!isTester) {
