@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { WheelSpinResult } from '../types/wheel';
-import { prizeProbabilities } from '../data/wheelConfig';
+import { wheelPrizes, prizeProbabilities } from '../data/wheelConfig';
 import { hapticFeedback, getTelegramUser } from '../utils/telegram';
 import { addPoints, addPrize } from '../utils/rewardsSystem';
 
@@ -18,25 +18,70 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
   const [hoveredSector, setHoveredSector] = useState<number | null>(null);
   const [showFullResult, setShowFullResult] = useState(false);
 
+  const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Жёсткий список из 6 призов для гарантированного отображения
-  const fixedPrizes = [
-    { id: 'points-10', name: '10 бонусов' },
-    { id: 'points-100', name: '100 бонусов' },
-    { id: 'free-ozonation', name: 'Озонация' },
-    { id: 'free-full-cleaning', name: 'Комплекс' },
-    { id: 'free-pre-sale', name: 'Скидка 30%' },
-    { id: 'points-1000', name: '1000 бонусов' }
-  ];
-
-  const numSectors = fixedPrizes.length;
+  // Количество секторов на колесе
+  const numSectors = wheelPrizes.length;
+  // Угол каждого сектора
   const sectorAngle = 360 / numSectors;
-  const radius = 140;
 
+  // Проверяем, можно ли крутить сегодня
+  useEffect(() => {
+    // Получаем информацию о пользователе Telegram
+    const telegramUser = getTelegramUser();
+    const isTester = telegramUser && telegramUser.username === 'yanvtg';
 
-  // Генерация clip-path для сектора
-  const getClipPath = (index: number) => {
+    const lastSpinDate = localStorage.getItem('wheel_last_spin_date');
+    const today = new Date().toISOString().split('T')[0];
+
+    if (!isTester && lastSpinDate === today) {
+      setCanSpin(false);
+      // Показываем результат последнего вращения
+      const lastResultStr = localStorage.getItem('wheel_last_result');
+      if (lastResultStr) {
+        setLastResult(JSON.parse(lastResultStr));
+      }
+    } else {
+      setCanSpin(true);
+    }
+
+    // Загружаем серию дней
+    const streak = parseInt(localStorage.getItem('wheel_daily_streak') || '0', 10);
+    setDailyStreak(streak);
+  }, []);
+
+  // Функция для получения случайного индекса приза с учетом заданных вероятностей
+  const getRandomPrizeIndex = (): number => {
+    // Получаем список призов с заданными вероятностями
+    const specificPrizes = Object.keys(prizeProbabilities);
+
+    // Генерируем случайное число от 0 до 100
+    const random = Math.random() * 100;
+
+    // Проверяем, соответствует ли результат какому-либо конкретному призу
+    let cumulativeProbability = 0;
+
+    for (const prizeId of specificPrizes) {
+      const probability = prizeProbabilities[prizeId as keyof typeof prizeProbabilities];
+      cumulativeProbability += probability;
+
+      if (random <= cumulativeProbability) {
+        // Нашли приз, которому соответствует случайное число
+        const prizeIndex = wheelPrizes.findIndex(p => p.id === prizeId);
+        if (prizeIndex !== -1) {
+          return prizeIndex;
+        }
+      }
+    }
+
+    // Если не попали в заданные вероятности, возвращаем самый распространенный приз (10 бонусов)
+    const defaultPrizeIndex = wheelPrizes.findIndex(p => p.id === 'points-10');
+    return defaultPrizeIndex !== -1 ? defaultPrizeIndex : 0;
+  };
+
+  // Функция для расчета координат сектора
+  const calculateSectorPath = (index: number, radius: number) => {
     const startAngle = (index * sectorAngle * Math.PI) / 180;
     const endAngle = ((index + 1) * sectorAngle * Math.PI) / 180;
 
@@ -45,14 +90,24 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     const x2 = 150 + radius * Math.cos(endAngle);
     const y2 = 150 + radius * Math.sin(endAngle);
 
-    return `polygon(50% 50%, ${x1}px ${y1}px, ${x2}px ${y2}px)`;
+    return `M 150 150 L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z`;
   };
 
-  // Рисуем колесо с помощью CSS (без SVG)
-  const renderWheelCSS = () => {
+  // Функция для получения координат для размещения текста (от центра к краю)
+  const getTextPosition = (index: number, offset: number) => {
+    const angle = (index * sectorAngle + sectorAngle / 2) * Math.PI / 180;
+    const x = 150 + offset * Math.cos(angle);
+    const y = 150 + offset * Math.sin(angle);
+    return { x, y };
+  };
+
+  // Рисуем колесо с помощью SVG в стиле Futuristic Automotive Dashboard
+  const renderWheel = () => {
+    const radius = 140;
+
     return (
-      <div className="relative w-[300px] h-[300px]">
-        {/* Подсветочное пятно */}
+      <div className="relative">
+        {/* Подсветочное пятно под колесом (плавающий эффект) */}
         <div 
           className="absolute inset-0 rounded-full blur-3xl opacity-30"
           style={{
@@ -61,9 +116,12 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           }}
         />
 
-        {/* Колесо — контейнер для секторов */}
-        <div 
-          className="absolute inset-0 rounded-full border border-white/10"
+        <svg
+          ref={svgRef}
+          width="300"
+          height="300"
+          viewBox="0 0 300 300"
+          className="rounded-full"
           style={{
             transform: `rotate(${rotation}deg)`,
             transition: spinning ? 'transform 4s cubic-bezier(0.15, 0, 0.15, 1)' : 'transform 0.3s ease-out',
@@ -71,88 +129,174 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
             boxShadow: 'inset 0 0 40px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 240, 255, 0.2)',
           }}
         >
-          {/* Сектора */}
-          {fixedPrizes.map((prize, index) => {
-            const color = index % 2 === 0 ? '#1c1c1e' : 'rgba(20, 20, 30, 0.7)';
-            const displayName =
-              prize.id === 'points-10' ? '10₽' :
-              prize.id === 'points-100' ? '100₽' :
-              prize.id === 'points-1000' ? '1000₽' :
-              prize.id === 'free-pre-sale' ? 'Скидка 30%' :
-              prize.id === 'free-ozonation' ? 'Озонация' :
-              prize.id === 'free-full-cleaning' ? 'Комплекс' :
-              prize.name;
+          {/* Внешний металлический обод (4px) */}
+          <circle
+            cx="150"
+            cy="150"
+            r="148"
+            fill="none"
+            stroke="url(#metalGradient)"
+            strokeWidth="4"
+            style={{
+              filter: 'drop-shadow(0 0 15px rgba(0, 240, 255, 0.3))'
+            }}
+          />
 
+          {/* Градиент для металлического обода */}
+          <defs>
+            <linearGradient id="metalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#4a4a4a" />
+              <stop offset="50%" stopColor="#ffffff" />
+              <stop offset="100%" stopColor="#4a4a4a" />
+            </linearGradient>
+
+            {/* Неоновое свечение для указателя */}
+            <filter id="neonGlow">
+              <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          {/* Сектора колеса (стеклянные лепестки) */}
+          {wheelPrizes.map((prize, index) => {
+            const pathData = calculateSectorPath(index, radius);
+            // Чередуем цвета: Deep Carbon и Semi-Transparent Black (усиленная видимость)
+            const color = index % 2 === 0
+              ? '#1c1c1e'
+              : 'rgba(20, 20, 30, 0.7)'; // более светлый полупрозрачный чёрный для лучшей читаемости
+            
+            // Короткое название для отображения в секторе
+            let displayName = prize.name;
+            if (prize.id === 'points-10') displayName = '10₽';
+            if (prize.id === 'points-100') displayName = '100₽';
+            if (prize.id === 'points-1000') displayName = '1000₽';
+            // Остальные призы отображаем как в wheelConfig.ts (Комплекс, Скидка 30%, Озонация)
+
+            // Получаем позицию для подписи (от центра к краю)
+            const labelPos = getTextPosition(index, radius * 0.65);
+            // Угол для поворота текста (чтобы шел от центра к краю)
             const textAngleDeg = index * sectorAngle + sectorAngle / 2;
-            const isBottomHalf = textAngleDeg > 180;
-            // Встроенные вычисления позиции текста
-            const offset = radius * 0.65;
-            const x = 150 + offset * Math.cos((textAngleDeg * Math.PI) / 180);
-            const y = 150 + offset * Math.sin((textAngleDeg * Math.PI) / 180);
+
+            // Исправление переворота текста: если угол > 180°, инвертируем текст
+            let transformString = `rotate(${textAngleDeg} ${labelPos.x} ${labelPos.y})`;
+            if (textAngleDeg > 180) {
+              transformString = `rotate(${textAngleDeg - 180} ${labelPos.x} ${labelPos.y}) scale(-1, -1)`;
+            }
 
             return (
-              <div
-                key={index}
-                className="absolute top-1/2 left-1/2 w-0 h-0"
-                style={{
-                  clipPath: getClipPath(index),
-                  backgroundColor: hoveredSector === index ? '#2a2a2e' : color,
-                  border: '0.8px solid rgba(255, 255, 255, 0.1)',
-                  filter: 'drop-shadow(0 0 3px rgba(0, 240, 255, 0.05))',
-                  transform: 'translate(-50%, -50%)',
-                  transition: 'background-color 0.3s ease',
-                }}
-                onMouseEnter={() => setHoveredSector(index)}
-                onMouseLeave={() => setHoveredSector(null)}
-              >
-                {/* Текст внутри сектора */}
-                <div
-                  className="absolute whitespace-nowrap"
+              <g key={index}>
+                {/* Сектор с тонкой обводкой (эффект стеклянных лепестков) */}
+                <path
+                  d={pathData}
+                  fill={hoveredSector === index ? '#2a2a2e' : color}
+                  stroke="rgba(255, 255, 255, 0.1)"
+                  strokeWidth="0.8"
                   style={{
-                    left: `${x}px`,
-                    top: `${y}px`,
-                    fontSize: '12px',
-                    fontWeight: '700',
-                    color: 'rgba(255, 255, 255, 0.98)',
-                    textShadow: '0 1px 3px rgba(0, 0, 0, 0.5)',
-                    transform: isBottomHalf
-                      ? `rotate(${textAngleDeg - 180}deg) scale(-1, -1)`
-                      : `rotate(${textAngleDeg}deg)`,
-                    transformOrigin: 'center',
-                    pointerEvents: 'none',
+                    filter: 'drop-shadow(0 0 3px rgba(0, 240, 255, 0.05))',
+                    transition: 'fill 0.3s ease'
                   }}
+                  onMouseEnter={() => setHoveredSector(index)}
+                  onMouseLeave={() => setHoveredSector(null)}
+                />
+
+                {/* Текст внутри сектора (от центра к краю) */}
+                <text
+                  x={labelPos.x}
+                  y={labelPos.y}
+                  textAnchor="middle"
+                  fontSize="12"
+                  fill="rgba(255, 255, 255, 0.98)"
+                  fontWeight="700"
+                  letterSpacing="0.02em"
+                  opacity="1"
+                  transform={transformString}
+                  className="font-sans font-bold"
+                  style={{ textShadow: '0 1px 3px rgba(0, 0, 0, 0.5)' }}
                 >
                   {displayName}
-                </div>
-              </div>
+                </text>
+              </g>
             );
           })}
-        </div>
 
-        {/* Центральная кнопка (The Hub) */}
-        <div
-          className="absolute top-1/2 left-1/2 w-18 h-18 rounded-full bg-gradient-to-br from-[#3a3a4a] to-[#1a1a2a] border border-white/10 flex items-center justify-center cursor-pointer z-10"
-          style={{
-            transform: 'translate(-50%, -50%)',
-            filter: 'drop-shadow(0 0 15px rgba(0, 240, 255, 0.4))',
-          }}
-          onClick={spinning || !canSpin ? undefined : spinWheel}
-        >
-          <div className="text-white font-bold text-lg">SPIN</div>
-        </div>
+          {/* Центральная кнопка (The Hub) - плоская, утопленная */}
+          <circle
+            cx="150"
+            cy="150"
+            r="36"
+            fill="url(#hubGradient)"
+            stroke="rgba(255, 255, 255, 0.1)"
+            strokeWidth="1"
+            style={{
+              filter: 'drop-shadow(0 0 15px rgba(0, 240, 255, 0.4))',
+            }}
+          />
 
-        {/* Неоновое пульсирующее кольцо вокруг центра */}
-        <div
-          className="absolute top-1/2 left-1/2 w-20 h-20 rounded-full border-2 border-cyan-400 opacity-60 animate-pulse"
-          style={{
-            transform: 'translate(-50%, -50%)',
-            boxShadow: '0 0 20px rgba(0, 240, 255, 0.7)',
-          }}
-        />
+          {/* Неоновое пульсирующее кольцо вокруг центра */}
+          <circle
+            cx="150"
+            cy="150"
+            r="40"
+            fill="none"
+            stroke="#00f0ff"
+            strokeWidth="2"
+            strokeOpacity="0.6"
+            style={{
+              animation: spinning ? 'pulse 2s infinite' : 'none',
+              filter: 'drop-shadow(0 0 20px rgba(0, 240, 255, 0.7))',
+            }}
+          />
 
-        {/* Указатель (The Pointer) */}
+          {/* Градиент для центральной кнопки */}
+          <defs>
+            <radialGradient id="hubGradient" cx="30%" cy="30%" r="70%">
+              <stop offset="0%" stopColor="#3a3a4a" />
+              <stop offset="40%" stopColor="#2a2a3a" />
+              <stop offset="70%" stopColor="#1a1a2a" />
+              <stop offset="100%" stopColor="#0d0d1a" />
+            </radialGradient>
+
+            {/* Анимация пульсации */}
+            <style>{`
+              @keyframes pulse {
+                0% { stroke-opacity: 0.3; filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.4)); }
+                50% { stroke-opacity: 0.8; filter: drop-shadow(0 0 30px rgba(0, 240, 255, 0.8)); }
+                100% { stroke-opacity: 0.3; filter: drop-shadow(0 0 20px rgba(0, 240, 255, 0.4)); }
+              }
+            `}</style>
+          </defs>
+
+          {/* Текст "SPIN" в центре (металлический) */}
+          <text
+            x="150"
+            y="155"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            fontSize="16"
+            fill="url(#metalTextGradient)"
+            fontWeight="700"
+            letterSpacing="0.05em"
+            className="font-sans font-bold"
+          >
+            SPIN
+          </text>
+
+          {/* Градиент для металлического текста */}
+          <defs>
+            <linearGradient id="metalTextGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#e0e0e0" />
+              <stop offset="50%" stopColor="#ffffff" />
+              <stop offset="100%" stopColor="#c0c0c0" />
+            </linearGradient>
+          </defs>
+        </svg>
+
+        {/* Указатель (The Pointer) - перевернутый треугольник с неоновым свечением */}
         <div 
-          className="absolute top-[-16px] left-1/2 transform -translate-x-1/2 z-20"
+          className="absolute top-[-16px] left-1/2 transform -translate-x-1/2 z-30"
           style={{
             filter: 'drop-shadow(0 8px 15px rgba(0, 240, 255, 0.6))',
           }}
@@ -164,6 +308,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
               stroke="rgba(255, 255, 255, 0.3)"
               strokeWidth="1"
               strokeLinejoin="round"
+              filter="url(#neonGlow)"
             />
           </svg>
         </div>
@@ -180,41 +325,47 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     setLastResult(null);
     setShowFullResult(false);
 
+    // Добавляем случайное количество оборотов (3-6) плюс смещение для нужного сектора
     const extraRotations = 3 + Math.floor(Math.random() * 4);
     const winningIndex = getRandomPrizeIndex();
     
+    // ФИНАЛЬНАЯ КАЛИБРОВКА: на основе всех тестов
+    // При normalizedRotation = 0° показывается "Предпродажка" (индекс 4)
+    // Значит, нужно смещение: 0° → индекс 4, поэтому для индекса 0 нужно: 0° - 4*36° = -144°
     const calibrationOffset = -144;
     const targetRotation = calibrationOffset - winningIndex * sectorAngle;
+    
+    // Нормализуем и добавляем обороты
     const normalizedRotation = ((targetRotation % 360) + 360) % 360;
     const finalRotation = normalizedRotation + extraRotations * 360;
 
     setRotation(finalRotation);
 
+    // Анимация вращения
     setTimeout(() => {
-      const prize = fixedPrizes[winningIndex]; // используем fixedPrizes для consistency
+      // Выбираем приз
+      const prize = wheelPrizes[winningIndex];
       const result: WheelSpinResult = {
-        prize: {
-          ...prize,
-          type: prize.id.startsWith('points') ? 'points' : 'free_service',
-          value: prize.id === 'points-10' ? 10 : prize.id === 'points-100' ? 100 : prize.id === 'points-1000' ? 1000 : prize.id,
-          rarity: 'common',
-          description: prize.name,
-          icon: ''
-        },
+        prize,
         sectorIndex: winningIndex,
         timestamp: Date.now()
       };
 
       setLastResult(result);
       setSpinning(false);
-      setShowFullResult(true);
+      setShowFullResult(true); // Показываем полноэкранный результат
 
       // Сохраняем результат
       localStorage.setItem('wheel_last_result', JSON.stringify(result));
 
-      // Добавляем награду
+      // Добавляем награду в систему
       if (result.prize.type === 'points') {
-        const points = typeof result.prize.value === 'number' ? result.prize.value : 0;
+        let points = 0;
+        if (typeof result.prize.value === 'string') {
+          points = parseInt(result.prize.value.replace('points-', ''), 10);
+        } else if (typeof result.prize.value === 'number') {
+          points = result.prize.value;
+        }
         addPoints(points);
       } else if (result.prize.type === 'free_service') {
         addPrize({
@@ -225,20 +376,27 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         });
       }
 
+      // Получаем информацию о пользователе Telegram
       const telegramUser = getTelegramUser();
       const isTester = telegramUser && telegramUser.username === 'yanvtg';
 
       if (isTester) {
+        // Для тестера не ограничиваем вращение
         setCanSpin(true);
       } else {
+        // Для обычных пользователей ограничиваем
         setCanSpin(false);
+
+        // Сохраняем дату вращения для обычных пользователей
         localStorage.setItem('wheel_last_spin_date', new Date().toISOString().split('T')[0]);
       }
 
+      // Обновляем серию для обычных пользователей
       if (!isTester) {
         const today = new Date().toISOString().split('T')[0];
         const lastSpinDate = localStorage.getItem('wheel_last_spin_date_prev');
         let newStreak = dailyStreak;
+
         if (!lastSpinDate || lastSpinDate !== today) {
           newStreak++;
           localStorage.setItem('wheel_daily_streak', newStreak.toString());
@@ -247,28 +405,12 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         }
       }
 
+      // Вызываем коллбэк
       onWin(result);
-    }, 4000);
+    }, 4000); // 4 секунды на анимацию
   };
 
-  const getRandomPrizeIndex = (): number => {
-    const specificPrizes = Object.keys(prizeProbabilities);
-    const random = Math.random() * 100;
-    let cumulativeProbability = 0;
-
-    for (const prizeId of specificPrizes) {
-      const probability = prizeProbabilities[prizeId as keyof typeof prizeProbabilities];
-      cumulativeProbability += probability;
-
-      if (random <= cumulativeProbability) {
-        const prizeIndex = fixedPrizes.findIndex(p => p.id === prizeId);
-        return prizeIndex !== -1 ? prizeIndex : 0;
-      }
-    }
-
-    return 0;
-  };
-
+  // Компонент для полноэкранного результата
   const FullScreenResult = () => (
     <div className="fixed inset-0 bg-black/90 backdrop-blur-xl flex items-center justify-center z-50 p-4">
       <div className="bg-[#0a0a0a] rounded-3xl p-8 max-w-md w-full border border-cyan-500/30 shadow-2xl shadow-cyan-500/20 text-center">
@@ -316,8 +458,10 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         </div>
 
         <div className="relative flex flex-col items-center">
-          {/* Колесо (CSS) */}
-          {renderWheelCSS()}
+          {/* Колесо */}
+          <div className="relative">
+            {renderWheel()}
+          </div>
 
           {/* Информация о серии */}
           <div className="mt-4 text-center">
@@ -337,7 +481,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
             {spinning ? 'Крутится...' : canSpin ? 'Крутить колесо!' : 'Попробуйте завтра'}
           </button>
 
-          {/* Результат последнего вращения */}
+          {/* Результат последнего вращения (резерв) */}
           {lastResult && !showFullResult && (
             <div className="mt-6 mb-8 p-4 bg-black/30 backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-2xl border border-cyan-500/20 w-full text-center">
               <h3 className="text-lg font-bold text-white mb-2">Ваш приз:</h3>
