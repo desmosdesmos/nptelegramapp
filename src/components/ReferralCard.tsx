@@ -3,76 +3,16 @@ import { Copy, Share2, Users, Gift, TrendingUp, ChevronDown, ChevronUp } from 'l
 import { getUserReferralInfo, shareReferralCode, copyReferralLink } from '../api/referralApi';
 import { getTotalReferralsCount, getBookedReferralsCount } from '../utils/referral';
 import { getTelegramUser } from '../utils/telegram';
+import { useReferral } from '../contexts/ReferralContext';
 
 interface ReferralCardProps {
   className?: string;
 }
 
 const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
-  const [referralInfo, setReferralInfo] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { referralInfo, loading: contextLoading, refreshReferralInfo } = useReferral();
   const [copied, setCopied] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
-
-  useEffect(() => {
-    loadReferralInfo();
-
-    // Добавляем слушатель для изменений в localStorage
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key && e.key.startsWith('referral_')) {
-        loadReferralInfo();
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
-
-  // Добавим подписку на кастомное событие для обновления данных
-  useEffect(() => {
-    const handleCustomUpdate = () => {
-      loadReferralInfo();
-    };
-
-    window.addEventListener('referralUpdate', handleCustomUpdate);
-
-    return () => {
-      window.removeEventListener('referralUpdate', handleCustomUpdate);
-    };
-  }, []);
-
-  const loadReferralInfo = async () => {
-    try {
-      setLoading(true);
-      const data = await getUserReferralInfo();
-
-      // Обновляем данные с учетом локальных значений
-      const telegramUser = getTelegramUser();
-      if (telegramUser) {
-        const referralCode = `USER${String(telegramUser.id).slice(-6)}`;
-        const localTotalReferrals = getTotalReferralsCount(referralCode);
-        const localBookedReferrals = getBookedReferralsCount(referralCode);
-
-        // Объединяем данные: используем локальные значения, если они больше
-        const updatedData = {
-          ...data,
-          totalReferrals: Math.max(data.totalReferrals, localTotalReferrals),
-          bookedReferrals: Math.max(data.bookedReferrals || 0, localBookedReferrals)
-        };
-
-        setReferralInfo(updatedData);
-      } else {
-        setReferralInfo(data);
-      }
-    } catch (error) {
-      console.error('Error loading referral info:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleCopyLink = async () => {
     if (referralInfo?.referralLink) {
@@ -90,7 +30,7 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
     }
   };
 
-  if (loading) {
+  if (contextLoading) {
     return (
       <div className={`w-full p-6 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 ${className}`}>
         <div className="animate-pulse">
