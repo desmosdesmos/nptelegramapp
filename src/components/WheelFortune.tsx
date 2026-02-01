@@ -15,6 +15,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
   const [canSpin, setCanSpin] = useState(true);
   const [dailyStreak, setDailyStreak] = useState(0);
   const [hoveredSector, setHoveredSector] = useState<number | null>(null);
+  const [debugInfo, setDebugInfo] = useState<string>('');
 
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -279,18 +280,18 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
     setSpinning(true);
     setLastResult(null);
+    setDebugInfo('');
 
     // Добавляем случайное количество оборотов (3-6) плюс смещение для нужного сектора
     const extraRotations = 3 + Math.floor(Math.random() * 4);
     const winningIndex = getRandomPrizeIndex();
     
     // КРИТИЧЕСКИЙ ИСПРАВЛЕНИЕ: корректный расчет targetRotation
-    // Учитываем, что секторы нумеруются от 0, и нужно попасть в центр сектора
-    // Формула: текущий угол + обороты + (360 - угол начала сектора - половина угла сектора)
     const sectorStartAngle = winningIndex * sectorAngle;
     const targetRotation = rotation + (extraRotations * 360) + (360 - sectorStartAngle - sectorAngle / 2);
 
     setRotation(targetRotation);
+    setDebugInfo(`Вычислений индекс: ${winningIndex}, приз: ${wheelPrizes[winningIndex].name}`);
 
     // Анимация вращения
     setTimeout(() => {
@@ -304,6 +305,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
       setLastResult(result);
       setSpinning(false);
+      setDebugInfo(`Результат: ${prize.name} (индекс: ${winningIndex})`);
 
       // Получаем информацию о пользователе Telegram
       const telegramUser = getTelegramUser();
@@ -357,6 +359,13 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
             ✕
           </button>
         </div>
+
+        {/* Отладочная информация */}
+        {debugInfo && (
+          <div className="mb-4 p-2 bg-yellow-900/30 border border-yellow-500/50 rounded text-yellow-300 text-sm">
+            DEBUG: {debugInfo}
+          </div>
+        )}
 
         <div className="relative flex flex-col items-center">
           {/* Колесо */}
