@@ -2,7 +2,7 @@ import { WheelPrize } from '../types/wheel';
 
 // Конфигурация призов для колеса фортуны
 export const wheelPrizes: WheelPrize[] = [
-  // Мелкие бонусы (99.99% шанс)
+  // Призы с конкретными шансами
   {
     id: 'points-10',
     name: '10 баллов',
@@ -22,30 +22,57 @@ export const wheelPrizes: WheelPrize[] = [
     icon: '⭐'
   },
   {
-    id: 'points-30',
-    name: '30 баллов',
-    type: 'points',
-    value: 30,
-    rarity: 'common',
-    description: 'Добавлено 30 баллов к вашему счету',
-    icon: '⭐'
-  },
-  {
-    id: 'points-40',
-    name: '40 баллов',
-    type: 'points',
-    value: 40,
-    rarity: 'common',
-    description: 'Добавлено 40 баллов к вашему счету',
-    icon: '⭐'
-  },
-  {
     id: 'points-50',
     name: '50 баллов',
     type: 'points',
     value: 50,
     rarity: 'common',
     description: 'Добавлено 50 баллов к вашему счету',
+    icon: '⭐'
+  },
+  {
+    id: 'points-100',
+    name: '100 баллов',
+    type: 'points',
+    value: 100,
+    rarity: 'common',
+    description: 'Добавлено 100 баллов к вашему счету',
+    icon: '⭐'
+  },
+  {
+    id: 'points-200',
+    name: '200 баллов',
+    type: 'points',
+    value: 200,
+    rarity: 'common',
+    description: 'Добавлено 200 баллов к вашему счету',
+    icon: '⭐'
+  },
+  {
+    id: 'points-500',
+    name: '500 баллов',
+    type: 'points',
+    value: 500,
+    rarity: 'rare',
+    description: 'Добавлено 500 баллов к вашему счету',
+    icon: '⭐'
+  },
+  {
+    id: 'points-1000',
+    name: '1000 баллов',
+    type: 'points',
+    value: 1000,
+    rarity: 'epic',
+    description: 'Добавлено 1000 баллов к вашему счету',
+    icon: '⭐'
+  },
+  {
+    id: 'points-2000',
+    name: '2000 баллов',
+    type: 'points',
+    value: 2000,
+    rarity: 'epic',
+    description: 'Добавлено 2000 баллов к вашему счету',
     icon: '⭐'
   },
   {
@@ -76,15 +103,6 @@ export const wheelPrizes: WheelPrize[] = [
     icon: '🏷️'
   },
   {
-    id: 'discount-4',
-    name: '4% скидка',
-    type: 'discount',
-    value: 4,
-    rarity: 'common',
-    description: '4% скидка на следующую услугу',
-    icon: '🏷️'
-  },
-  {
     id: 'discount-5',
     name: '5% скидка',
     type: 'discount',
@@ -93,8 +111,6 @@ export const wheelPrizes: WheelPrize[] = [
     description: '5% скидка на следующую услугу',
     icon: '🏷️'
   },
-
-  // Средние призы (3% шанс)
   {
     id: 'free-ozonation',
     name: 'Бесплатная озонация',
@@ -113,8 +129,6 @@ export const wheelPrizes: WheelPrize[] = [
     description: 'Бесплатное обеспыливание салона при следующем визите',
     icon: '🧹'
   },
-
-  // Дорогие призы (0% шанс)
   {
     id: 'free-full-cleaning',
     name: 'Бесплатная полная химчистка',
@@ -123,40 +137,18 @@ export const wheelPrizes: WheelPrize[] = [
     rarity: 'epic',
     description: 'Бесплатная полная химчистка салона',
     icon: '🚗'
-  },
-  {
-    id: 'free-ceiling',
-    name: 'Бесплатный потолок',
-    type: 'free_service',
-    value: 'ceiling',
-    rarity: 'epic',
-    description: 'Бесплатная химчистка потолка при следующем визите',
-    icon: '☁️'
-  },
-  {
-    id: 'vip-service',
-    name: 'VIP-услуга',
-    type: 'free_service',
-    value: 'vip',
-    rarity: 'legendary',
-    description: 'Полная VIP-химчистка автомобиля',
-    icon: '👑'
-  },
-  {
-    id: 'discount-30',
-    name: '30% скидка',
-    type: 'discount',
-    value: 30,
-    rarity: 'legendary',
-    description: '30% скидка на любую услугу',
-    icon: '🏷️'
   }
 ];
 
-// Вероятности выпадения призов по редкости
-export const rarityWeights = {
-  common: 99.99,    // 99.99% шанс на мелкие бонусы
-  rare: 3,          // 3% шанс на средние призы
-  epic: 0,          // 0% шанс на дорогие призы
-  legendary: 0      // 0% шанс на легендарные призы
+// Вероятности выпадения конкретных призов
+export const prizeProbabilities = {
+  'points-10': 99.5,        // 99.5% шанс
+  'points-20': 99,          // 99% шанс
+  'points-50': 10,          // 10% шанс
+  'points-500': 0.0001,     // 0.0001% шанс
+  'free-ozonation': 2,      // 2% шанс
+  'free-vacuuming': 0.5,    // 0.5% шанс
+  'free-full-cleaning': 0,  // 0% шанс
+  'points-2000': 0,         // 0% шанс
+  'points-1000': 0          // 0% шанс
 };

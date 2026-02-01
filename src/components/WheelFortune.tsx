@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { WheelSpinResult } from '../types/wheel';
-import { wheelPrizes } from '../data/wheelConfig';
+import { wheelPrizes, prizeProbabilities } from '../data/wheelConfig';
 import { hapticFeedback, getTelegramUser } from '../utils/telegram';
 
 interface WheelFortuneProps {
@@ -199,37 +199,34 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     }, 5000); // 5 секунд на анимацию
   };
 
-  // Функция для получения случайного индекса приза с учетом редкости
+  // Функция для получения случайного индекса приза с учетом заданных вероятностей
   const getRandomPrizeIndex = (): number => {
+    // Получаем список призов с заданными вероятностями
+    const specificPrizes = Object.keys(prizeProbabilities);
+
     // Генерируем случайное число от 0 до 100
     const random = Math.random() * 100;
 
-    // Определяем, к какому типу приза относится результат
-    if (random < 99.99) {
-      // 99.99% шанс на обычные призы (мелкие бонусы)
-      const commonPrizes = wheelPrizes.filter(p => p.rarity === 'common');
-      return wheelPrizes.indexOf(commonPrizes[Math.floor(Math.random() * commonPrizes.length)]);
-    } else if (random < 99.99 + 3) {
-      // 3% шанс на редкие призы (средние призы)
-      const rarePrizes = wheelPrizes.filter(p => p.rarity === 'rare');
-      return wheelPrizes.indexOf(rarePrizes[Math.floor(Math.random() * rarePrizes.length)]);
-    } else if (random < 99.99 + 3 + 0) {
-      // 0% шанс на эпические призы (дорогие призы)
-      const epicPrizes = wheelPrizes.filter(p => p.rarity === 'epic');
-      if (epicPrizes.length > 0) {
-        return wheelPrizes.indexOf(epicPrizes[Math.floor(Math.random() * epicPrizes.length)]);
-      }
-    } else {
-      // 0% шанс на легендарные призы
-      const legendaryPrizes = wheelPrizes.filter(p => p.rarity === 'legendary');
-      if (legendaryPrizes.length > 0) {
-        return wheelPrizes.indexOf(legendaryPrizes[Math.floor(Math.random() * legendaryPrizes.length)]);
+    // Проверяем, соответствует ли результат какому-либо конкретному призу
+    let cumulativeProbability = 0;
+
+    for (const prizeId of specificPrizes) {
+      const probability = prizeProbabilities[prizeId as keyof typeof prizeProbabilities];
+      cumulativeProbability += probability;
+
+      if (random <= cumulativeProbability) {
+        // Нашли приз, которому соответствует случайное число
+        const prizeIndex = wheelPrizes.findIndex(p => p.id === prizeId);
+        if (prizeIndex !== -1) {
+          return prizeIndex;
+        }
       }
     }
 
-    // Если не удалось определить, возвращаем случайный обычный приз
-    const commonPrizes = wheelPrizes.filter(p => p.rarity === 'common');
-    return wheelPrizes.indexOf(commonPrizes[Math.floor(Math.random() * commonPrizes.length)]);
+    // Если не попали в заданные вероятности, выбираем случайный приз из оставшихся
+    // или возвращаем самый распространенный приз (10 баллов)
+    const defaultPrizeIndex = wheelPrizes.findIndex(p => p.id === 'points-10');
+    return defaultPrizeIndex !== -1 ? defaultPrizeIndex : 0;
   };
 
   return (
