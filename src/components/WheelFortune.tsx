@@ -15,7 +15,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
   const [canSpin, setCanSpin] = useState(true);
   const [dailyStreak, setDailyStreak] = useState(0);
   const [hoveredSector, setHoveredSector] = useState<number | null>(null);
-  const [debugInfo, setDebugInfo] = useState<string>('');
 
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -280,7 +279,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
     setSpinning(true);
     setLastResult(null);
-    setDebugInfo('');
 
     // Добавляем случайное количество оборотов (3-6) плюс смещение для нужного сектора
     const extraRotations = 3 + Math.floor(Math.random() * 4);
@@ -297,7 +295,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     const finalRotation = normalizedRotation + extraRotations * 360;
 
     setRotation(finalRotation);
-    setDebugInfo(`ФИНАЛЬНАЯ КАЛИБРОВКА 2: вычислен индекс=${winningIndex}, calibrationOffset=${calibrationOffset}, targetRotation=${targetRotation}, normalized=${normalizedRotation}, final=${finalRotation}, приз=${wheelPrizes[winningIndex].name}`);
 
     // Анимация вращения
     setTimeout(() => {
@@ -311,7 +308,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
       setLastResult(result);
       setSpinning(false);
-      setDebugInfo(`Результат: ${prize.name} (индекс: ${winningIndex})`);
 
       // Получаем информацию о пользователе Telegram
       const telegramUser = getTelegramUser();
