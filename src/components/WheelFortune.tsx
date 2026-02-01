@@ -286,17 +286,18 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     const extraRotations = 3 + Math.floor(Math.random() * 4);
     const winningIndex = getRandomPrizeIndex();
     
-    // ФИНАЛЬНОЕ РЕШЕНИЕ: прямой расчет на основе диагностики
-    // Из диагностики: при rotation=60° реальный индекс=5, но нужно winningIndex=0
-    // Значит формула: rotation = 360 - winningIndex * sectorAngle
-    const targetRotation = 360 - winningIndex * sectorAngle;
-
+    // ФИНАЛЬНАЯ КАЛИБРОВКА: на основе всех тестов
+    // При normalizedRotation = 0° показывается "Предпродажка" (индекс 4)
+    // Значит, нужно смещение: 0° → индекс 4, поэтому для индекса 0 нужно: 0° - 4*36° = -144°
+    const calibrationOffset = -144;
+    const targetRotation = calibrationOffset - winningIndex * sectorAngle;
+    
     // Нормализуем и добавляем обороты
     const normalizedRotation = ((targetRotation % 360) + 360) % 360;
     const finalRotation = normalizedRotation + extraRotations * 360;
 
     setRotation(finalRotation);
-    setDebugInfo(`ФИНАЛЬНАЯ КАЛИБРОВКА: вычислен индекс=${winningIndex}, targetRotation=${targetRotation}, normalized=${normalizedRotation}, final=${finalRotation}, приз=${wheelPrizes[winningIndex].name}`);
+    setDebugInfo(`ФИНАЛЬНАЯ КАЛИБРОВКА 2: вычислен индекс=${winningIndex}, calibrationOffset=${calibrationOffset}, targetRotation=${targetRotation}, normalized=${normalizedRotation}, final=${finalRotation}, приз=${wheelPrizes[winningIndex].name}`);
 
     // Анимация вращения
     setTimeout(() => {
