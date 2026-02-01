@@ -73,7 +73,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
       }
     }
 
-    // Если не попали в заданные вероятности, возвращаем самый распространенный приз (10 баллов)
+    // Если не попали в заданные вероятности, возвращаем самый распространенный приз (10 бонусов)
     const defaultPrizeIndex = wheelPrizes.findIndex(p => p.id === 'points-10');
     return defaultPrizeIndex !== -1 ? defaultPrizeIndex : 0;
   };
@@ -113,19 +113,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     const x = 150 + offset * Math.cos(angle);
     const y = 150 + offset * Math.sin(angle);
     return { x, y };
-  };
-
-  // Функция для сокращения названия приза
-  const shortenPrizeName = (name: string): string => {
-    const mappings: Record<string, string> = {
-      '10 баллов': '10 б',
-      '50 баллов': '50 б',
-      'Комплекс': 'Комплекс',
-      'Озонация': 'Озон',
-      '1000 баллов': '1K б'
-    };
-    
-    return mappings[name] || name;
   };
 
   // Рисуем колесо с помощью SVG
@@ -183,8 +170,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           const pathData = calculateSectorPath(index, radius);
           const color = getSectorColor(prize.rarity);
 
-          // Получаем позицию для иконки и подписи
-          const iconPos = getTextPosition(index, radius * 0.65);
+          // Получаем позицию для подписи
           const labelPos = getTextPosition(index, radius * 0.52);
 
           return (
@@ -203,39 +189,18 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
                 onMouseLeave={() => setHoveredSector(null)}
               />
 
-              {/* Иконка в секторе */}
-              <text
-                x={iconPos.x}
-                y={iconPos.y - 6}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize="12"
-                fill="white"
-                fontWeight="bold"
-                stroke="#00ffff"
-                strokeWidth="0.3"
-                opacity="0.9"
-                letterSpacing="0.05em"
-                style={{
-                  transform: hoveredSector === index ? 'scale(1.05)' : 'scale(1)',
-                  transition: 'transform 0.3s ease'
-                }}
-              >
-                {prize.icon}
-              </text>
-
-              {/* Подпись приза в секторе - без вращения, только позиционирование */}
+              {/* Подпись приза в секторе - без иконок, только текст */}
               <text
                 x={labelPos.x}
                 y={labelPos.y + 10}
                 textAnchor="middle"
-                fontSize="8"
+                fontSize="10"
                 fill="white"
                 fontWeight="500"
                 letterSpacing="0.05em"
-                opacity="0.9"
+                opacity="0.95"
               >
-                {shortenPrizeName(prize.name)}
+                {prize.name}
               </text>
             </g>
           );
@@ -268,7 +233,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
             filter: 'drop-shadow(0 0 12px rgba(0, 255, 255, 0.6))'
           }}
         />
-
+        
         <defs>
           <radialGradient id="centerGradient" cx="30%" cy="30%" r="70%">
             <stop offset="0%" stopColor="#e0e0e0" />
@@ -276,7 +241,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
             <stop offset="70%" stopColor="#808080" />
             <stop offset="100%" stopColor="#202020" />
           </radialGradient>
-
+          
           {/* Анимация пульсации */}
           <style>{`
             @keyframes pulse {
@@ -292,7 +257,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           y="155"
           textAnchor="middle"
           dominantBaseline="middle"
-          fontSize="14"
+          fontSize="16"
           fill="#00ffff"
           fontWeight="bold"
           stroke="#000"
@@ -431,7 +396,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
             <div className="mt-6 p-4 bg-black/30 backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-2xl border border-cyan-500/20 w-full text-center">
               <h3 className="text-lg font-bold text-white mb-2">Ваш приз:</h3>
               <div className="flex items-center justify-center gap-2">
-                <span className="text-3xl">{lastResult.prize.icon}</span>
                 <span className="text-white font-medium text-xl">{lastResult.prize.name}</span>
               </div>
               <p className="text-white/80 text-sm mt-1">{lastResult.prize.description}</p>
