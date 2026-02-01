@@ -15,6 +15,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
   const [canSpin, setCanSpin] = useState(true);
   const [dailyStreak, setDailyStreak] = useState(0);
   const [hoveredSector, setHoveredSector] = useState<number | null>(null);
+  const [showFullResult, setShowFullResult] = useState(false);
 
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -208,7 +209,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           );
         })}
 
-        {/* Центральное колесо (кнопка "SPIN") */}
+        {/* Центральное колесо (кнопка "NP") */}
         <circle
           cx="150"
           cy="150"
@@ -279,6 +280,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
     setSpinning(true);
     setLastResult(null);
+    setShowFullResult(false);
 
     // Добавляем случайное количество оборотов (3-6) плюс смещение для нужного сектора
     const extraRotations = 3 + Math.floor(Math.random() * 4);
@@ -308,6 +310,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
       setLastResult(result);
       setSpinning(false);
+      setShowFullResult(true); // Показываем полноэкранный результат
 
       // Получаем информацию о пользователе Telegram
       const telegramUser = getTelegramUser();
@@ -346,6 +349,37 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     }, 4000); // 4 секунды на анимацию
   };
 
+  // Компонент для полноэкранного результата
+  const FullScreenResult = () => (
+    <div className="fixed inset-0 bg-black/90 backdrop-blur-xl flex items-center justify-center z-50 p-4">
+      <div className="bg-[#0a0a0a] rounded-3xl p-8 max-w-md w-full border border-cyan-500/30 shadow-2xl shadow-cyan-500/20 text-center">
+        <div className="mb-6">
+          <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full mb-6">
+            <span className="text-4xl font-bold text-white">🎉</span>
+          </div>
+          <h2 className="text-3xl font-bold text-white mb-2">Поздравляем!</h2>
+          <p className="text-cyan-300 mb-6">Вы выиграли:</p>
+        </div>
+        
+        <div className="mb-8">
+          <div className="text-5xl font-bold text-[#00ffff] mb-4">
+            {lastResult?.prize.name}
+          </div>
+          <p className="text-white/80 text-lg">
+            {lastResult?.prize.description}
+          </p>
+        </div>
+
+        <button
+          onClick={() => setShowFullResult(false)}
+          className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-full text-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95"
+        >
+          Продолжить
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div
@@ -361,7 +395,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
             ✕
           </button>
         </div>
-
 
         <div className="relative flex flex-col items-center">
           {/* Колесо */}
@@ -403,8 +436,8 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
             {spinning ? 'Крутится...' : canSpin ? 'Крутить колесо!' : 'Попробуйте завтра'}
           </button>
 
-          {/* Результат последнего вращения */}
-          {lastResult && (
+          {/* Результат последнего вращения (для старых браузеров/резерв) */}
+          {lastResult && !showFullResult && (
             <div className="mt-6 mb-8 p-4 bg-black/30 backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-2xl border border-cyan-500/20 w-full text-center">
               <h3 className="text-lg font-bold text-white mb-2">Ваш приз:</h3>
               <div className="flex items-center justify-center gap-2">
@@ -415,6 +448,9 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           )}
         </div>
       </div>
+
+      {/* Полноэкранный результат */}
+      {showFullResult && <FullScreenResult />}
     </div>
   );
 };
