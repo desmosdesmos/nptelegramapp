@@ -70,21 +70,27 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
         </div>
         <p className="text-white/80 mb-6">Приведи друга на комплексную химчистку и получи 300₽ на карту!</p>
 
-        <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-3 gap-4 mb-6">
           <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center">
             <Users className="w-6 h-6 text-white mx-auto mb-2" />
-            <p className="text-2xl font-bold text-white">{referralInfo?.totalReferrals || 0}</p>
-            <p className="text-white/80 text-sm">Привлечено</p>
+            <p className="text-xl font-bold text-white">{referralInfo?.totalReferrals || 0}</p>
+            <p className="text-white/80 text-xs">Привлечено</p>
           </div>
           <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center">
             <Gift className="w-6 h-6 text-white mx-auto mb-2" />
-            <p className="text-2xl font-bold text-white">{referralInfo?.totalBonuses || 0} ₽</p>
-            <p className="text-white/80 text-sm">Выплачено</p>
+            <p className="text-xl font-bold text-white">{referralInfo?.totalBonuses || 0} ₽</p>
+            <p className="text-white/80 text-xs">Выплачено</p>
+          </div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center">
+            <Gift className="w-6 h-6 text-white mx-auto mb-2" />
+            <p className="text-xl font-bold text-white">{referralInfo?.pendingBonuses || 0} ₽</p>
+            <p className="text-white/80 text-xs">Ожидает</p>
           </div>
         </div>
 
         <div className="bg-white/20 backdrop-blur-sm border-2 border-dashed border-white/30 rounded-xl p-4 mb-6">
           <p className="text-center text-lg font-bold text-white break-all">{referralInfo?.referralCode || 'Загрузка...'}</p>
+          <p className="text-center text-white/70 text-sm mt-2">Поделись этой ссылкой с друзьями</p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3">

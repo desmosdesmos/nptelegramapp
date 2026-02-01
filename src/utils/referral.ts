@@ -62,11 +62,20 @@ export const wasRegisteredViaReferral = (): boolean => {
 };
 
 /**
- * Проверить, является ли услуга, которую выбрал пользователь, 
+ * Проверить, является ли услуга, которую выбрал пользователь,
  * квалифицирующей для начисления реферального бонуса
  */
 export const isQualifyingService = (serviceType: string): boolean => {
   // В данном случае, только комплексная химчистка дает право на бонус
-  return serviceType.toLowerCase().includes('комплексн') && 
+  return serviceType.toLowerCase().includes('комплексн') &&
          serviceType.toLowerCase().includes('химчистк');
+};
+
+/**
+ * Проверить, является ли реферальный код действительным
+ */
+export const isValidReferralCode = (code: string): boolean => {
+  // Проверяем, соответствует ли код формату USER + 6 цифр
+  const referralCodePattern = /^USER\d{6}$/;
+  return referralCodePattern.test(code);
 };

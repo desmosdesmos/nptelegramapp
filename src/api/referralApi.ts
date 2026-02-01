@@ -17,6 +17,10 @@ export const getUserReferralInfo = async (): Promise<ReferralInfo> => {
       throw new Error('Telegram user not found');
     }
 
+    // Генерируем постоянный реферальный код на основе ID пользователя
+    const referralCode = `USER${String(telegramUser.id).slice(-6)}`;
+    const referralLink = `https://t.me/npdetailing?start=${referralCode}`;
+
     const response = await fetch(`${API_BASE_URL}/referrals/${telegramUser.id}`, {
       method: 'GET',
       headers: {
@@ -30,24 +34,37 @@ export const getUserReferralInfo = async (): Promise<ReferralInfo> => {
       console.warn(`Failed to fetch referral info: ${response.status} ${response.statusText}`);
 
       return {
-        referralCode: `REF${Math.floor(Math.random() * 1000000)}`,
-        referralLink: `https://t.me/npdetailing?start=REF${Math.floor(Math.random() * 1000000)}`,
-        totalReferrals: Math.floor(Math.random() * 5),
-        totalBonuses: Math.floor(Math.random() * 5) * 300, // Теперь 300 за каждого
+        referralCode,
+        referralLink,
+        totalReferrals: 0,
+        totalBonuses: 0,
+        pendingBonuses: 0,
         referrals: []
       };
     }
 
-    return await response.json();
+    const data = await response.json();
+
+    // Обновляем данные с постоянным кодом
+    return {
+      ...data,
+      referralCode,
+      referralLink
+    };
   } catch (error) {
     console.warn('Network error fetching referral info, returning mock data:', error);
 
     // Возвращаем mock-данные при сетевой ошибке
+    const telegramUser = getTelegramUser();
+    const referralCode = telegramUser ? `USER${String(telegramUser.id).slice(-6)}` : `USER${Math.floor(Math.random() * 1000000)}`;
+    const referralLink = `https://t.me/npdetailing?start=${referralCode}`;
+
     return {
-      referralCode: `REF${Math.floor(Math.random() * 1000000)}`,
-      referralLink: `https://t.me/npdetailing?start=REF${Math.floor(Math.random() * 1000000)}`,
-      totalReferrals: Math.floor(Math.random() * 5),
-      totalBonuses: Math.floor(Math.random() * 5) * 300, // Теперь 300 за каждого
+      referralCode,
+      referralLink,
+      totalReferrals: 0,
+      totalBonuses: 0,
+      pendingBonuses: 0,
       referrals: []
     };
   }
@@ -76,10 +93,10 @@ export const getUserReferralStats = async (): Promise<ReferralStats> => {
       console.warn(`Failed to fetch referral stats: ${response.status} ${response.statusText}`);
 
       return {
-        totalReferrals: Math.floor(Math.random() * 5),
-        totalBonuses: Math.floor(Math.random() * 5) * 300, // Теперь 300 за каждого
-        monthlyReferrals: Math.floor(Math.random() * 3),
-        pendingBonuses: 0
+        totalReferrals: 0,
+        totalBonuses: 0,
+        pendingBonuses: 0,
+        completedReferrals: 0
       };
     }
 
@@ -89,29 +106,29 @@ export const getUserReferralStats = async (): Promise<ReferralStats> => {
 
     // Возвращаем mock-данные при сетевой ошибке
     return {
-      totalReferrals: Math.floor(Math.random() * 5),
-      totalBonuses: Math.floor(Math.random() * 5) * 300, // Теперь 300 за каждого
-      monthlyReferrals: Math.floor(Math.random() * 3),
-      pendingBonuses: 0
+      totalReferrals: 0,
+      totalBonuses: 0,
+      pendingBonuses: 0,
+      completedReferrals: 0
     };
   }
 };
 
 /**
- * Поделиться реферальным кодом
+ * Поделиться реферальной ссылкой
  */
 export const shareReferralCode = (referralCode: string) => {
-  const shareText = `Привет! Воспользуйся моим промокодом "${referralCode}" при записи на комплексную химчистку в @nptime_bot и получи скидку 500₽. А я получу 300₽ на карту за рекомендацию ❤️`;
+  const shareText = `Привет! Переходи по моей ссылке для записи на комплексную химчистку в @nptime_bot и получай скидку 500₽. А я получу 300₽ на карту за рекомендацию ❤️`;
 
   if (navigator.share) {
     navigator.share({
-      title: 'Промокод для автосервиса NP Detailing',
+      title: 'Реферальная ссылка для NP Detailing',
       text: shareText
     }).catch(console.error);
   } else {
     // Fallback: копируем текст в буфер обмена
     navigator.clipboard.writeText(shareText);
-    alert('Текст с промокодом скопирован в буфер обмена!');
+    alert('Текст с реферальной информацией скопирован в буфер обмена!');
   }
 };
 

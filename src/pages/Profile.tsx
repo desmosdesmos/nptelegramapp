@@ -129,19 +129,19 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
         <ul className="space-y-2 text-white/80">
           <li className="flex items-start gap-2">
             <span className="text-green-400 mt-1">✓</span>
-            <span>Поделись своей реферальной ссылкой с друзьями</span>
+            <span>Твоя реферальная ссылка генерируется автоматически</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-green-400 mt-1">✓</span>
-            <span>Твой друг записывается на комплексную химчистку через твою ссылку</span>
+            <span>Поделись ей с друзьями - когда они перейдут и запишутся на комплексную химчистку, ты получишь 300₽</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-green-400 mt-1">✓</span>
-            <span>После оказания услуги ты получаешь 300₽ на карту</span>
+            <span>Бонусы начисляются автоматически после оказания услуги</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-green-400 mt-1">✓</span>
-            <span>Без ограничений - сколько приведёшь, столько и получишь</span>
+            <span>Нет нужды вводить промокоды - всё происходит автоматически</span>
           </li>
         </ul>
       </div>
