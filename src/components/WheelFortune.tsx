@@ -283,7 +283,12 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     // Добавляем случайное количество оборотов (3-6) плюс смещение для нужного сектора
     const extraRotations = 3 + Math.floor(Math.random() * 4);
     const winningIndex = getRandomPrizeIndex();
-    const targetRotation = rotation + (extraRotations * 360) + (360 - (winningIndex * sectorAngle));
+    
+    // КРИТИЧЕСКИЙ ИСПРАВЛЕНИЕ: корректный расчет targetRotation
+    // Учитываем, что секторы нумеруются от 0, и нужно попасть в центр сектора
+    // Формула: текущий угол + обороты + (360 - угол начала сектора - половина угла сектора)
+    const sectorStartAngle = winningIndex * sectorAngle;
+    const targetRotation = rotation + (extraRotations * 360) + (360 - sectorStartAngle - sectorAngle / 2);
 
     setRotation(targetRotation);
 
