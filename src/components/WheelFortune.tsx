@@ -166,18 +166,24 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
             // Чередуем цвета: Deep Carbon и Semi-Transparent Black
             const color = index % 2 === 0 ? '#1c1c1e' : 'rgba(0, 0, 0, 0.5)';
             
-            // Короткое название для отображения
+            // Короткое название для отображения с символом ₽ для бонусов
             let displayName = prize.name;
-            if (prize.id === 'points-10') displayName = '10';
-            if (prize.id === 'points-100') displayName = '100';
-            if (prize.id === 'points-1000') displayName = '1000';
+            if (prize.id === 'points-10') displayName = '10₽';
+            if (prize.id === 'points-100') displayName = '100₽';
+            if (prize.id === 'points-1000') displayName = '1000₽';
             if (prize.id === 'free-pre-sale') displayName = 'Скидка';
             if (prize.id === 'ozone') displayName = 'Озон';
 
             // Получаем позицию для подписи (от центра к краю)
             const labelPos = getTextPosition(index, radius * 0.65);
             // Угол для поворота текста (чтобы шел от центра к краю)
-            const textAngle = (index * sectorAngle + sectorAngle / 2) * (Math.PI / 180);
+            const textAngleDeg = index * sectorAngle + sectorAngle / 2;
+
+            // Исправление переворота текста: если угол > 180°, инвертируем текст
+            let transformString = `rotate(${textAngleDeg} ${labelPos.x} ${labelPos.y})`;
+            if (textAngleDeg > 180) {
+              transformString = `rotate(${textAngleDeg - 180} ${labelPos.x} ${labelPos.y}) scale(-1, -1)`;
+            }
 
             return (
               <g key={index}>
@@ -205,7 +211,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
                   fontWeight="700"
                   letterSpacing="0.02em"
                   opacity="0.95"
-                  transform={`rotate(${textAngle * 180 / Math.PI} ${labelPos.x} ${labelPos.y})`}
+                  transform={transformString}
                   className="font-sans font-bold"
                 >
                   {displayName}
