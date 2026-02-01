@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useReducer } from 'react';
 import { getUserReferralInfo } from '../api/referralApi';
 import { getTotalReferralsCount, getBookedReferralsCount, getReferralsInfo } from '../utils/referral';
 import { getTelegramUser } from '../utils/telegram';
@@ -11,9 +11,18 @@ interface ReferralContextType {
 
 const ReferralContext = createContext<ReferralContextType | undefined>(undefined);
 
+// Редуктор для принудительного обновления
+const forceUpdateReducer = (state: number, action: any) => {
+  if (action.type === 'FORCE_UPDATE') {
+    return state + 1;
+  }
+  return state;
+};
+
 export const ReferralProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [referralInfo, setReferralInfo] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [, forceUpdate] = useReducer(forceUpdateReducer, 0);
 
   const loadReferralInfo = async () => {
     try {
@@ -26,7 +35,7 @@ export const ReferralProvider: React.FC<{ children: ReactNode }> = ({ children }
         const referralCode = `USER${String(telegramUser.id).slice(-6)}`;
         const localTotalReferrals = getTotalReferralsCount(referralCode);
         const localBookedReferrals = getBookedReferralsCount(referralCode);
-        
+
         // Получаем информацию о рефералах
         const localReferrals = getReferralsInfo(referralCode);
 
@@ -71,10 +80,11 @@ export const ReferralProvider: React.FC<{ children: ReactNode }> = ({ children }
   useEffect(() => {
     const handleCustomUpdate = () => {
       loadReferralInfo();
+      forceUpdate({ type: 'FORCE_UPDATE' }); // Принудительно обновляем состояние
     };
-    
+
     window.addEventListener('referralUpdate', handleCustomUpdate);
-    
+
     return () => {
       window.removeEventListener('referralUpdate', handleCustomUpdate);
     };
