@@ -429,7 +429,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
 
               // Находим реферала с текущим именем
               const referralIndex = referrals.findIndex((ref: any) =>
-                ref.name === (telegramUser.first_name || 'Неизвестный')
+                ref.name === (telegramUser?.first_name || 'Неизвестный')
               );
 
               if (referralIndex !== -1) {

@@ -121,6 +121,7 @@ export const saveReferralInfo = (referralCode: string, referrerCode: string): vo
   const referralData = {
     id: `ref_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
     name: getTelegramUser()?.first_name || 'Неизвестный',
+    referralCode: referralCode, // добавляем код реферала
     dateJoined: new Date().toISOString(),
     bonusAmount: 300, // фиксированная сумма бонуса
     status: 'active',

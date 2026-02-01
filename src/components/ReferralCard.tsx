@@ -166,6 +166,7 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
                     <div className="text-xs text-white/70 mt-1">
                       {referral.dateJoined ? new Date(referral.dateJoined).toLocaleDateString('ru-RU') : ''}
                       {referral.serviceType && ` • ${referral.serviceType}`}
+                      {referral.referralCode && ` • ${referral.referralCode}`}
                     </div>
                   </li>
                 ))}
