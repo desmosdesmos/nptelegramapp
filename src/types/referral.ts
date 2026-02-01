@@ -7,7 +7,6 @@ export interface ReferralInfo {
   referralLink: string;
   totalReferrals: number; // Общее количество привлеченных
   totalBonuses: number; // Общая сумма выплаченных бонусов в рублях
-  pendingBonuses: number; // Бонусы, ожидающие выплаты
   referrals: Referral[]; // Детали по каждому рефералу
 }
 
@@ -24,6 +23,5 @@ export interface Referral {
 export interface ReferralStats {
   totalReferrals: number;
   totalBonuses: number;
-  pendingBonuses: number;
   completedReferrals: number; // Количество завершенных рефералов (с оплатой)
 }
