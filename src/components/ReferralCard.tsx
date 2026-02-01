@@ -15,6 +15,19 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
 
   useEffect(() => {
     loadReferralInfo();
+
+    // Добавляем слушатель для изменений в localStorage
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key && e.key.startsWith('referral_')) {
+        loadReferralInfo();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   const loadReferralInfo = async () => {
