@@ -399,6 +399,12 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       if (success) {
         notificationFeedback('success');
         tg?.showAlert('Заявка отправлена! Мы свяжемся с вами в ближайшее время.');
+
+        // Если пользователь пришел по реферальной ссылке, увеличиваем счетчик "Записалось"
+        if (formData.referrer) {
+          // В реальном приложении здесь будет вызов API для обновления статистики
+          console.log(`Заявка от реферала: ${formData.referrer}. Увеличиваем счетчик "Записалось".`);
+        }
       } else {
         throw new Error('Ошибка отправки');
       }

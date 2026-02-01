@@ -37,7 +37,7 @@ export const getUserReferralInfo = async (): Promise<ReferralInfo> => {
         referralCode,
         referralLink,
         totalReferrals: 0,
-        confirmedReferrals: 0,
+        bookedReferrals: 0,
         totalBonuses: 0,
         referrals: []
       };
@@ -63,7 +63,7 @@ export const getUserReferralInfo = async (): Promise<ReferralInfo> => {
       referralCode,
       referralLink,
       totalReferrals: 0,
-      confirmedReferrals: 0,
+      bookedReferrals: 0,
       totalBonuses: 0,
       referrals: []
     };
@@ -94,7 +94,7 @@ export const getUserReferralStats = async (): Promise<ReferralStats> => {
 
       return {
         totalReferrals: 0,
-        confirmedReferrals: 0,
+        bookedReferrals: 0,
         totalBonuses: 0,
         pendingBonuses: 0
       };
@@ -107,7 +107,7 @@ export const getUserReferralStats = async (): Promise<ReferralStats> => {
     // Возвращаем mock-данные при сетевой ошибке
     return {
       totalReferrals: 0,
-      confirmedReferrals: 0,
+      bookedReferrals: 0,
       totalBonuses: 0,
       pendingBonuses: 0
     };

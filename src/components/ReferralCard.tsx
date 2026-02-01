@@ -78,8 +78,8 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
           </div>
           <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center">
             <Gift className="w-6 h-6 text-white mx-auto mb-2" />
-            <p className="text-xl font-bold text-white">{referralInfo?.totalBonuses || 0} ₽</p>
-            <p className="text-white/80 text-xs">Выплачено</p>
+            <p className="text-xl font-bold text-white">{referralInfo?.bookedReferrals || 0}</p>
+            <p className="text-white/80 text-xs">Записалось</p>
           </div>
         </div>
 
