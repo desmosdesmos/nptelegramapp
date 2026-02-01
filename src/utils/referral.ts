@@ -5,12 +5,23 @@
 import { getTelegramUser } from './telegram';
 
 /**
- * Получить реферальный код из URL параметров
+ * Получить реферальный код из URL параметров или данных Telegram Web App
  */
 export const getReferralCodeFromUrl = (): string | null => {
+  // Сначала проверяем URL параметры (для прямых ссылок)
   const urlParams = new URLSearchParams(window.location.search);
-  // Проверяем параметр 'start' (для Telegram бота)
-  return urlParams.get('start');
+  const fromUrl = urlParams.get('start');
+  if (fromUrl) {
+    return fromUrl;
+  }
+
+  // Затем проверяем данные Telegram Web App (для запуска через бота)
+  const tg = (window as any).Telegram?.WebApp;
+  if (tg && tg.initDataUnsafe?.start_param) {
+    return tg.initDataUnsafe.start_param;
+  }
+
+  return null;
 };
 
 /**

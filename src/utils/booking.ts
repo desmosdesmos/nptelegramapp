@@ -54,7 +54,8 @@ export const sendBookingToTelegram = async (formData: BookingFormData): Promise<
     ? `@${telegramUser.username}` 
     : `tg://user?id=${telegramUser?.id}`;
 
-  const message = [
+  console.log('Отправка заявки с реферером:', formData.referrer);
+const message = [
     '🎯 *Новая заявка на запись*',
     '',
     `👤 *Имя:* ${formData.name}`,
