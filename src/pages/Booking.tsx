@@ -207,7 +207,11 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
 
   // Проверяем реферальный код при загрузке компонента
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log('URL параметры:', Object.fromEntries(urlParams));
     const referralCode = getReferralCodeFromUrl();
+    console.log('Извлеченный реферальный код:', referralCode);
+
     if (referralCode && isValidReferralCode(referralCode)) {
       setFormData(prev => ({
         ...prev,
@@ -224,6 +228,8 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
           console.log(`Новый реферал: пользователь пришел по ссылке ${referralCode}. Увеличиваем счетчик "Привлечено".`);
         });
       }
+    } else {
+      console.log('Реферальный код не найден или невалиден');
     }
   }, []);
     
