@@ -170,10 +170,10 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           const pathData = calculateSectorPath(index, radius);
           const color = getSectorColor(prize.rarity);
 
-          // Получаем позицию для подписи с оптимизацией для 5 секторов
+          // Получаем позицию для подписи с оптимизацией для 6 секторов
           const labelPos = getTextPosition(index, radius * 0.58);
-          // Корректируем Y-позицию для лучшего отображения при 5 секторах
-          const adjustedY = labelPos.y + (numSectors === 5 ? 14 : 10);
+          // Корректируем Y-позицию для лучшего отображения при 6 секторах
+          const adjustedY = labelPos.y + (numSectors === 6 ? 14 : 10);
 
           return (
             <g key={index}>
