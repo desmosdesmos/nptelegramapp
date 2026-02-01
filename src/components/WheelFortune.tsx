@@ -14,6 +14,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
   const [lastResult, setLastResult] = useState<WheelSpinResult | null>(null);
   const [canSpin, setCanSpin] = useState(true);
   const [dailyStreak, setDailyStreak] = useState(0);
+  const [hoveredSector, setHoveredSector] = useState<number | null>(null);
 
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -169,26 +170,24 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           const pathData = calculateSectorPath(index, 140);
           const color = getSectorColor(prize.rarity);
 
-          // Получаем позиции для иконки и текста
+          // Получаем позицию для иконки
           const iconPos = getTextPosition(index, 140 * 0.68);
-          const textPos = getTextPosition(index, 140 * 0.52);
 
-          // Рассчитываем угол для поворота текста
-          const textAngle = index * sectorAngle + sectorAngle / 2;
-          // Корректируем угол, чтобы текст был удобочитаем
-          const correctedTextAngle = textAngle > 90 && textAngle < 270 ? textAngle + 180 : textAngle;
 
           return (
             <g key={index}>
               {/* Сектор */}
               <path
                 d={pathData}
-                fill={color}
+                fill={hoveredSector === index ? '#3c3c5a' : color}
                 stroke="#00ffff" // Неоново-циановая граница
                 strokeWidth="2"
                 style={{
-                  filter: 'drop-shadow(0 0 5px rgba(0, 255, 255, 0.7))'
+                  filter: 'drop-shadow(0 0 5px rgba(0, 255, 255, 0.7))',
+                  transition: 'fill 0.3s ease'
                 }}
+                onMouseEnter={() => setHoveredSector(index)}
+                onMouseLeave={() => setHoveredSector(null)}
               />
 
               {/* Иконка в секторе */}
@@ -197,26 +196,20 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
                 y={iconPos.y}
                 textAnchor="middle"
                 dominantBaseline="middle"
-                fontSize="16"
+                fontSize="14"
                 fill="white"
                 fontWeight="bold"
+                stroke="#00ffff"
+                strokeWidth="0.5"
+                style={{
+                  transform: hoveredSector === index ? 'scale(1.1)' : 'scale(1)',
+                  transition: 'transform 0.3s ease'
+                }}
               >
                 {prize.icon}
               </text>
 
               {/* Название приза в секторе */}
-              <text
-                x={textPos.x}
-                y={textPos.y}
-                textAnchor="middle"
-                fontSize="10"
-                fill="white"
-                fontWeight="500"
-                letterSpacing="0.5"
-                transform={`rotate(${correctedTextAngle}, ${textPos.x}, ${textPos.y})`}
-              >
-                {prize.name.length > 14 ? `${prize.name.substring(0, 14)}...` : prize.name}
-              </text>
             </g>
           );
         })}
@@ -225,24 +218,32 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         <circle
           cx="150"
           cy="150"
-          r="30"
-          fill="#1a1a1a"
+          r="32"
+          fill="url(#centerGradient)"
           stroke="#00ffff"
           strokeWidth="2"
           style={{
-            filter: 'drop-shadow(0 0 8px rgba(0, 255, 255, 0.8))'
+            filter: 'drop-shadow(0 0 12px rgba(0, 255, 255, 0.9))'
           }}
         />
+        <defs>
+          <radialGradient id="centerGradient" cx="30%" cy="30%" r="70%">
+            <stop offset="0%" stopColor="#3c3c5a" />
+            <stop offset="100%" stopColor="#1a1a1a" />
+          </radialGradient>
+        </defs>
         <text
           x="150"
           y="155"
           textAnchor="middle"
           dominantBaseline="middle"
-          fontSize="12"
+          fontSize="14"
           fill="#00ffff"
           fontWeight="bold"
+          stroke="#000"
+          strokeWidth="1"
         >
-          NP
+          SPIN
         </text>
       </svg>
     );
