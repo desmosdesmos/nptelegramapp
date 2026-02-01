@@ -3,7 +3,8 @@ import { ArrowLeft } from 'lucide-react';
 import { PageKey } from '../App';
 import { getTelegramWebApp, hapticFeedback, notificationFeedback, getTelegramUser } from '../utils/telegram';
 import { sendBookingToTelegram, validateBookingForm, type BookingFormData } from '../utils/booking';
-import { getReferralCodeFromUrl, isValidReferralCode } from '../utils/referral';
+import { getReferralCodeFromUrl as getOldReferralCode, isValidReferralCode as isValidOldReferralCode } from '../utils/referral';
+import { incrementBookedReferrals, getReferralCodeFromUrl, isValidReferralCode } from '../utils/simpleReferralSystem';
 import { mainServices, localCleaningServices, getServiceById, getServiceOptionById } from '../data/services';
 import { getAllBrands, getModelsByBrand } from '../data/carBrands';
 import type { Service } from '../types/services';
@@ -399,45 +400,10 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
 
         // Если пользователь пришел по реферальной ссылке, увеличиваем счетчик "Записалось"
         if (formData.referrer) {
-          // В реальном приложении здесь будет вызов API для обновления статистики
-          // Для демонстрации используем локальное хранилище
-          import('../utils/referral').then(({ incrementBookedReferrals, getReferralsInfo }) => {
-            incrementBookedReferrals(formData.referrer!);
+          // Увеличиваем счетчик "Записалось" с помощью новой системы
+          incrementBookedReferrals();
 
-            // Обновляем информацию о реферале
-            const telegramUser = getTelegramUser();
-            if (telegramUser && formData.referrer) {
-              // Получаем существующую информацию о рефералах
-              const referrals = getReferralsInfo(formData.referrer);
-
-              // Находим реферала с текущим именем
-              const referralIndex = referrals.findIndex((ref: any) =>
-                ref.name === (telegramUser?.first_name || 'Неизвестный')
-              );
-
-              if (referralIndex !== -1) {
-                // Обновляем информацию о реферале
-                referrals[referralIndex].serviceType = 'комплексная химчистка'; // или другой тип услуги
-                referrals[referralIndex].status = 'completed'; // обновляем статус
-
-                // Сохраняем обновленную информацию
-                const referralsKey = `referrals_${formData.referrer}`;
-                localStorage.setItem(referralsKey, JSON.stringify(referrals));
-
-                // Уведомляем другие компоненты об изменении
-                window.dispatchEvent(new StorageEvent('storage', {
-                  key: referralsKey,
-                  newValue: JSON.stringify(referrals),
-                  oldValue: JSON.stringify([...referrals]) // это не совсем правильно, но для целей обновления подойдет
-                }));
-
-                // Уведомляем через кастомное событие
-                window.dispatchEvent(new CustomEvent('referralUpdate'));
-              }
-            }
-
-            console.log(`Заявка от реферала: ${formData.referrer}. Увеличиваем счетчик "Записалось".`);
-          });
+          console.log(`Заявка от реферала: ${formData.referrer}. Увеличиваем счетчик "Записалось".`);
         }
       } else {
         throw new Error('Ошибка отправки');

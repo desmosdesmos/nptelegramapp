@@ -12,10 +12,9 @@ import Services from './pages/Services';
 import Reviews from './pages/Reviews';
 import Profile from './pages/Profile';
 import ErrorBoundary from './ErrorBoundary';
-import { getReferralCodeFromUrl, saveReferrerInfo, isValidReferralCode, incrementTotalReferrals, saveReferralInfo } from './utils/referral';
-import { forceReferralStateUpdate } from './utils/referralState';
+import { getReferralCodeFromUrl as getOldReferralCode, isValidReferralCode as isValidOldReferralCode } from './utils/referral';
 import { getTelegramUser } from './utils/telegram';
-import { setupActivityTracking } from './utils/activityTracker';
+import { getReferralCodeFromUrl, isValidReferralCode, hasUserBeenCounted, incrementTotalReferrals, setCurrentUserReferralCode } from './utils/simpleReferralSystem';
 
 // Define a type for the page keys
 export type PageKey = 'Home' | 'Booking' | 'Works' | 'Contacts' | 'Services' | 'Reviews' | 'Profile';
@@ -38,40 +37,28 @@ function App() {
   const [shouldRenderDock, setShouldRenderDock] = useState(false);
   const CurrentPageComponent = appPages[page].component;
 
-  // Check for referral code on app load - SYNCHRONOUS UPDATE
+  // Check for referral code on app load - NEW SIMPLE SYSTEM
   useEffect(() => {
     const referralCode = getReferralCodeFromUrl();
     console.log('App loaded with referral code:', referralCode);
 
     if (referralCode && isValidReferralCode(referralCode)) {
-      // Save referrer info
-      saveReferrerInfo(referralCode);
+      // Проверяем, был ли пользователь уже учтен
+      if (!hasUserBeenCounted()) {
+        // Increment total referrals counter for the referrer
+        incrementTotalReferrals(referralCode);
 
-      // Increment total referrals counter for the referrer on every visit
-      incrementTotalReferrals(referralCode);
+        // Сохраняем реферальный код текущего пользователя
+        const telegramUser = getTelegramUser();
+        if (telegramUser) {
+          const currentUserReferralCode = `USER${String(telegramUser.id).slice(-6)}`;
+          setCurrentUserReferralCode(currentUserReferralCode);
+        }
 
-      // Save referral info
-      const telegramUser = getTelegramUser();
-      if (telegramUser) {
-        const referralCodeForUser = `USER${String(telegramUser.id).slice(-6)}`;
-        saveReferralInfo(referralCodeForUser, referralCode);
+        console.log(`Referral visit: user came via link ${referralCode}. Incrementing "Total Referrals" counter.`);
       } else {
-        // If no Telegram user is available yet, save the referrer code for later use
-        localStorage.setItem('pending_referrer_code', referralCode);
+        console.log('User already counted for referral, skipping increment');
       }
-
-      console.log(`Referral visit: user came via link ${referralCode}. Incrementing "Total Referrals" counter.`);
-
-      // FORCE IMMEDIATE REFRESH OF ALL COMPONENTS
-      setTimeout(() => {
-        window.dispatchEvent(new CustomEvent('referralUpdate'));
-        forceReferralStateUpdate();
-      }, 100); // Small delay to ensure all state updates are processed
-
-      // ALSO trigger a manual refresh after a bit more time
-      setTimeout(() => {
-        window.dispatchEvent(new CustomEvent('referralUpdate'));
-      }, 500);
     } else {
       console.log('No valid referral code found in URL');
     }

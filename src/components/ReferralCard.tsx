@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Copy, Share2, Users, Gift, TrendingUp, ChevronDown, ChevronUp } from 'lucide-react';
-import { getUserReferralInfo, shareReferralCode, copyReferralLink } from '../api/referralApi';
-import { getTotalReferralsCount, getBookedReferralsCount, getReferralsInfo } from '../utils/referral';
+import { shareReferralCode, copyReferralLink } from '../api/referralApi';
+import { getReferralCounts, getReferralDetails, getCurrentUserReferralCode } from '../utils/simpleReferralSystem';
 import { getTelegramUser } from '../utils/telegram';
 
 interface ReferralCardProps {
@@ -14,33 +14,39 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
   const [copied, setCopied] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
-  const loadReferralInfo = async () => {
+  const loadReferralInfo = () => {
     try {
       setLoading(true);
-      const data = await getUserReferralInfo();
 
-      // Обновляем данные с учетом локальных значений
+      // Получаем данные из новой системы
+      const counts = getReferralCounts();
+      const referralDetails = getReferralDetails();
+      const currentUserReferralCode = getCurrentUserReferralCode();
+
+      // Получаем данные пользователя
       const telegramUser = getTelegramUser();
-      if (telegramUser) {
-        const referralCode = `USER${String(telegramUser.id).slice(-6)}`;
-        const localTotalReferrals = getTotalReferralsCount(referralCode);
-        const localBookedReferrals = getBookedReferralsCount(referralCode);
+      const referralCode = telegramUser ? `USER${String(telegramUser.id).slice(-6)}` : 'USER000000';
+      const referralLink = `https://t.me/nptime_bot/npfast?start=${referralCode}`;
 
-        // Получаем информацию о рефералах
-        const localReferrals = getReferralsInfo(referralCode);
+      // Формируем данные для отображения
+      const updatedData = {
+        referralCode,
+        referralLink,
+        totalReferrals: counts.total,
+        bookedReferrals: counts.booked,
+        totalBonuses: counts.booked * 300, // 300₽ за каждую запись
+        referrals: referralDetails.map((detail: any) => ({
+          id: detail.userId,
+          name: detail.referrerCode,
+          dateJoined: new Date(detail.timestamp).toISOString(),
+          bonusAmount: 300,
+          status: 'active',
+          serviceType: 'ожидание',
+          rewardPaid: false
+        }))
+      };
 
-        // Объединяем данные: используем локальные значения, если они больше
-        const updatedData = {
-          ...data,
-          totalReferrals: Math.max(data.totalReferrals || 0, localTotalReferrals),
-          bookedReferrals: Math.max(data.bookedReferrals || 0, localBookedReferrals),
-          referrals: [...(data.referrals || []), ...localReferrals]
-        };
-
-        setReferralInfo(updatedData);
-      } else {
-        setReferralInfo(data);
-      }
+      setReferralInfo(updatedData);
     } catch (error) {
       console.error('Error loading referral info:', error);
     } finally {
