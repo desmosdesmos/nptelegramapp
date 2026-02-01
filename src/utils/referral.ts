@@ -115,6 +115,46 @@ export const isNewReferral = (): boolean => {
 };
 
 /**
+ * Сохранить информацию о новом реферале
+ */
+export const saveReferralInfo = (referralCode: string, referrerCode: string): void => {
+  const referralData = {
+    id: `ref_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    name: getTelegramUser()?.first_name || 'Неизвестный',
+    dateJoined: new Date().toISOString(),
+    bonusAmount: 300, // фиксированная сумма бонуса
+    status: 'active',
+    serviceType: 'ожидание',
+    rewardPaid: false
+  };
+
+  // Получаем существующие рефералы
+  const referralsKey = `referrals_${referrerCode}`;
+  const existingReferrals = JSON.parse(localStorage.getItem(referralsKey) || '[]');
+
+  // Добавляем нового реферала
+  existingReferrals.push(referralData);
+
+  // Сохраняем обратно в localStorage
+  localStorage.setItem(referralsKey, JSON.stringify(existingReferrals));
+
+  // Уведомляем другие компоненты об изменении
+  window.dispatchEvent(new StorageEvent('storage', {
+    key: referralsKey,
+    newValue: JSON.stringify(existingReferrals),
+    oldValue: JSON.stringify(existingReferrals.slice(0, -1))
+  }));
+};
+
+/**
+ * Получить информацию о рефералах
+ */
+export const getReferralsInfo = (referrerCode: string): any[] => {
+  const referralsKey = `referrals_${referrerCode}`;
+  return JSON.parse(localStorage.getItem(referralsKey) || '[]');
+};
+
+/**
  * Обновить счетчик привлеченных пользователей
  */
 export const incrementTotalReferrals = (referrerCode: string): void => {
@@ -124,6 +164,13 @@ export const incrementTotalReferrals = (referrerCode: string): void => {
   const countKey = `referral_total_count_${referrerCode}`;
   const currentCount = parseInt(localStorage.getItem(countKey) || '0', 10);
   localStorage.setItem(countKey, (currentCount + 1).toString());
+
+  // Уведомляем другие компоненты об изменении
+  window.dispatchEvent(new StorageEvent('storage', {
+    key: countKey,
+    newValue: (currentCount + 1).toString(),
+    oldValue: currentCount.toString()
+  }));
 };
 
 /**
@@ -136,6 +183,13 @@ export const incrementBookedReferrals = (referrerCode: string): void => {
   const countKey = `referral_booked_count_${referrerCode}`;
   const currentCount = parseInt(localStorage.getItem(countKey) || '0', 10);
   localStorage.setItem(countKey, (currentCount + 1).toString());
+
+  // Уведомляем другие компоненты об изменении
+  window.dispatchEvent(new StorageEvent('storage', {
+    key: countKey,
+    newValue: (currentCount + 1).toString(),
+    oldValue: currentCount.toString()
+  }));
 };
 
 /**

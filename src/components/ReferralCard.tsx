@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Copy, Share2, Users, Gift, TrendingUp } from 'lucide-react';
+import { Copy, Share2, Users, Gift, TrendingUp, ChevronDown, ChevronUp } from 'lucide-react';
 import { getUserReferralInfo, shareReferralCode, copyReferralLink } from '../api/referralApi';
 import { getTotalReferralsCount, getBookedReferralsCount } from '../utils/referral';
 import { getTelegramUser } from '../utils/telegram';
@@ -12,6 +12,7 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
   const [referralInfo, setReferralInfo] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
     loadReferralInfo();
@@ -46,7 +47,7 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
         const updatedData = {
           ...data,
           totalReferrals: Math.max(data.totalReferrals, localTotalReferrals),
-          bookedReferrals: Math.max(data.bookedReferrals, localBookedReferrals)
+          bookedReferrals: Math.max(data.bookedReferrals || 0, localBookedReferrals)
         };
 
         setReferralInfo(updatedData);
@@ -137,6 +138,43 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
             Поделиться
           </button>
         </div>
+
+        {/* Кнопка для отображения деталей рефералов */}
+        <button
+          onClick={() => setShowDetails(!showDetails)}
+          className="mt-4 w-full flex items-center justify-center gap-2 py-2 px-4 bg-white/20 hover:bg-white/30 rounded-xl transition-colors text-white font-medium"
+        >
+          {showDetails ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+          {showDetails ? 'Скрыть детали' : 'Показать рефералов (' + (referralInfo?.referrals?.length || 0) + ')'}
+        </button>
+
+        {/* Детали рефералов */}
+        {showDetails && referralInfo?.referrals && (
+          <div className="mt-4 bg-white/10 backdrop-blur-sm rounded-xl p-4 max-h-60 overflow-y-auto">
+            <h3 className="text-lg font-semibold text-white mb-3">Ваши рефералы:</h3>
+            {referralInfo.referrals.length > 0 ? (
+              <ul className="space-y-2">
+                {referralInfo.referrals.map((referral: any, index: number) => (
+                  <li key={index} className="bg-white/10 p-3 rounded-lg">
+                    <div className="flex justify-between">
+                      <span className="text-white">{referral.name || 'Неизвестный пользователь'}</span>
+                      <span className="text-white">
+                        {referral.status === 'completed' ? '✅' : '⏳'}
+                        {referral.bonusAmount}₽
+                      </span>
+                    </div>
+                    <div className="text-xs text-white/70 mt-1">
+                      {referral.dateJoined ? new Date(referral.dateJoined).toLocaleDateString('ru-RU') : ''}
+                      {referral.serviceType && ` • ${referral.serviceType}`}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-white/70 text-center py-2">Пока нет рефералов</p>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

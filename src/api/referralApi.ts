@@ -57,11 +57,16 @@ export const getUserReferralInfo = async (): Promise<ReferralInfo> => {
     const localTotalReferrals = getTotalReferralsCount(referralCode);
     const localBookedReferrals = getBookedReferralsCount(referralCode);
 
+    // Получаем информацию о рефералах
+    const { getReferralsInfo } = await import('../utils/referral');
+    const localReferrals = getReferralsInfo(referralCode);
+
     // Объединяем данные: используем локальные значения, если они больше
     return {
       ...result,
       totalReferrals: Math.max(result.totalReferrals, localTotalReferrals),
-      bookedReferrals: Math.max(result.bookedReferrals || 0, localBookedReferrals)
+      bookedReferrals: Math.max(result.bookedReferrals || 0, localBookedReferrals),
+      referrals: [...(result.referrals || []), ...localReferrals]
     };
   } catch (error) {
     console.warn('Network error fetching referral info, returning mock data:', error);

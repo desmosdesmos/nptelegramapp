@@ -223,8 +223,14 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       // Проверяем, является ли пользователь новым рефералом
       if (isNewReferral()) {
         // Увеличиваем счетчик "Привлечено" для реферера
-        import('../utils/referral').then(({ incrementTotalReferrals }) => {
+        import('../utils/referral').then(({ incrementTotalReferrals, saveReferralInfo }) => {
           incrementTotalReferrals(referralCode);
+          // Сохраняем информацию о реферале
+          const telegramUser = getTelegramUser();
+          if (telegramUser) {
+            const referralCodeForUser = `USER${String(telegramUser.id).slice(-6)}`;
+            saveReferralInfo(referralCodeForUser, referralCode);
+          }
           console.log(`Новый реферал: пользователь пришел по ссылке ${referralCode}. Увеличиваем счетчик "Привлечено".`);
         });
       }
@@ -412,8 +418,38 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
         if (formData.referrer) {
           // В реальном приложении здесь будет вызов API для обновления статистики
           // Для демонстрации используем локальное хранилище
-          import('../utils/referral').then(({ incrementBookedReferrals }) => {
+          import('../utils/referral').then(({ incrementBookedReferrals, getReferralsInfo }) => {
             incrementBookedReferrals(formData.referrer!);
+
+            // Обновляем информацию о реферале
+            const telegramUser = getTelegramUser();
+            if (telegramUser) {
+              // Получаем существующую информацию о рефералах
+              const referrals = getReferralsInfo(formData.referrer);
+
+              // Находим реферала с текущим именем
+              const referralIndex = referrals.findIndex((ref: any) =>
+                ref.name === (telegramUser.first_name || 'Неизвестный')
+              );
+
+              if (referralIndex !== -1) {
+                // Обновляем информацию о реферале
+                referrals[referralIndex].serviceType = 'комплексная химчистка'; // или другой тип услуги
+                referrals[referralIndex].status = 'completed'; // обновляем статус
+
+                // Сохраняем обновленную информацию
+                const referralsKey = `referrals_${formData.referrer}`;
+                localStorage.setItem(referralsKey, JSON.stringify(referrals));
+
+                // Уведомляем другие компоненты об изменении
+                window.dispatchEvent(new StorageEvent('storage', {
+                  key: referralsKey,
+                  newValue: JSON.stringify(referrals),
+                  oldValue: JSON.stringify([...referrals]) // это не совсем правильно, но для целей обновления подойдет
+                }));
+              }
+            }
+
             console.log(`Заявка от реферала: ${formData.referrer}. Увеличиваем счетчик "Записалось".`);
           });
         }
