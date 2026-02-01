@@ -350,7 +350,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div
         ref={containerRef}
-        className="bg-[#0a0a0a] backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-3xl p-6 max-w-md w-full border border-cyan-500/20 shadow-2xl shadow-cyan-500/10"
+        className="bg-[#0a0a0a] backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-3xl p-6 max-w-md w-full border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-y-auto max-h-[90vh]"
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold text-white font-system">Ежедневное колесо фортуны</h2>
@@ -405,7 +405,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
           {/* Результат последнего вращения */}
           {lastResult && (
-            <div className="mt-6 p-4 bg-black/30 backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-2xl border border-cyan-500/20 w-full text-center">
+            <div className="mt-6 mb-8 p-4 bg-black/30 backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-2xl border border-cyan-500/20 w-full text-center">
               <h3 className="text-lg font-bold text-white mb-2">Ваш приз:</h3>
               <div className="flex items-center justify-center gap-2">
                 <span className="text-white font-medium text-xl">{lastResult.prize.name}</span>
