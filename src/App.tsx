@@ -46,23 +46,20 @@ function App() {
       // Save referrer info
       saveReferrerInfo(referralCode);
 
-      // Check if this is a new referral visit
-      if (isNewReferral()) {
-        // Increment total referrals counter for the referrer
-        incrementTotalReferrals(referralCode);
+      // Increment total referrals counter for the referrer on every visit
+      incrementTotalReferrals(referralCode);
 
-        // Save referral info
-        const telegramUser = getTelegramUser();
-        if (telegramUser) {
-          const referralCodeForUser = `USER${String(telegramUser.id).slice(-6)}`;
-          saveReferralInfo(referralCodeForUser, referralCode);
-        }
-
-        console.log(`New referral: user came via link ${referralCode}. Incrementing "Total Referrals" counter.`);
-
-        // Dispatch custom event to notify all components about the update
-        window.dispatchEvent(new CustomEvent('referralUpdate'));
+      // Save referral info
+      const telegramUser = getTelegramUser();
+      if (telegramUser) {
+        const referralCodeForUser = `USER${String(telegramUser.id).slice(-6)}`;
+        saveReferralInfo(referralCodeForUser, referralCode);
       }
+
+      console.log(`Referral visit: user came via link ${referralCode}. Incrementing "Total Referrals" counter.`);
+
+      // Dispatch custom event to notify all components about the update
+      window.dispatchEvent(new CustomEvent('referralUpdate'));
     } else {
       console.log('No valid referral code found in URL');
     }
