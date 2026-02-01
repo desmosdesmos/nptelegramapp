@@ -286,21 +286,17 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     const extraRotations = 3 + Math.floor(Math.random() * 4);
     const winningIndex = getRandomPrizeIndex();
     
-    // ФИНАЛЬНОЕ ИСПРАВЛЕНИЕ: прямой расчет угла с нормализацией
-    // Указатель в верхней позиции (90 градусов), сектора начинаются с 0 градусов (правая позиция)
-    // Центр сектора с индексом i находится под углом: i * sectorAngle + sectorAngle/2
-    // Чтобы центр сектора оказался в верхней позиции (90 градусов), нужно повернуть на: 90 - (i * sectorAngle + sectorAngle/2)
-    const sectorCenterAngle = winningIndex * sectorAngle + sectorAngle / 2;
-    const targetRotation = 90 - sectorCenterAngle;
+    // ФИНАЛЬНАЯ ДИАГНОСТИКА: прямая проверка позиционирования
+    // Вместо сложных расчетов, используем простой подход:
+    // При вращении колесо должно остановиться так, чтобы сектор с индексом winningIndex был под указателем
+    // Попробуем фиксированное значение для тестирования
+    const testRotation = 60; // Тестовое значение из предыдущего debug
 
-    // Нормализуем угол в диапазон [0, 360)
-    const normalizedRotation = ((targetRotation % 360) + 360) % 360;
-    
-    // Добавляем случайные обороты для анимации
-    const finalRotation = normalizedRotation + extraRotations * 360;
+    // Для диагностики: покажем реальный индекс сектора под указателем
+    const realSectorIndex = Math.floor((360 - testRotation % 360) / sectorAngle) % numSectors;
 
-    setRotation(finalRotation);
-    setDebugInfo(`Вычислений индекс: ${winningIndex}, приз: ${wheelPrizes[winningIndex].name}, sectorCenterAngle: ${sectorCenterAngle}, targetRotation: ${targetRotation}, normalized: ${normalizedRotation}, final: ${finalRotation}`);
+    setRotation(testRotation + extraRotations * 360);
+    setDebugInfo(`ДИАГНОСТИКА: вычислен индекс=${winningIndex}, реальный индекс под указателем=${realSectorIndex}, приз=${wheelPrizes[winningIndex].name}, testRotation=${testRotation}`);
 
     // Анимация вращения
     setTimeout(() => {
