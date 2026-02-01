@@ -262,26 +262,27 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           fill="none"
           stroke="#00ffff"
           strokeWidth="2"
-          strokeOpacity="0.3"
+          strokeOpacity="0.2"
           style={{
-            animation: spinning ? 'pulse 1.5s infinite' : 'none',
-            filter: 'drop-shadow(0 0 10px rgba(0, 255, 255, 0.7))'
+            animation: spinning ? 'pulse 2s infinite' : 'none',
+            filter: 'drop-shadow(0 0 12px rgba(0, 255, 255, 0.6))'
           }}
         />
-        
+
         <defs>
           <radialGradient id="centerGradient" cx="30%" cy="30%" r="70%">
-            <stop offset="0%" stopColor="#d0d0d0" />
-            <stop offset="50%" stopColor="#a0a0a0" />
-            <stop offset="100%" stopColor="#303030" />
+            <stop offset="0%" stopColor="#e0e0e0" />
+            <stop offset="40%" stopColor="#c0c0c0" />
+            <stop offset="70%" stopColor="#808080" />
+            <stop offset="100%" stopColor="#202020" />
           </radialGradient>
-          
+
           {/* Анимация пульсации */}
           <style>{`
             @keyframes pulse {
-              0% { stroke-opacity: 0.3; }
-              50% { stroke-opacity: 0.7; }
-              100% { stroke-opacity: 0.3; }
+              0% { stroke-opacity: 0.2; }
+              50% { stroke-opacity: 0.6; }
+              100% { stroke-opacity: 0.2; }
             }
           `}</style>
         </defs>
@@ -391,16 +392,16 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
             {renderWheel()}
 
             {/* Указатель (изящный треугольник с закругленными углами) */}
-            <div className="absolute top-[-12px] left-1/2 transform -translate-x-1/2 z-20">
-              <svg width="24" height="12" viewBox="0 0 24 12" className="overflow-visible">
+            <div className="absolute top-[-14px] left-1/2 transform -translate-x-1/2 z-20">
+              <svg width="28" height="14" viewBox="0 0 28 14" className="overflow-visible">
                 <polygon
-                  points="12,0 24,6 12,12 0,6"
+                  points="14,0 28,7 14,14 0,7"
                   fill="none"
                   stroke="#00ffff"
                   strokeWidth="2"
                   strokeLinejoin="round"
                   style={{
-                    filter: 'drop-shadow(0 0 5px #00ffff)'
+                    filter: 'drop-shadow(0 0 6px #00ffff), drop-shadow(0 0 12px rgba(0, 255, 255, 0.5))'
                   }}
                 />
               </svg>
