@@ -183,9 +183,22 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
                 fontSize="24"
                 fill="white"
                 fontWeight="bold"
-                transform={`rotate(${index * sectorAngle + sectorAngle / 2}, 150, 150) translate(0, -${radius * 0.6})`}
+                transform={`rotate(${index * sectorAngle + sectorAngle / 2}, 150, 150) translate(0, -${radius * 0.65})`}
               >
                 {prize.icon}
+              </text>
+
+              {/* Название приза в секторе */}
+              <text
+                x="150"
+                y="150"
+                textAnchor="middle"
+                fontSize="8"
+                fill="white"
+                fontWeight="normal"
+                transform={`rotate(${index * sectorAngle + sectorAngle / 2}, 150, 150) translate(0, -${radius * 0.5}) rotate(${-(index * sectorAngle + sectorAngle / 2)})`}
+              >
+                {prize.name.length > 10 ? `${prize.name.substring(0, 10)}...` : prize.name}
               </text>
             </g>
           );
