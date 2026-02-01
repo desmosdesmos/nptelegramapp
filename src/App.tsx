@@ -15,6 +15,7 @@ import ErrorBoundary from './ErrorBoundary';
 import { getReferralCodeFromUrl, saveReferrerInfo, isValidReferralCode, incrementTotalReferrals, saveReferralInfo } from './utils/referral';
 import { forceReferralStateUpdate } from './utils/referralState';
 import { getTelegramUser } from './utils/telegram';
+import { setupActivityTracking } from './utils/activityTracker';
 
 // Define a type for the page keys
 export type PageKey = 'Home' | 'Booking' | 'Works' | 'Contacts' | 'Services' | 'Reviews' | 'Profile';
@@ -100,6 +101,11 @@ function App() {
     return () => {
       clearInterval(interval);
     };
+  }, []);
+
+  // Setup activity tracking to process referrals when user becomes active
+  useEffect(() => {
+    setupActivityTracking();
   }, []);
 
   // Track viewport height changes to detect keyboard visibility
