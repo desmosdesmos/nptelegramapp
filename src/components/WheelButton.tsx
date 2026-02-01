@@ -8,7 +8,6 @@ interface WheelButtonProps {
 
 const WheelButton: React.FC<WheelButtonProps> = ({ onOpenWheel }) => {
   const [canSpin, setCanSpin] = useState(false);
-  const [timeUntilNextSpin, setTimeUntilNextSpin] = useState('');
 
   useEffect(() => {
     const checkSpinAvailability = () => {
@@ -19,27 +18,15 @@ const WheelButton: React.FC<WheelButtonProps> = ({ onOpenWheel }) => {
       if (isTester) {
         // Для тестера всегда можно крутить
         setCanSpin(true);
-        setTimeUntilNextSpin('');
       } else {
         // Для обычных пользователей проверяем дату
         const lastSpinDate = localStorage.getItem('wheel_last_spin_date');
         const today = new Date().toISOString().split('T')[0];
 
         if (lastSpinDate === today) {
-          // Узнаем, когда можно будет крутить снова
-          const tomorrow = new Date();
-          tomorrow.setDate(tomorrow.getDate() + 1);
-          tomorrow.setHours(0, 0, 0, 0);
-
-          const timeDiff = tomorrow.getTime() - new Date().getTime();
-          const hours = Math.floor(timeDiff / (1000 * 60 * 60));
-          const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-
-          setTimeUntilNextSpin(`${hours}ч ${minutes}м`);
           setCanSpin(false);
         } else {
           setCanSpin(true);
-          setTimeUntilNextSpin('');
         }
       }
     };
