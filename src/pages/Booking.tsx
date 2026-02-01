@@ -423,7 +423,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
 
             // Обновляем информацию о реферале
             const telegramUser = getTelegramUser();
-            if (telegramUser) {
+            if (telegramUser && formData.referrer) {
               // Получаем существующую информацию о рефералах
               const referrals = getReferralsInfo(formData.referrer);
 
