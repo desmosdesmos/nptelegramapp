@@ -56,8 +56,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           }}
         />
 
-        {!showFullResult && (
-          <svg
+        <svg
             ref={svgRef}
             width="300"
             height="300"
