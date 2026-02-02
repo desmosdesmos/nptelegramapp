@@ -320,8 +320,11 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         }
       `}</style>
       <div
-        className="bg-[#0a0a0a]/80 backdrop-filter backdrop-blur-32 rounded-3xl p-8 max-w-md w-full border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 text-center overflow-hidden"
-        style={{ animation: 'pulseGlow 2s infinite' }}
+        className="bg-[#0a0a0a]/80 backdrop-filter backdrop-blur-2xl rounded-3xl p-8 max-w-md w-full border border-cyan-500/10 text-center"
+        style={{
+          boxShadow: '0 0 30px rgba(0, 240, 255, 0.15)',
+          position: 'relative'
+        }}
       >
         <div className="mb-8">
           <div className="flex flex-col items-center justify-center mb-6">
@@ -332,17 +335,20 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
             <p className="text-cyan-300 font-system text-sm">Вы выиграли:</p>
           </div>
 
-          <div className="mb-6">
+          <div
+            className="mb-6 relative z-10"
+            style={{ textShadow: '0 2px 12px rgba(0, 0, 0, 0.6)' }}
+          >
             <div
               className="text-6xl font-bold mb-2 bg-clip-text text-transparent text-center"
               style={{
                 background: 'linear-gradient(135deg, #00f0ff, #00c0ff)',
-                textShadow: '0 2px 10px rgba(0, 0, 0, 0.4)'
+                WebkitTextStroke: '1px rgba(0, 0, 0, 0.3)'
               }}
             >
               {lastResult?.prize.name}
             </div>
-            <p className="text-white/90 text-lg font-system text-center leading-relaxed">
+            <p className="text-white/95 text-lg font-system text-center leading-relaxed">
               {lastResult?.prize.description}
             </p>
           </div>
