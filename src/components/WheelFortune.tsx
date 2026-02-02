@@ -309,7 +309,11 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         className="fixed inset-0 bg-black/60 backdrop-blur-3xl flex items-center justify-center z-50 p-4 transition-opacity duration-500"
         style={{ animation: 'fadeIn 0.4s ease-out' }}
       >
-      <div className="bg-[#0a0a0a]/80 backdrop-filter backdrop-blur-32 rounded-3xl p-8 max-w-md w-full border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 text-center">
+      <div className="bg-[#0a0a0a]/85 rounded-3xl p-8 max-w-md w-full border border-cyan-500/15 shadow-2xl shadow-cyan-500/10 text-center" style={{
+        boxShadow: '0 0 40px rgba(0, 240, 255, 0.08)',
+        WebkitBackdropFilter: 'blur(32px)',
+        backdropFilter: 'blur(32px)'
+      }}>
         <div className="flex flex-col items-center justify-center">
           <div className="mb-6">
             <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-black/20 border border-cyan-500/30 mb-6">
