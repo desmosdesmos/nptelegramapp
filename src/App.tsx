@@ -16,7 +16,6 @@ import { getTelegramUser } from './utils/telegram';
 import { getReferralCodeFromUrl, isValidReferralCode, hasUserBeenCounted, incrementTotalReferrals, setCurrentUserReferralCode } from './utils/simpleReferralSystem';
 import WheelFortune from './components/WheelFortune';
 import WheelButton from './components/WheelButton';
-import WinScreen from './components/WinScreen';
 import { WheelSpinResult } from './types/wheel';
 
 // Define a type for the page keys
@@ -39,8 +38,6 @@ function App() {
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [shouldRenderDock, setShouldRenderDock] = useState(false);
   const [showWheel, setShowWheel] = useState(false);
-  const [showWinScreen, setShowWinScreen] = useState(false);
-  const [winResult, setWinResult] = useState<WheelSpinResult | null>(null);
   const CurrentPageComponent = appPages[page].component;
 
   // Check for referral code on app load - NEW SIMPLE SYSTEM
@@ -173,9 +170,9 @@ function App() {
 
   // Обработчик выигрыша в колесе
   const handleWheelWin = (result: WheelSpinResult) => {
-    setWinResult(result);
-    setShowWheel(false);
-    setShowWinScreen(true);
+    console.log('Выигрыш в колесе:', result);
+    // Здесь можно добавить логику сохранения выигрыша
+    // и применение его к аккаунту пользователя
   };
 
   return (
@@ -238,9 +235,6 @@ function App() {
         )}
       </AnimatePresence>
 
-      {showWinScreen && winResult && (
-        <WinScreen result={winResult} onClose={() => setShowWinScreen(false)} />
-      )}
     </div>
   );
 }
