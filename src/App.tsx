@@ -208,13 +208,31 @@ function App() {
       {/* Кнопка колеса фортуны */}
       <WheelButton onOpenWheel={() => setShowWheel(true)} />
 
-      {/* Модальное окно колеса фортуны */}
-      {showWheel && (
-        <WheelFortune
-          onWin={handleWheelWin}
-          onClose={() => setShowWheel(false)}
-        />
-      )}
+      {/* Модальное окно колеса фортуны с анимацией выхода */}
+      <AnimatePresence>
+        {showWheel && (
+          <motion.div
+            key="wheel"
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{
+              opacity: 0,
+              scale: 0.75,
+              filter: 'blur(10px)',
+              transition: {
+                duration: 0.38,
+                ease: [0.34, 1.56, 0.64, 1] // spring
+              }
+            }}
+            className="fixed inset-0 z-50"
+          >
+            <WheelFortune
+              onWin={handleWheelWin}
+              onClose={() => setShowWheel(false)}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
