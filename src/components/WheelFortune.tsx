@@ -56,19 +56,20 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           }}
         />
 
-        <svg
-          ref={svgRef}
-          width="300"
-          height="300"
-          viewBox="0 0 300 300"
-          className="rounded-full border border-white/10"
-          style={{
-            transform: `rotate(${rotation}deg)`,
-            transition: spinning ? 'transform 4s cubic-bezier(0.15, 0, 0.15, 1)' : 'transform 0.3s ease-out',
-            background: 'transparent',
-            boxShadow: 'inset 0 0 40px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 240, 255, 0.2)',
-          }}
-        >
+        {!showFullResult && (
+          <svg
+            ref={svgRef}
+            width="300"
+            height="300"
+            viewBox="0 0 300 300"
+            className="rounded-full border border-white/10"
+            style={{
+              transform: `rotate(${rotation}deg)`,
+              transition: spinning ? 'transform 4s cubic-bezier(0.15, 0, 0.15, 1)' : 'transform 0.3s ease-out',
+              background: 'transparent',
+              boxShadow: 'inset 0 0 40px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 240, 255, 0.2)',
+            }}
+          >
           {/* Внешний металлический обод */}
           <circle
             cx="150"
