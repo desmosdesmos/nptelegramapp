@@ -121,10 +121,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
             const labelPos = getTextPosition(index, radius * 0.65);
             const textAngleDeg = index * sectorAngle + sectorAngle / 2;
-            let transformString = `rotate(${textAngleDeg} ${labelPos.x} ${labelPos.y})`;
-            if (textAngleDeg > 180) {
-              transformString = `rotate(${textAngleDeg - 180} ${labelPos.x} ${labelPos.y}) scale(-1, -1)`;
-            }
+            const transformString = `rotate(${textAngleDeg} ${labelPos.x} ${labelPos.y})`;
 
             return (
               <g key={index}>
@@ -144,6 +141,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
                   x={labelPos.x}
                   y={labelPos.y}
                   textAnchor="middle"
+                  dominantBaseline="middle"
                   fontSize="12"
                   fill="rgba(255, 255, 255, 0.98)"
                   fontWeight="700"
