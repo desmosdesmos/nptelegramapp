@@ -213,15 +213,16 @@ function App() {
         {showWheel && (
           <motion.div
             key="wheel"
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, scale: 0.6, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{
               opacity: 0,
-              scale: 0.75,
-              filter: 'blur(10px)',
+              scale: 0.65,
+              y: 20,
+              filter: 'blur(12px)',
               transition: {
-                duration: 0.38,
-                ease: [0.34, 1.56, 0.64, 1] // spring
+                duration: 0.42,
+                ease: [0.34, 1.56, 0.64, 1]
               }
             }}
             className="fixed inset-0 z-50"

@@ -323,24 +323,29 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         className="bg-[#0a0a0a]/80 backdrop-filter backdrop-blur-32 rounded-3xl p-8 max-w-md w-full border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 text-center overflow-hidden"
         style={{ animation: 'pulseGlow 2s infinite' }}
       >
-        <div className="mb-6">
-          <div className="inline-flex items-center justify-center w-28 h-28 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 rounded-2xl border border-cyan-500/30 mb-6">
-            <span className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">✨</span>
-          </div>
-          <h2 className="text-3xl font-bold text-white mb-2 font-system">Поздравляем!</h2>
-          <p className="text-cyan-300 font-system text-sm mb-6">Вы выиграли:</p>
-        </div>
-
         <div className="mb-8">
-          <div
-            className="text-6xl font-bold mb-3 bg-clip-text text-transparent"
-            style={{ background: 'linear-gradient(135deg, #00f0ff, #00c0ff)' }}
-          >
-            {lastResult?.prize.name}
+          <div className="flex flex-col items-center justify-center mb-6">
+            <div className="w-24 h-24 rounded-2xl border border-cyan-500/30 flex items-center justify-center mb-4">
+              <span className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">✨</span>
+            </div>
+            <h2 className="text-3xl font-bold text-white mb-2 font-system">Поздравляем!</h2>
+            <p className="text-cyan-300 font-system text-sm">Вы выиграли:</p>
           </div>
-          <p className="text-white/90 text-lg font-system leading-relaxed">
-            {lastResult?.prize.description}
-          </p>
+
+          <div className="mb-6">
+            <div
+              className="text-6xl font-bold mb-2 bg-clip-text text-transparent text-center"
+              style={{
+                background: 'linear-gradient(135deg, #00f0ff, #00c0ff)',
+                textShadow: '0 2px 10px rgba(0, 0, 0, 0.4)'
+              }}
+            >
+              {lastResult?.prize.name}
+            </div>
+            <p className="text-white/90 text-lg font-system text-center leading-relaxed">
+              {lastResult?.prize.description}
+            </p>
+          </div>
         </div>
 
         <button
