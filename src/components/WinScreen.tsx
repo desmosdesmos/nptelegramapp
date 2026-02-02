@@ -20,7 +20,7 @@ const WinScreen: React.FC<WinScreenProps> = ({ result, onClose }) => {
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.8, y: 20 }}
         transition={{ type: 'spring', damping: 22, stiffness: 300 }}
-        className="bg-[#0a0a0a]/80 rounded-3xl p-8 max-w-md w-full border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 text-center"
+        className="bg-[#0a0a0a]/85 rounded-3xl p-8 max-w-md w-full border border-white/10 shadow-lg shadow-black/20 text-center"
       >
         <div className="mb-6">
           <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-black/20 border border-cyan-500/30 mb-6">
@@ -32,8 +32,8 @@ const WinScreen: React.FC<WinScreenProps> = ({ result, onClose }) => {
 
         <div className="mb-8">
           <div
-            className="text-5xl font-bold mb-2 bg-clip-text text-transparent"
-            style={{ 
+            className="text-5xl font-bold mb-2 bg-clip-text text-transparent relative z-10"
+            style={{
               background: 'linear-gradient(135deg, #00f0ff, #00c0ff)',
               textShadow: '0 4px 20px rgba(0, 0, 0, 0.25)'
             }}
