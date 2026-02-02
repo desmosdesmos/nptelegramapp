@@ -302,11 +302,13 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     return 0;
   };
 
-  const FullScreenResult = () => (
-    <div
-      className="fixed inset-0 bg-black/60 backdrop-blur-3xl flex items-center justify-center z-50 p-4 transition-opacity duration-500"
-      style={{ animation: 'fadeIn 0.4s ease-out' }}
-    >
+  const FullScreenResult = () => {
+    if (!lastResult) return null;
+    return (
+      <div
+        className="fixed inset-0 bg-black/60 backdrop-blur-3xl flex items-center justify-center z-50 p-4 transition-opacity duration-500"
+        style={{ animation: 'fadeIn 0.4s ease-out' }}
+      >
       <style>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(20px); }
