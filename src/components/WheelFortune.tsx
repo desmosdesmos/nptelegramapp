@@ -395,4 +395,5 @@ const FullScreenResult = () => {
   );
 };
 
+
 export default WheelFortune;
