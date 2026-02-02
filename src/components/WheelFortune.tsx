@@ -356,46 +356,48 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div
-        ref={containerRef}
-        className="bg-black/20 backdrop-filter backdrop-blur-32 bg-opacity-70 rounded-3xl p-6 max-w-md w-full border border-white/10 shadow-xl shadow-white/5 backdrop-saturate-150"
-      >
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-white font-system">Ежедневное колесо фортуны</h2>
-          <button onClick={onClose} className="text-white/70 hover:text-white text-xl">✕</button>
-        </div>
-
-        <div className="relative flex flex-col items-center">
-          {renderWheel()}
-          <div className="mt-4 text-center">
-            <p className="text-white/80 font-system">Дней подряд: <span className="font-bold text-[#00ffff]">{dailyStreak}</span></p>
+      {!showFullResult && (
+        <div
+          ref={containerRef}
+          className="bg-black/20 backdrop-filter backdrop-blur-32 bg-opacity-70 rounded-3xl p-6 max-w-md w-full border border-white/10 shadow-xl shadow-white/5 backdrop-saturate-150"
+        >
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold text-white font-system">Ежедневное колесо фортуны</h2>
+            <button onClick={onClose} className="text-white/70 hover:text-white text-xl">✕</button>
           </div>
 
-          <button
-            onClick={spinWheel}
-            disabled={!canSpin || spinning}
-            className={`mt-6 px-6 py-3.5 rounded-2xl font-medium text-base transition-all duration-300 ${
-              canSpin && !spinning
-                ? 'bg-white/10 backdrop-blur-sm text-white border border-white/20 hover:bg-white/15 hover:border-white/30 transform hover:scale-105 active:scale-95'
-                : 'bg-black/30 text-white/50 cursor-not-allowed'
-            }`}
-          >
-            {spinning ? 'Крутится...' : canSpin ? 'Крутить колесо!' : 'Попробуйте завтра'}
-          </button>
-
-          {lastResult && !showFullResult && (
-            <div className="mt-6 mb-8 p-4 bg-black/30 backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-2xl border border-cyan-500/20 w-full text-center">
-              <h3 className="text-lg font-bold text-white mb-2">Ваш приз:</h3>
-              <div className="flex items-center justify-center gap-2">
-                <span className="text-white font-medium text-xl">{lastResult.prize.name}</span>
-              </div>
-              <p className="text-white/80 text-sm mt-1">{lastResult.prize.description}</p>
+          <div className="relative flex flex-col items-center">
+            {renderWheel()}
+            <div className="mt-4 text-center">
+              <p className="text-white/80 font-system">Дней подряд: <span className="font-bold text-[#00ffff]">{dailyStreak}</span></p>
             </div>
-          )}
-        </div>
 
-        {showFullResult && <FullScreenResult />}
-      </div>
+            <button
+              onClick={spinWheel}
+              disabled={!canSpin || spinning}
+              className={`mt-6 px-6 py-3.5 rounded-2xl font-medium text-base transition-all duration-300 ${
+                canSpin && !spinning
+                  ? 'bg-white/10 backdrop-blur-sm text-white border border-white/20 hover:bg-white/15 hover:border-white/30 transform hover:scale-105 active:scale-95'
+                  : 'bg-black/30 text-white/50 cursor-not-allowed'
+              }`}
+            >
+              {spinning ? 'Крутится...' : canSpin ? 'Крутить колесо!' : 'Попробуйте завтра'}
+            </button>
+
+            {lastResult && !showFullResult && (
+              <div className="mt-6 mb-8 p-4 bg-black/30 backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-2xl border border-cyan-500/20 w-full text-center">
+                <h3 className="text-lg font-bold text-white mb-2">Ваш приз:</h3>
+                <div className="flex items-center justify-center gap-2">
+                  <span className="text-white font-medium text-xl">{lastResult.prize.name}</span>
+                </div>
+                <p className="text-white/80 text-sm mt-1">{lastResult.prize.description}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {showFullResult && <FullScreenResult />}
     </div>
   );
 };
