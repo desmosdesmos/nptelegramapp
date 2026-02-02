@@ -106,8 +106,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           {/* Сектора */}
           {wheelPrizes.map((_, index) => {
             const pathData = calculateSectorPath(index, radius);
-            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
-    const color = colors[index % 6];
+            const color = index % 2 === 0 ? '#1c1c1e' : 'rgba(20, 20, 30, 0.7)';
             
             // Жёсткие названия для всех 6 секторов
             const displayName = [
