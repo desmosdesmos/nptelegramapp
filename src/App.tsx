@@ -38,6 +38,8 @@ function App() {
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [shouldRenderDock, setShouldRenderDock] = useState(false);
   const [showWheel, setShowWheel] = useState(false);
+  const [showWinScreen, setShowWinScreen] = useState(false);
+  const [winResult, setWinResult] = useState<WheelSpinResult | null>(null);
   const CurrentPageComponent = appPages[page].component;
 
   // Check for referral code on app load - NEW SIMPLE SYSTEM
@@ -170,9 +172,9 @@ function App() {
 
   // Обработчик выигрыша в колесе
   const handleWheelWin = (result: WheelSpinResult) => {
-    console.log('Выигрыш в колесе:', result);
-    // Здесь можно добавить логику сохранения выигрыша
-    // и применение его к аккаунту пользователя
+    setWinResult(result);
+    setShowWheel(false);
+    setShowWinScreen(true);
   };
 
   return (
@@ -234,6 +236,10 @@ function App() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {showWinScreen && winResult && (
+        <WinScreen result={winResult} onClose={() => setShowWinScreen(false)} />
+      )}
     </div>
   );
 }
