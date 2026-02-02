@@ -309,61 +309,42 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         className="fixed inset-0 bg-black/60 backdrop-blur-3xl flex items-center justify-center z-50 p-4 transition-opacity duration-500"
         style={{ animation: 'fadeIn 0.4s ease-out' }}
       >
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes pulseGlow {
-          0%, 100% { box-shadow: 0 0 20px rgba(0, 240, 255, 0.3); }
-          50% { box-shadow: 0 0 30px rgba(0, 240, 255, 0.6); }
-        }
-      `}</style>
-      <div
-        className="bg-[#0a0a0a]/80 backdrop-filter backdrop-blur-2xl rounded-3xl p-8 max-w-md w-full border border-cyan-500/10 text-center"
-        style={{
-          boxShadow: '0 0 30px rgba(0, 240, 255, 0.15)',
-          position: 'relative'
-        }}
-      >
-        <div className="mb-8">
-          <div className="flex flex-col items-center justify-center mb-6">
-            <div className="w-24 h-24 rounded-2xl border border-cyan-500/30 flex items-center justify-center mb-4">
-              <span className="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">✨</span>
+      <div className="bg-[#0a0a0a]/80 backdrop-filter backdrop-blur-32 rounded-3xl p-8 max-w-md w-full border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 text-center">
+        <div className="flex flex-col items-center justify-center">
+          <div className="mb-6">
+            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-black/20 border border-cyan-500/30 mb-6">
+              <span className="text-5xl">✨</span>
             </div>
-            <h2 className="text-3xl font-bold text-white mb-2 font-system">Поздравляем!</h2>
+            <h2 className="text-3xl font-bold text-white mb-1 font-system">Поздравляем!</h2>
             <p className="text-cyan-300 font-system text-sm">Вы выиграли:</p>
           </div>
 
-          <div
-            className="mb-6 relative z-10"
-            style={{ textShadow: '0 2px 12px rgba(0, 0, 0, 0.6)' }}
-          >
+          <div className="text-center mb-8">
             <div
-              className="text-6xl font-bold mb-2 bg-clip-text text-transparent text-center"
+              className="text-5xl font-bold mb-2 bg-clip-text text-transparent"
               style={{
                 background: 'linear-gradient(135deg, #00f0ff, #00c0ff)',
-                WebkitTextStroke: '1px rgba(0, 0, 0, 0.3)'
+                textShadow: '0 4px 20px rgba(0, 0, 0, 0.25)'
               }}
             >
               {lastResult?.prize.name}
             </div>
-            <p className="text-white/95 text-lg font-system text-center leading-relaxed">
+            <p className="text-white/80 text-lg font-system leading-relaxed">
               {lastResult?.prize.description}
             </p>
           </div>
-        </div>
 
-        <button
-          onClick={() => {
-            setShowFullResult(false);
-            onClose();
-          }}
-          className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-full text-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg shadow-cyan-500/20"
-          aria-label="Вернуться в приложение"
-        >
-          Вернуться в приложение
-        </button>
+          <button
+            onClick={() => {
+              setShowFullResult(false);
+              onClose();
+            }}
+            className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-full text-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-102 active:scale-98 shadow-lg shadow-cyan-500/15"
+            aria-label="Вернуться в приложение"
+          >
+            Вернуться в приложение
+          </button>
+        </div>
       </div>
     </div>
   );
