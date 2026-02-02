@@ -16,6 +16,7 @@ import { getTelegramUser } from './utils/telegram';
 import { getReferralCodeFromUrl, isValidReferralCode, hasUserBeenCounted, incrementTotalReferrals, setCurrentUserReferralCode } from './utils/simpleReferralSystem';
 import WheelFortune from './components/WheelFortune';
 import WheelButton from './components/WheelButton';
+import WinScreen from './components/WinScreen';
 import { WheelSpinResult } from './types/wheel';
 
 // Define a type for the page keys
