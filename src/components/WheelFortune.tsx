@@ -303,26 +303,47 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
   };
 
   const FullScreenResult = () => (
-    <div className="fixed inset-0 bg-black/90 backdrop-blur-xl flex items-center justify-center z-50 p-4">
-      <div className="bg-[#0a0a0a] rounded-3xl p-8 max-w-md w-full border border-cyan-500/30 shadow-2xl shadow-cyan-500/20 text-center">
+    <div
+      className="fixed inset-0 bg-black/60 backdrop-blur-3xl flex items-center justify-center z-50 p-4 transition-opacity duration-500"
+      style={{ animation: 'fadeIn 0.4s ease-out' }}
+    >
+      <style>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulseGlow {
+          0%, 100% { box-shadow: 0 0 20px rgba(0, 240, 255, 0.3); }
+          50% { box-shadow: 0 0 30px rgba(0, 240, 255, 0.6); }
+        }
+      `}</style>
+      <div
+        className="bg-[#0a0a0a]/80 backdrop-filter backdrop-blur-32 rounded-3xl p-8 max-w-md w-full border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 text-center overflow-hidden"
+        style={{ animation: 'pulseGlow 2s infinite' }}
+      >
         <div className="mb-6">
-          <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full mb-6">
-            <span className="text-4xl font-bold text-white">🎉</span>
+          <div className="inline-flex items-center justify-center w-28 h-28 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 rounded-2xl border border-cyan-500/30 mb-6">
+            <span className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">✨</span>
           </div>
-          <h2 className="text-3xl font-bold text-white mb-2">Поздравляем!</h2>
-          <p className="text-cyan-300 mb-6">Вы выиграли:</p>
+          <h2 className="text-3xl font-bold text-white mb-2 font-system">Поздравляем!</h2>
+          <p className="text-cyan-300 font-system text-sm mb-6">Вы выиграли:</p>
         </div>
+
         <div className="mb-8">
-          <div className="text-5xl font-bold text-[#00ffff] mb-4">
+          <div
+            className="text-6xl font-bold mb-3 bg-clip-text text-transparent"
+            style={{ background: 'linear-gradient(135deg, #00f0ff, #00c0ff)' }}
+          >
             {lastResult?.prize.name}
           </div>
-          <p className="text-white/80 text-lg">
+          <p className="text-white/90 text-lg font-system leading-relaxed">
             {lastResult?.prize.description}
           </p>
         </div>
+
         <button
           onClick={() => setShowFullResult(false)}
-          className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-full text-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95"
+          className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-full text-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg shadow-cyan-500/20"
         >
           Продолжить
         </button>
