@@ -342,7 +342,10 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         </div>
 
         <button
-          onClick={() => setShowFullResult(false)}
+          onClick={() => {
+            setShowFullResult(false);
+            onClose();
+          }}
           className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-full text-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg shadow-cyan-500/20"
         >
           Продолжить
