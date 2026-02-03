@@ -5,7 +5,7 @@ import { hapticFeedback, getTelegramUser } from '../utils/telegram';
 import { addPoints, addPrize } from '../utils/rewardsSystem';
 
 interface WheelFortuneProps {
-  onWin: (result: WheelSpinResult) => void;
+  onWin: (result: WheelSpinResult) => Promise<void> | void;
   onClose: () => void;
 }
 
@@ -218,7 +218,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     );
   };
 
-  const spinWheel = () => {
+  const spinWheel = async () => {
     if (!canSpin || spinning) return;
     hapticFeedback('medium');
     setSpinning(true);
@@ -232,7 +232,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     const finalRotation = normalizedRotation + extraRotations * 360;
     setRotation(finalRotation);
 
-    setTimeout(() => {
+    setTimeout(async () => {
       const prize = wheelPrizes[winningIndex];
       const result: WheelSpinResult = {
         prize,
@@ -247,9 +247,9 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
       if (prize.type === 'points') {
         const points = typeof prize.value === 'number' ? prize.value : 0;
-        addPoints(points);
+        await addPoints(points);
       } else if (prize.type === 'free_service') {
-        addPrize({
+        await addPrize({
           id: prize.id,
           name: prize.name,
           type: prize.type,
@@ -279,7 +279,7 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         }
       }
 
-      onWin(result);
+      await onWin(result);
     }, 4000);
   };
 

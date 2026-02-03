@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, Phone, MessageCircle, Award } from 'lucide-react';
 import { PageKey } from '../App';
 import { getTelegramUser } from '../utils/telegram';
@@ -11,7 +11,30 @@ interface ProfileProps {
 
 const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
   const [phoneCopied, setPhoneCopied] = useState(false);
+  const [points, setPoints] = useState<number>(0);
+  const [prizes, setPrizes] = useState<Array<{ id: string; name: string; type: string; description?: string; timestamp: number }>>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const telegramUser = getTelegramUser();
+
+  useEffect(() => {
+    const loadRewards = async () => {
+      try {
+        setLoading(true);
+        const pointsData = await getPoints();
+        const prizesData = await getPrizes();
+        setPoints(pointsData);
+        setPrizes(prizesData);
+      } catch (error) {
+        console.error('Error loading rewards:', error);
+        setPoints(0);
+        setPrizes([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadRewards();
+  }, []);
 
   const handleTelegramClick = () => {
     // Open Telegram with a predefined message
@@ -100,7 +123,11 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
         <div className="mb-6">
           <div className="flex items-center justify-between mb-3">
             <h4 className="text-lg font-semibold text-white">Бонусы</h4>
-            <span className="text-2xl font-bold text-[#00ffff]">{getPoints()} ₽</span>
+            {loading ? (
+              <span className="text-2xl font-bold text-[#00ffff]">Загрузка...</span>
+            ) : (
+              <span className="text-2xl font-bold text-[#00ffff]">{points} ₽</span>
+            )}
           </div>
           <p className="text-white/70 text-sm">Накопленные бонусы можно использовать для оплаты услуг</p>
         </div>
@@ -108,11 +135,13 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
         {/* Призы */}
         <div>
           <h4 className="text-lg font-semibold text-white mb-3">Призы</h4>
-          {getPrizes().length === 0 ? (
+          {loading ? (
+            <p className="text-white/60 italic">Загрузка призов...</p>
+          ) : prizes.length === 0 ? (
             <p className="text-white/60 italic">Пока нет призов. Крутите колесо фортуны ежедневно!</p>
           ) : (
             <div className="space-y-3">
-              {getPrizes().map((prize: { id: string; name: string; type: string; description?: string; timestamp: number }, index: number) => (
+              {prizes.map((prize, index) => (
                 <div key={index} className="flex items-center justify-between p-3 bg-black/30 rounded-lg">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
