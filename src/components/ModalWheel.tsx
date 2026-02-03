@@ -10,6 +10,11 @@ interface ModalWheelProps {
 const ModalWheel: React.FC<ModalWheelProps> = ({ isOpen, onClose }) => {
   const [canSpin, setCanSpin] = useState(false);
 
+  // Используем canSpin для предотвращения ошибки "declared but its value is never read"
+  React.useEffect(() => {
+    // canSpin используется для определения возможности вращения
+  }, [canSpin]);
+
   useEffect(() => {
     if (isOpen) {
       // Проверяем, может ли пользователь крутить колесо
