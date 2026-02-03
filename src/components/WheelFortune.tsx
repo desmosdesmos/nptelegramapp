@@ -330,15 +330,15 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
               {spinning ? 'Крутится...' : canSpin ? 'Крутить колесо!' : 'Попробуйте завтра'}
             </button>
 
-            {lastResult && (
+            {lastResult ? (
               <div className="mt-6 mb-8 p-4 bg-black/30 backdrop-filter backdrop-blur-20 bg-opacity-5 rounded-2xl border border-cyan-500/20 w-full text-center">
                 <h3 className="text-lg font-bold text-white mb-2">Ваш приз:</h3>
                 <div className="flex items-center justify-center gap-2">
-                  <span className="text-white font-medium text-xl">{lastResult.prize.name}</span>
+                  <span className="text-white font-medium text-xl">{(lastResult as WheelSpinResult).prize.name}</span>
                 </div>
-                <p className="text-white/80 text-sm mt-1">{lastResult.prize.description}</p>
+                <p className="text-white/80 text-sm mt-1">{(lastResult as WheelSpinResult).prize.description}</p>
               </div>
-            )}
+            ) : null}
           </div>
         </div>
       )}
