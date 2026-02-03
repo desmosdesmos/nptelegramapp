@@ -7,7 +7,10 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: '*', // В продакшене лучше указать конкретный домен
+  credentials: true
+}));
 app.use(express.json());
 
 // Простая "база данных" в памяти (в реальном приложении используйте MongoDB, PostgreSQL и т.д.)
@@ -132,10 +135,14 @@ app.get('/health', (req, res) => {
 });
 
 // Маршрут для отправки уведомлений в Telegram
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || 'YOUR_BOT_TOKEN_HERE';
 const ADMIN_CHAT_ID = process.env.ADMIN_CHAT_ID || 'YOUR_CHAT_ID_HERE'; // ID администратора (@yanvtg)
 
 async function sendTelegramNotification(message) {
+  console.log('Attempting to send Telegram notification...');
+  console.log('Bot token (first 10 chars):', TELEGRAM_BOT_TOKEN.substring(0, 10));
+  console.log('Admin chat ID:', ADMIN_CHAT_ID);
+  console.log('Message:', message);
+
   try {
     const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: 'POST',
@@ -149,7 +156,11 @@ async function sendTelegramNotification(message) {
       })
     });
 
+    console.log('Telegram API response status:', response.status);
+
     const result = await response.json();
+    console.log('Telegram API response:', result);
+
     if (!result.ok) {
       console.error('Error sending Telegram notification:', result);
     }
@@ -162,9 +173,12 @@ async function sendTelegramNotification(message) {
 
 // Маршрут для получения результатов прокрута колеса
 app.post('/wheel-spin-result', async (req, res) => {
+  console.log('Received wheel spin result request:', req.body);
+
   const { userId, userName, result } = req.body;
 
   if (!userId || !userName || !result) {
+    console.error('Missing required fields in wheel spin result:', { userId, userName, result });
     return res.status(400).json({ error: 'Missing required fields: userId, userName, result' });
   }
 
@@ -181,11 +195,14 @@ app.post('/wheel-spin-result', async (req, res) => {
 #колесофортуны #результат
   `.trim();
 
+  console.log('Formatted message for Telegram:', message);
+
   // Отправляем уведомление в Telegram
   const notificationResult = await sendTelegramNotification(message);
 
   // Логгируем результат в консоль
   console.log(`Wheel spin result from user ${userId} (${userName}):`, result);
+  console.log('Notification result:', notificationResult);
 
   res.json({ success: true, notificationSent: !!notificationResult });
 });
