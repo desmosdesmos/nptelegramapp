@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Тест уведомлений колеса</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <h1>Тест уведомлений колеса</h1>
+    <button id="testButton">Отправить тестовое уведомление</button>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('testButton').addEventListener('click', async () => {
+            const result = {
+                prize: {
+                    id: "test_prize_" + Date.now(),
+                    name: "Тестовый приз",
+                    type: "discount",
+                    value: Math.floor(Math.random() * 1000),
+                    description: "Тестовое описание приза"
+                },
+                timestamp: new Date().toISOString()
+            };
+
+            const user = {
+                id: 478799066,
+                username: "yanvtg",
+                first_name: "Yan"
+            };
+
+            try {
+                const response = await fetch('/wheel-spin-result', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        userName: user.username ? `@${user.username}` : `${user.first_name} ${user.last_name || ''}`.trim(),
+                        result: result
+                    }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('result').innerHTML = '<p>Уведомление успешно отправлено!</p><p>' + JSON.stringify(data) + '</p>';
+                    
+                    // Также отправим уведомление в Telegram
+                    if (window.Telegram && window.Telegram.WebApp) {
+                        window.Telegram.WebApp.showAlert('Уведомление отправлено!');
+                    }
+                } else {
+                    document.getElementById('result').innerHTML = '<p>Ошибка: ' + response.status + '</p>';
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = '<p>Ошибка: ' + error.message + '</p>';
+            }
+        });
+    </script>
+</body>
+</html>

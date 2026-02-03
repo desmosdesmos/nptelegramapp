@@ -1,0 +1,52 @@
+// Тестовая функция для проверки отправки уведомлений
+async function testNotification() {
+  // Имитация результата вращения колеса
+  const result = {
+    prize: {
+      id: "test_prize_1",
+      name: "Тестовый приз",
+      type: "discount",
+      value: 100,
+      description: "Тестовое описание"
+    },
+    timestamp: new Date().toISOString()
+  };
+
+  // Имитация пользователя Telegram
+  const user = {
+    id: 478799066,
+    username: "yanvtg",
+    first_name: "Yan"
+  };
+
+  console.log('Attempting to send wheel spin result to admin:', result);
+
+  try {
+    // Используем пустой URL для разработки (благодаря прокси в Vite)
+    const response = await fetch(`/wheel-spin-result`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId: user.id,
+        userName: user.username ? `@${user.username}` : `${user.first_name} ${user.last_name || ''}`.trim(),
+        result: result
+      }),
+    });
+
+    console.log('Response received:', response.status);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('Wheel spin result sent to admin:', data);
+  } catch (error) {
+    console.error('Error sending wheel spin result to admin:', error);
+  }
+}
+
+// Вызов тестовой функции
+testNotification();
