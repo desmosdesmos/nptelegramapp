@@ -367,11 +367,7 @@ const FullScreenResult: React.FC<FullScreenResultProps> = ({ result, onClose }) 
 
         <div className="mb-8">
           <div
-            className="text-5xl font-bold mb-2 bg-clip-text text-transparent relative z-10"
-            style={{
-              background: 'linear-gradient(135deg, #00f0ff, #00c0ff)',
-              textShadow: '0 4px 20px rgba(0, 0, 0, 0.25)'
-            }}
+            className="text-5xl font-bold mb-2 text-cyan-400"
           >
             {result.prize.name}
           </div>
