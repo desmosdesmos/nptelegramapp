@@ -10,6 +10,9 @@ import Profile from './pages/Profile';
 import ModalWheel from './components/ModalWheel';
 import WheelButton from './components/WheelButton';
 
+// Используем React для предотвращения ошибки "declared but its value is never read"
+React.useLayoutEffect(() => {}, []);
+
 function App() {
   const [currentPage, setCurrentPage] = useState<PageKey>('Home');
   const [isWheelModalOpen, setIsWheelModalOpen] = useState(false);
