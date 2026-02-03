@@ -3,6 +3,7 @@ import { WheelSpinResult } from '../types/wheel';
 import { wheelPrizes, prizeProbabilities } from '../data/wheelConfig';
 import { hapticFeedback, getTelegramUser } from '../utils/telegram';
 import { addPoints, addPrize } from '../utils/rewardsSystem';
+import { sendWheelSpinResultToTelegram } from '../api/notificationsApi';
 
 interface WheelFortuneProps {
   onWin: (result: WheelSpinResult) => Promise<void> | void;
@@ -278,6 +279,9 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           localStorage.setItem('wheel_last_spin_date_prev', today);
         }
       }
+
+      // Отправляем результат в Telegram админу
+      await sendWheelSpinResultToTelegram(result);
 
       await onWin(result);
     }, 4000);

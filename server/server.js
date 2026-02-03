@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const crypto = require('crypto');
@@ -130,6 +131,65 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// Маршрут для отправки уведомлений в Telegram
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || 'YOUR_BOT_TOKEN_HERE';
+const ADMIN_CHAT_ID = process.env.ADMIN_CHAT_ID || 'YOUR_CHAT_ID_HERE'; // ID администратора (@yanvtg)
+
+async function sendTelegramNotification(message) {
+  try {
+    const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chat_id: ADMIN_CHAT_ID,
+        text: message,
+        parse_mode: 'HTML'
+      })
+    });
+
+    const result = await response.json();
+    if (!result.ok) {
+      console.error('Error sending Telegram notification:', result);
+    }
+    return result;
+  } catch (error) {
+    console.error('Error sending Telegram notification:', error);
+    return null;
+  }
+}
+
+// Маршрут для получения результатов прокрута колеса
+app.post('/wheel-spin-result', async (req, res) => {
+  const { userId, userName, result } = req.body;
+
+  if (!userId || !userName || !result) {
+    return res.status(400).json({ error: 'Missing required fields: userId, userName, result' });
+  }
+
+  // Формируем сообщение для администратора
+  const message = `
+🎰 <b>Новый результат прокрута колеса</b>
+
+👤 Пользователь: ${userName} (ID: ${userId})
+🎁 Приз: ${result.prize.name}
+📝 Тип приза: ${result.prize.type}
+💰 Значение: ${result.prize.value || 'N/A'}
+📅 Время: ${new Date(result.timestamp).toLocaleString('ru-RU')}
+
+#колесофортуны #результат
+  `.trim();
+
+  // Отправляем уведомление в Telegram
+  const notificationResult = await sendTelegramNotification(message);
+
+  // Логгируем результат в консоль
+  console.log(`Wheel spin result from user ${userId} (${userName}):`, result);
+
+  res.json({ success: true, notificationSent: !!notificationResult });
+});
+
 // Обработка 404
 app.use('*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
@@ -144,4 +204,5 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);
+  console.log(`Wheel spin notifications endpoint: http://localhost:${PORT}/wheel-spin-result`);
 });
