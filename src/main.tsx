@@ -2,9 +2,20 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
+import { initTelegramWebApp } from './utils/telegram';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
+// Рендерим приложение после небольшой задержки, чтобы дать Telegram Web App API время на инициализацию
+setTimeout(() => {
+  // Инициализируем Telegram WebApp
+  initTelegramWebApp();
+
+  // Рендерим приложение
+  const root = document.getElementById('root');
+  if (root) {
+    ReactDOM.createRoot(root).render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>,
+    );
+  }
+}, 100);
