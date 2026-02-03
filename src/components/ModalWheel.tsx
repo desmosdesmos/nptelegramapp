@@ -33,9 +33,6 @@ const ModalWheel: React.FC<ModalWheelProps> = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
-  // Используем canSpin для определения, показывать ли спиннер
-  const isSpinning = canSpin; // Используем переменную, чтобы избежать ошибки
-
   if (!isOpen) return null;
 
   return (
