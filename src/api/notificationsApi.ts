@@ -21,6 +21,11 @@ export const sendWheelSpinResultToTelegram = async (result: any) => {
 
   try {
     console.log(`Sending request to: ${API_BASE_URL}/wheel-spin-result`);
+    console.log('Request payload:', {
+      userId: user.id,
+      userName: user.username ? `@${user.username}` : `${user.first_name} ${user.last_name || ''}`.trim(),
+      result: result
+    });
 
     const response = await fetch(`${API_BASE_URL}/wheel-spin-result`, {
       method: 'POST',
@@ -42,6 +47,13 @@ export const sendWheelSpinResultToTelegram = async (result: any) => {
 
     const data = await response.json();
     console.log('Wheel spin result sent to admin:', data);
+
+    // Дополнительная проверка успешности отправки
+    if (data.success && data.notificationSent) {
+      console.log('SUCCESS: Notification was sent to admin');
+    } else {
+      console.log('WARNING: Server responded but notification may not have been sent');
+    }
   } catch (error) {
     console.error('Error sending wheel spin result to admin:', error);
   }

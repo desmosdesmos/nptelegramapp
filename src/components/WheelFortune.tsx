@@ -282,6 +282,8 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
       // Отправляем результат в Telegram админу
       console.log('About to send wheel spin result to admin:', result);
+      console.log('Current user info:', getTelegramUser());
+
       await sendWheelSpinResultToTelegram(result);
       console.log('Wheel spin result sent to admin');
 
