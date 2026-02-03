@@ -3,7 +3,7 @@ import { getTelegramUser } from '../utils/telegram';
 // Базовый URL для API
 const API_BASE_URL = process.env.NODE_ENV === 'production'
   ? 'https://api.nptelegramapp.com'  // Для продакшена
-  : '';                              // Для разработки используем прокси
+  : 'http://localhost:3001';         // Для разработки
 
 /**
  * Отправить результат прокрута колеса в Telegram администратору
