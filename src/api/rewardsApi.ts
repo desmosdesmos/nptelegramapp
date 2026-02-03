@@ -1,7 +1,9 @@
 import { getTelegramWebApp } from '../utils/telegram';
 
-// Базовый URL для API (замените на реальный URL вашего сервера)
-const API_BASE_URL = 'https://api.nptelegramapp.com'; // Замените на ваш реальный API URL
+// Базовый URL для API
+const API_BASE_URL = process.env.NODE_ENV === 'production'
+  ? 'https://api.nptelegramapp.com'  // Для продакшена
+  : 'http://localhost:3001';         // Для разработки
 
 interface RewardData {
   points: number;
