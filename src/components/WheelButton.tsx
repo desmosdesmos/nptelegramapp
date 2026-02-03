@@ -12,7 +12,7 @@ const WheelButton: React.FC<WheelButtonProps> = ({ onOpenWheel }) => {
   useEffect(() => {
     const checkSpinAvailability = () => {
       // Получаем информацию о пользователе Telegram
-      const telegramUser = getTelegramUser();
+      // const telegramUser = getTelegramUser();
       // const isTester = telegramUser && telegramUser.username === 'yanvtg';
 
       // Временно разрешаем вращение для всех пользователей для тестирования
