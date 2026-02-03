@@ -355,19 +355,27 @@ interface FullScreenResultProps {
 
 const FullScreenResult: React.FC<FullScreenResultProps> = ({ result, onClose }) => {
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-2xl flex items-center justify-center z-50 p-4">
-      <div className="bg-[#0a0a0a]/85 rounded-3xl p-8 max-w-md w-full border border-white/10 shadow-lg shadow-black/20 text-center">
-        <div className="mb-6">
-          <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-black/20 border border-white/10 mb-6">
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-2xl flex items-center justify-center z-50 p-4 animate-fade-in-up">
+      <div className="bg-gradient-to-br from-gray-900 to-black/90 rounded-3xl p-8 max-w-md w-full border border-cyan-500/30 shadow-2xl shadow-cyan-500/10 text-center relative overflow-hidden">
+        {/* Декоративный элемент */}
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
+
+        <div className="mb-6 relative z-10">
+          <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-cyan-900/50 to-blue-900/50 border border-cyan-500/30 mb-6 shadow-lg">
             <span className="text-5xl">🎉</span>
           </div>
-          <h2 className="text-3xl font-bold text-white mb-1 font-system">Поздравляем!</h2>
-          <p className="text-cyan-300 font-system text-sm">Вы выиграли:</p>
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2 font-system">
+            Поздравляем!
+          </h2>
+          <p className="text-cyan-300/80 font-system text-sm tracking-wide">Вы выиграли:</p>
         </div>
 
-        <div className="mb-8">
+        <div className="mb-8 relative z-10">
           <div
-            className="text-5xl font-bold mb-2 text-cyan-400"
+            className="text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent"
+            style={{
+              textShadow: '0 2px 10px rgba(0, 240, 255, 0.3)',
+            }}
           >
             {result.prize.name}
           </div>
@@ -378,7 +386,10 @@ const FullScreenResult: React.FC<FullScreenResultProps> = ({ result, onClose }) 
 
         <button
           onClick={onClose}
-          className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold rounded-full text-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-102 active:scale-98 shadow-lg shadow-cyan-500/15"
+          className="px-8 py-4 bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-bold rounded-full text-lg hover:from-cyan-500 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg w-full"
+          style={{
+            boxShadow: '0 10px 25px -5px rgba(0, 240, 255, 0.3), inset 0 2px 5px rgba(255, 255, 255, 0.1)'
+          }}
         >
           Вернуться в приложение
         </button>
