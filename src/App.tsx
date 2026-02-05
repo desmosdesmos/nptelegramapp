@@ -4,7 +4,7 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import Services from './pages/Services';
 import Booking from './pages/Booking';
-import Works from './pages/Works-simple';
+import Works from './pages/Works';
 import Reviews from './pages/Reviews';
 import Profile from './pages/Profile';
 import ModalWheel from './components/ModalWheel';
