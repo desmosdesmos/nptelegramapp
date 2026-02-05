@@ -279,6 +279,9 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         }
       }
 
+      // Сохраняем точное время последнего вращения для таймера
+      localStorage.setItem('lastSpinTime', String(Date.now()));
+
       await onWin(result);
     }, 4000);
   };
