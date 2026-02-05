@@ -10,29 +10,35 @@ const WheelButton: React.FC<WheelButtonProps> = ({ onOpenWheel }) => {
   const [canSpin, setCanSpin] = useState(false);
 
   useEffect(() => {
-    const checkSpinAvailability = () => {
-      // Получаем информацию о пользователе Telegram
-      const telegramUser = getTelegramUser();
-      const isTester = telegramUser && telegramUser.username === 'yanvtg';
+    try {
+      const checkSpinAvailability = () => {
+        let isTester = false;
+        try {
+          const telegramUser = getTelegramUser();
+          isTester = telegramUser && telegramUser.username === 'yanvtg';
+        } catch (e) {
+          console.warn('Telegram user not available, defaulting to non-tester');
+        }
 
-      if (isTester) {
-        // Для тестера всегда можно крутить
-        setCanSpin(true);
-      } else {
-        // Для обычных пользователей: проверяем по lastSpinTime (как в таймере)
-        const lastSpinStr = localStorage.getItem('lastSpinTime');
-        const lastSpin = lastSpinStr ? parseInt(lastSpinStr, 10) : 0;
-        const now = Date.now();
-        const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000;
+        if (isTester) {
+          setCanSpin(true);
+        } else {
+          const lastSpinStr = localStorage.getItem('lastSpinTime');
+          const lastSpin = lastSpinStr ? parseInt(lastSpinStr, 10) : 0;
+          const now = Date.now();
+          const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000;
 
-        setCanSpin(now >= nextSpinTime);
-      }
-    };
+          setCanSpin(now >= nextSpinTime);
+        }
+      };
 
-    checkSpinAvailability();
-    const interval = setInterval(checkSpinAvailability, 60000);
-
-    return () => clearInterval(interval);
+      checkSpinAvailability();
+      const interval = setInterval(checkSpinAvailability, 60000);
+      return () => clearInterval(interval);
+    } catch (e) {
+      console.error('WheelButton useEffect failed:', e);
+      setCanSpin(true); // Критический fallback: всегда показываем кнопку при ошибке
+    }
   }, []);
 
   return (
