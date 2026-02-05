@@ -1,10 +1,5 @@
 {
   "name": "mini-apk",
   "installCommand": "npm install",
-  "buildCommand": "npm run build",
-  "git": {
-    "deploymentEnabled": {
-      "feature/enhanced-wheel-design": false
-    }
-  }
+  "buildCommand": "npm run build"
 }
