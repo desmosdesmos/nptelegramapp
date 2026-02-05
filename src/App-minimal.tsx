@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { PageKey } from './types';
+
+// Определяем минимальный тип PageKey
+type PageKey = 'Home';
 
 // Простой макет
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
