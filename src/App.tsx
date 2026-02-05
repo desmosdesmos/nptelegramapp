@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+
+// Используем React для useState, поэтому импорт необходим
 import { PageKey } from './types';
 import Layout from './components/Layout';
 import Home from './pages/Home';
