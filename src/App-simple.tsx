@@ -32,7 +32,10 @@ function App() {
   const [currentPage, setCurrentPage] = useState<PageKey>('Home');
 
   const renderPage = () => {
-    return <Home onNavigate={setCurrentPage} />;
+    return <Home onNavigate={(page) => {
+      // Используем onNavigate, чтобы избежать ошибки TypeScript
+      setCurrentPage(page);
+    }} />;
   };
 
   return (
