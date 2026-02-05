@@ -171,8 +171,8 @@ function App() {
   // Обработчик выигрыша в колесе
   const handleWheelWin = (result: WheelSpinResult) => {
     console.log('Выигрыш в колесе:', result);
-    // Здесь можно добавить логику сохранения выигрыша
-    // и применение его к аккаунту пользователя
+    // Сохраняем время последнего вращения для таймера
+    localStorage.setItem('lastSpinTime', String(Date.now()));
   };
 
   return (
