@@ -19,20 +19,17 @@ const WheelButton: React.FC<WheelButtonProps> = ({ onOpenWheel }) => {
         // Для тестера всегда можно крутить
         setCanSpin(true);
       } else {
-        // Для обычных пользователей проверяем дату
-        const lastSpinDate = localStorage.getItem('wheel_last_spin_date');
-        const today = new Date().toISOString().split('T')[0];
+        // Для обычных пользователей: проверяем по lastSpinTime (как в таймере)
+        const lastSpinStr = localStorage.getItem('lastSpinTime');
+        const lastSpin = lastSpinStr ? parseInt(lastSpinStr, 10) : 0;
+        const now = Date.now();
+        const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000;
 
-        if (lastSpinDate === today) {
-          setCanSpin(false);
-        } else {
-          setCanSpin(true);
-        }
+        setCanSpin(now >= nextSpinTime);
       }
     };
 
     checkSpinAvailability();
-    // Проверяем каждую минуту
     const interval = setInterval(checkSpinAvailability, 60000);
 
     return () => clearInterval(interval);
