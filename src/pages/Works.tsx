@@ -35,7 +35,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
       carImage: '',
       brandColor: '#FF0000', // Mitsubishi red
       postUrl: 'https://t.me/npdetailing/50',
-      logoPngUrl: new URL('../assets/logos/mitsubishi-seeklogo.png', import.meta.url).href
+      logoPngUrl: new URL('../assets/logos/mitsubishi-simple.svg', import.meta.url).href
     },
     {
       id: '3',
@@ -43,7 +43,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
       carImage: '',
       brandColor: '#000000', // Opel black
       postUrl: 'https://t.me/npdetailing/65',
-      logoPngUrl: new URL('../assets/logos/opel-seeklogo.png', import.meta.url).href
+      logoPngUrl: new URL('../assets/logos/opel-simple.svg', import.meta.url).href
     },
     {
       id: '4',
@@ -51,7 +51,7 @@ const Works: React.FC<WorksProps> = ({ onNavigate }) => {
       carImage: '',
       brandColor: '#FF0000', // Lada red
       postUrl: 'https://t.me/npdetailing/10',
-      logoPngUrl: new URL('../assets/logos/lada-sb-seeklogo.png', import.meta.url).href
+      logoPngUrl: new URL('../assets/logos/lada-simple.svg', import.meta.url).href
     },
     {
       id: '5',
