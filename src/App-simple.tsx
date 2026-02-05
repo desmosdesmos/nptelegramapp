@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PageKey } from './types';
+import { PageKey } from './types/simple-types';
 
 // Простой макет
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -9,10 +9,6 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       {/* Простая навигация внизу */}
       <div className="fixed bottom-0 left-0 right-0 bg-gray-800 p-4 flex justify-around">
         <button className="text-white">Главная</button>
-        <button className="text-white">Услуги</button>
-        <button className="text-white">Запись</button>
-        <button className="text-white">Работы</button>
-        <button className="text-white">Профиль</button>
       </div>
     </div>
   );
