@@ -63,7 +63,6 @@ const ModalWheel: React.FC<ModalWheelProps> = ({ isOpen, onClose }) => {
               console.log('Wheel result:', result);
 
               // Обновляем состояние canSpin в родительском компоненте
-              const today = new Date().toISOString().split('T')[0];
               setCanSpin(false);
             }}
             onClose={onClose}
