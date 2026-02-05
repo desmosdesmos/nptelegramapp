@@ -16,7 +16,7 @@ const ModalWheel: React.FC<ModalWheelProps> = ({ isOpen, onClose }) => {
   }, [canSpin]);
 
   useEffect(() => {
-    if (isOpen) {
+    const checkSpinAvailability = () => {
       // Проверяем, может ли пользователь крутить колесо
       const telegramUser = getTelegramUser();
       const isTester = telegramUser && telegramUser.username === 'yanvtg';
@@ -35,6 +35,10 @@ const ModalWheel: React.FC<ModalWheelProps> = ({ isOpen, onClose }) => {
           setCanSpin(true);
         }
       }
+    };
+
+    if (isOpen) {
+      checkSpinAvailability();
     }
   }, [isOpen]);
 
@@ -57,6 +61,10 @@ const ModalWheel: React.FC<ModalWheelProps> = ({ isOpen, onClose }) => {
             onWin={async (result) => {
               // Здесь можно добавить дополнительную логику при выигрыше
               console.log('Wheel result:', result);
+
+              // Обновляем состояние canSpin в родительском компоненте
+              const today = new Date().toISOString().split('T')[0];
+              setCanSpin(false);
             }}
             onClose={onClose}
           />

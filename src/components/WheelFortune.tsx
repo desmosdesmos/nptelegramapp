@@ -266,6 +266,14 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
       } else {
         setCanSpin(false);
         localStorage.setItem('wheel_last_spin_date', new Date().toISOString().split('T')[0]);
+
+        // Вызываем функцию onWin, которая теперь будет обновлять состояние в родительском компоненте
+        await onWin(result);
+
+        // Закрываем модальное окно через некоторое время после получения результата
+        setTimeout(() => {
+          onClose();
+        }, 5000); // Закрываем через 5 секунд после получения результата
       }
 
       if (!isTester) {
@@ -286,8 +294,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
       await sendWheelSpinResultToTelegram(result);
       console.log('Wheel spin result sent to admin');
-
-      await onWin(result);
     }, 4000);
   };
 
