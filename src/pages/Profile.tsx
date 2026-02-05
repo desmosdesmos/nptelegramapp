@@ -4,12 +4,14 @@ import { PageKey } from '../App';
 import { getTelegramUser } from '../utils/telegram';
 import ReferralCard from '../components/ReferralCard';
 import { getPoints, getPrizes } from '../utils/rewardsSystem';
+import { useDailySpinTimer } from '../hooks/useDailySpinTimer';
 
 interface ProfileProps {
   onNavigate: (page: PageKey) => void;
 }
 
 const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
+  const { timeLeft, canSpin } = useDailySpinTimer();
   const [phoneCopied, setPhoneCopied] = useState(false);
   const [points, setPoints] = useState<number>(0);
   const [prizes, setPrizes] = useState<Array<{ id: string; name: string; type: string; description?: string; timestamp: number }>>([]);
@@ -61,6 +63,21 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
       </button>
 
       <h1 className='text-3xl font-bold mb-8'>Профиль</h1>
+
+      {/* Daily Spin Timer */}
+      {timeLeft && (
+        <div className="mb-6 text-center text-sm text-gray-400">
+          Следующая рулетка через:
+          <span className="font-mono font-medium text-white ml-1">
+            {String(timeLeft.hours).padStart(2, '0')}:{String(timeLeft.minutes).padStart(2, '0')}:{String(timeLeft.seconds).padStart(2, '0')}
+          </span>
+        </div>
+      )}
+      {!timeLeft && canSpin && (
+        <div className="mb-6 text-center text-sm text-green-400">
+          🎯 Сегодня можно крутить рулетку!
+        </div>
+      )}
 
       {/* User Profile Card */}
       <div className="w-full p-5 mb-8 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md">
