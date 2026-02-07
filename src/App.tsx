@@ -12,7 +12,7 @@ import Services from './pages/Services';
 import Reviews from './pages/Reviews';
 import Profile from './pages/Profile';
 import ErrorBoundary from './ErrorBoundary';
-import { getTelegramUser } from './utils/telegram';
+import { getTelegramUser, getTelegramWebApp } from './utils/telegram';
 import { getReferralCodeFromUrl, isValidReferralCode, hasUserBeenCounted, incrementTotalReferrals, setCurrentUserReferralCode } from './utils/simpleReferralSystem';
 import WheelFortune from './components/WheelFortune';
 import WheelButton from './components/WheelButton';
@@ -125,8 +125,8 @@ function App() {
     // Set initial state based on viewport height to prevent initial flicker
     const initialKeyboardState = window.innerHeight < initialViewportHeight - 150;
     setIsKeyboardVisible(initialKeyboardState);
-    // Don't render dock immediately - wait for first resize event or delay
-    setTimeout(() => setShouldRenderDock(true), 100);
+    // Render dock immediately
+    setShouldRenderDock(true);
 
     const handleResize = () => {
       const currentViewportHeight = window.innerHeight;
