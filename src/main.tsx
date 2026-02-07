@@ -5,8 +5,9 @@ import './index.css'
 
 import { initTelegramWebApp } from './utils/telegram';
 
-// Рендерим приложение после небольшой задержки, чтобы дать Telegram Web App API время на инициализацию
-setTimeout(() => {
+// Инициализируем Telegram WebApp и рендерим приложение
+// Используем DOMContentLoaded для гарантии загрузки DOM
+document.addEventListener('DOMContentLoaded', () => {
   // Инициализируем Telegram WebApp
   initTelegramWebApp();
 
@@ -19,4 +20,21 @@ setTimeout(() => {
       </React.StrictMode>,
     );
   }
-}, 100);
+});
+
+// Также вызываем инициализацию сразу, если документ уже загружен
+if (document.readyState === 'loading') {
+  // Документ еще загружается, событие DOMContentLoaded будет вызвано позже
+} else {
+  // Документ уже загружен, вызываем инициализацию сразу
+  initTelegramWebApp();
+
+  const root = document.getElementById('root');
+  if (root) {
+    ReactDOM.createRoot(root).render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>,
+    );
+  }
+}
