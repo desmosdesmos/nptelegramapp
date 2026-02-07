@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { getTelegramUser } from '../utils/telegram';
 import { wheelPrizes } from '../data/wheelConfig';
 import { WheelPrize } from '../types/wheel';
+import { WheelSpinResult } from '../types/wheel';
 
 const AdminPanel: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [services, setServices] = useState<any[]>([]);
   const [prices, setPrices] = useState<{[key: string]: number}>({});
-  const [wheelResults, setWheelResults] = useState<any[]>([]);
+  const [wheelResults, setWheelResults] = useState<WheelSpinResult[]>([]);
+  const [visits, setVisits] = useState<{userId: number, timestamp: number, firstName: string, lastName?: string, username?: string}[]>([]);
+  const [newService, setNewService] = useState({ name: '', price: 0 });
   const [newPrize, setNewPrize] = useState<Pick<WheelPrize, 'name' | 'description' | 'type' | 'value'> & { type: WheelPrize['type'] }>({ 
     name: '', 
     description: '', 
@@ -55,12 +58,52 @@ const AdminPanel: React.FC = () => {
     if (savedResults) {
       setWheelResults(JSON.parse(savedResults));
     }
+
+    // Загружаем посещения
+    const savedVisits = localStorage.getItem('admin_visits');
+    if (savedVisits) {
+      setVisits(JSON.parse(savedVisits));
+    } else {
+      // Добавляем текущий визит администратора
+      const telegramUser = getTelegramUser();
+      if (telegramUser) {
+        const newVisit = {
+          userId: telegramUser.id,
+          timestamp: Date.now(),
+          firstName: telegramUser.first_name,
+          lastName: telegramUser.last_name,
+          username: telegramUser.username
+        };
+        setVisits([newVisit]);
+        localStorage.setItem('admin_visits', JSON.stringify([newVisit]));
+      }
+    }
   };
 
   const handleServicePriceChange = (serviceId: string, newPrice: number) => {
     const updatedPrices = { ...prices, [serviceId]: newPrice };
     setPrices(updatedPrices);
     localStorage.setItem('service_prices', JSON.stringify(updatedPrices));
+  };
+
+  const handleAddService = () => {
+    if (!newService.name || newService.price <= 0) {
+      alert('Пожалуйста, заполните все поля услуги');
+      return;
+    }
+
+    const newServiceObj = {
+      id: `service_${Date.now()}`,
+      name: newService.name,
+      price: newService.price
+    };
+
+    const updatedServices = [...services, newServiceObj];
+    setServices(updatedServices);
+    localStorage.setItem('services', JSON.stringify(updatedServices));
+
+    // Сброс формы
+    setNewService({ name: '', price: 0 });
   };
 
   const handleAddPrize = () => {
@@ -96,6 +139,14 @@ const AdminPanel: React.FC = () => {
     }));
   };
 
+  const handleServiceInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setNewService(prev => ({
+      ...prev,
+      [name]: name === 'price' ? Number(value) : value
+    }));
+  };
+
   if (!isAdmin) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-black">
@@ -109,32 +160,73 @@ const AdminPanel: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white p-4">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold mb-8 text-center">Админ-панель</h1>
 
         {/* Управление услугами и ценами */}
         <section className="mb-12 bg-gray-900/50 p-6 rounded-2xl border border-white/10">
           <h2 className="text-2xl font-semibold mb-6 text-cyan-400">Управление услугами и ценами</h2>
           
-          <div className="space-y-4">
-            {services.map(service => (
-              <div key={service.id} className="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+              <h3 className="text-xl font-medium mb-4">Существующие услуги</h3>
+              <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
+                {services.map(service => (
+                  <div key={service.id} className="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg">
+                    <div>
+                      <h3 className="font-medium">{service.name}</h3>
+                      <p className="text-sm text-gray-400">ID: {service.id}</p>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="mr-3">Цена:</span>
+                      <input
+                        type="number"
+                        value={prices[service.id] || service.price || 0}
+                        onChange={(e) => handleServicePriceChange(service.id, Number(e.target.value))}
+                        className="bg-gray-700 border border-gray-600 rounded px-3 py-1 w-32 text-white"
+                      />
+                      <span className="ml-2">₽</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-xl font-medium mb-4">Добавить новую услугу</h3>
+              <div className="space-y-4">
                 <div>
-                  <h3 className="font-medium">{service.name}</h3>
-                  <p className="text-sm text-gray-400">ID: {service.id}</p>
+                  <label className="block text-sm mb-1">Название услуги</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={newService.name}
+                    onChange={handleServiceInputChange}
+                    className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white"
+                    placeholder="Например: Базовая мойка"
+                  />
                 </div>
-                <div className="flex items-center">
-                  <span className="mr-3">Цена:</span>
+                
+                <div>
+                  <label className="block text-sm mb-1">Цена (₽)</label>
                   <input
                     type="number"
-                    value={prices[service.id] || service.price || 0}
-                    onChange={(e) => handleServicePriceChange(service.id, Number(e.target.value))}
-                    className="bg-gray-700 border border-gray-600 rounded px-3 py-1 w-32 text-white"
+                    name="price"
+                    value={newService.price}
+                    onChange={handleServiceInputChange}
+                    className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white"
+                    placeholder="Например: 500"
                   />
-                  <span className="ml-2">₽</span>
                 </div>
+                
+                <button
+                  onClick={handleAddService}
+                  className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                >
+                  Добавить услугу
+                </button>
               </div>
-            ))}
+            </div>
           </div>
         </section>
 
@@ -145,7 +237,7 @@ const AdminPanel: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <h3 className="text-xl font-medium mb-4">Существующие призы</h3>
-              <div className="space-y-3">
+              <div className="space-y-3 max-h-96 overflow-y-auto pr-2">
                 {wheelPrizes.map((prize) => (
                   <div key={prize.id} className="p-3 bg-gray-800/50 rounded-lg">
                     <div className="flex justify-between">
@@ -237,7 +329,7 @@ const AdminPanel: React.FC = () => {
 
         {/* Результаты колеса фортуны */}
         <section className="mb-12 bg-gray-900/50 p-6 rounded-2xl border border-white/10">
-          <h2 className="text-2xl font-semibold mb-6 text-cyan-400">Результаты колеса фортуны</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-cyan-400">Результаты вращений колеса фортуны</h2>
           
           <div className="overflow-x-auto">
             <table className="w-full text-left">
@@ -254,9 +346,11 @@ const AdminPanel: React.FC = () => {
                   wheelResults.map((result, index) => (
                     <tr key={index} className="border-b border-gray-800">
                       <td className="py-3">{new Date(result.timestamp).toLocaleString()}</td>
-                      <td className="py-3">{result.userId || 'Неизвестный'}</td>
-                      <td className="py-3">{result.prizeName}</td>
-                      <td className="py-3">{result.prizeType}</td>
+                      <td className="py-3">
+                        {result.prize.user ? `${result.prize.user.first_name} (${result.prize.user.id})` : 'Неизвестный'}
+                      </td>
+                      <td className="py-3">{result.prize.name}</td>
+                      <td className="py-3">{result.prize.type}</td>
                     </tr>
                   ))
                 ) : (
@@ -271,25 +365,57 @@ const AdminPanel: React.FC = () => {
           </div>
         </section>
 
-        {/* Статистика */}
-        <section className="bg-gray-900/50 p-6 rounded-2xl border border-white/10">
-          <h2 className="text-2xl font-semibold mb-6 text-cyan-400">Статистика</h2>
+        {/* Статистика посещений */}
+        <section className="mb-12 bg-gray-900/50 p-6 rounded-2xl border border-white/10">
+          <h2 className="text-2xl font-semibold mb-6 text-cyan-400">Статистика посещений</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="bg-gray-800/50 p-4 rounded-lg">
               <h3 className="text-lg font-medium mb-2">Всего вращений</h3>
-              <p className="text-3xl font-bold text-cyan-400">0</p>
+              <p className="text-3xl font-bold text-cyan-400">{wheelResults.length}</p>
             </div>
             
             <div className="bg-gray-800/50 p-4 rounded-lg">
-              <h3 className="text-lg font-medium mb-2">Активных пользователей</h3>
-              <p className="text-3xl font-bold text-cyan-400">0</p>
+              <h3 className="text-lg font-medium mb-2">Уникальных пользователей</h3>
+              <p className="text-3xl font-bold text-cyan-400">{visits.length}</p>
             </div>
             
             <div className="bg-gray-800/50 p-4 rounded-lg">
-              <h3 className="text-lg font-medium mb-2">Общий доход</h3>
-              <p className="text-3xl font-bold text-cyan-400">0 ₽</p>
+              <h3 className="text-lg font-medium mb-2">Последнее посещение</h3>
+              <p className="text-lg font-bold text-cyan-400">
+                {visits.length > 0 ? new Date(visits[visits.length - 1].timestamp).toLocaleString() : 'Нет данных'}
+              </p>
             </div>
+          </div>
+
+          <h3 className="text-xl font-medium mb-4">Список посетителей</h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-gray-700">
+                  <th className="pb-2">ID пользователя</th>
+                  <th className="pb-2">Имя</th>
+                  <th className="pb-2">Время посещения</th>
+                </tr>
+              </thead>
+              <tbody>
+                {visits.length > 0 ? (
+                  visits.map((visit, index) => (
+                    <tr key={index} className="border-b border-gray-800">
+                      <td className="py-3">{visit.userId}</td>
+                      <td className="py-3">{visit.firstName} {visit.lastName || ''} {visit.username ? `(@${visit.username})` : ''}</td>
+                      <td className="py-3">{new Date(visit.timestamp).toLocaleString()}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={3} className="py-6 text-center text-gray-500">
+                      Нет данных о посещениях
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </section>
       </div>

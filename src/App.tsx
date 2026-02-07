@@ -17,10 +17,9 @@ import { getReferralCodeFromUrl, isValidReferralCode, hasUserBeenCounted, increm
 import WheelFortune from './components/WheelFortune';
 import WheelButton from './components/WheelButton';
 import { WheelSpinResult } from './types/wheel';
-import DebugPanel from './pages/DebugPanel';
 
 // Define a type for the page keys
-export type PageKey = 'Home' | 'Booking' | 'Works' | 'Contacts' | 'Services' | 'Reviews' | 'Profile' | 'Admin' | 'Debug';
+export type PageKey = 'Home' | 'Booking' | 'Works' | 'Contacts' | 'Services' | 'Reviews' | 'Profile' | 'Admin';
 
 // Page mapping
 const appPages: Record<PageKey, { component: React.FC<any> }> = {
@@ -32,7 +31,6 @@ const appPages: Record<PageKey, { component: React.FC<any> }> = {
   Reviews: { component: Reviews },
   Profile: { component: Profile },
   Admin: { component: React.lazy(() => import('./pages/AdminPanel')) },
-  Debug: { component: DebugPanel },
 };
 
 // --- Main App Component ---
@@ -340,9 +338,6 @@ function App() {
           ) : isAdmin ? (
             <DockButton pageKey="Admin" label="Админ" icon={<Shield className='w-6 h-6' />} />
           ) : null}
-          {isAdmin && (
-            <DockButton pageKey="Debug" label="Диагн." icon={<Wrench className='w-6 h-6' />} />
-          )}
           <DockButton pageKey="Profile" label="Профиль" icon={<User className='w-6 h-6' />} />
         </div>
       )}
