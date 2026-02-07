@@ -190,7 +190,7 @@ function App() {
     const timer = setTimeout(() => {
       const telegramUser = getTelegramUser();
       const ADMIN_TELEGRAM_IDS = ['478799066']; // @yanvtg
-      setIsAdmin(telegramUser && ADMIN_TELEGRAM_IDS.includes(String(telegramUser.id)));
+      setIsAdmin(!!(telegramUser && ADMIN_TELEGRAM_IDS.includes(String(telegramUser.id))));
       setCheckingAuth(false);
     }, 500);
 
