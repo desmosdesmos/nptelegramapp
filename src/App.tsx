@@ -207,11 +207,21 @@ function App() {
     // Проверяем сразу при загрузке компонента
     const checkAdminStatus = () => {
       const telegramUser = getTelegramUser();
-      console.log('Telegram user data:', telegramUser); // Отладочное сообщение
+      console.log('=== ADMIN CHECK DEBUG ===');
+      console.log('Full Telegram object:', window.Telegram);
+      console.log('Telegram WebApp available:', !!window.Telegram?.WebApp);
+      console.log('Init data unsafe:', window.Telegram?.WebApp?.initDataUnsafe);
+      console.log('Telegram user data:', telegramUser);
+      console.log('User ID type:', typeof telegramUser?.id, 'Value:', telegramUser?.id);
+      
       const ADMIN_TELEGRAM_IDS = ['478799066']; // @yanvtg
       console.log('Expected admin IDs:', ADMIN_TELEGRAM_IDS);
+      
       const isAdminUser = !!(telegramUser && ADMIN_TELEGRAM_IDS.includes(String(telegramUser.id)));
-      console.log('Is admin?', isAdminUser, 'User ID:', telegramUser?.id, 'String user ID:', telegramUser ? String(telegramUser.id) : 'No user'); // Расширенное отладочное сообщение
+      console.log('Is admin?', isAdminUser, 'User ID:', telegramUser?.id, 'String user ID:', telegramUser ? String(telegramUser.id) : 'No user');
+      console.log('Comparison result:', telegramUser ? ADMIN_TELEGRAM_IDS.includes(String(telegramUser.id)) : 'No user data');
+      console.log('========================');
+      
       setIsAdmin(isAdminUser);
       setCheckingAuth(false);
     };
