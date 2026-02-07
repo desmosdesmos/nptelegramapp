@@ -34,7 +34,18 @@ const WheelButton: React.FC<WheelButtonProps> = ({ onOpenWheel }) => {
 
       checkSpinAvailability();
       const interval = setInterval(checkSpinAvailability, 60000);
-      return () => clearInterval(interval);
+      
+      // Добавляем слушатель события storage для обновления состояния при изменении из других вкладок
+      const handleStorageChange = () => {
+        checkSpinAvailability();
+      };
+      
+      window.addEventListener('storage', handleStorageChange);
+      
+      return () => {
+        clearInterval(interval);
+        window.removeEventListener('storage', handleStorageChange);
+      };
     } catch (e) {
       console.error('WheelButton useEffect failed:', e);
       setCanSpin(true); // Критический fallback: всегда показываем кнопку при ошибке
@@ -46,7 +57,7 @@ const WheelButton: React.FC<WheelButtonProps> = ({ onOpenWheel }) => {
       {canSpin && (
         <button
           onClick={onOpenWheel}
-          className="absolute bottom-24 right-4 z-40 w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 animate-bounce"
+          className="fixed bottom-[120px] right-4 z-40 w-16 h-16 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 animate-bounce"
         >
           <div className="relative">
             <Gift className="w-8 h-8 text-black" />

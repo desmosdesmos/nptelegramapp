@@ -173,6 +173,17 @@ function App() {
     console.log('Выигрыш в колесе:', result);
     // Сохраняем время последнего вращения для таймера
     localStorage.setItem('lastSpinTime', String(Date.now()));
+    
+    // Обновляем состояние в localStorage для синхронизации с WheelButton
+    const event = new Event('storage');
+    window.dispatchEvent(event);
+  };
+
+  const handleCloseWheel = () => {
+    setShowWheel(false);
+    // Обновляем состояние в localStorage для синхронизации с WheelButton
+    const event = new Event('storage');
+    window.dispatchEvent(event);
   };
 
   return (
@@ -229,7 +240,7 @@ function App() {
           >
             <WheelFortune
               onWin={handleWheelWin}
-              onClose={() => setShowWheel(false)}
+              onClose={handleCloseWheel}
             />
           </motion.div>
         )}

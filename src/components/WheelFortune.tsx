@@ -283,6 +283,9 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
       const now = Date.now();
       console.log('[Wheel] Saving lastSpinTime:', new Date(now).toISOString(), 'timestamp:', now);
       localStorage.setItem('lastSpinTime', String(now));
+      
+      // Обновляем состояние canSpin для скрытия кнопки
+      setCanSpin(false);
 
       await onWin(result);
     }, 4000);
@@ -348,7 +351,9 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         </div>
       )}
 
-      {lastResult && <FullScreenResult result={lastResult} onClose={onClose} />}
+      {lastResult && <FullScreenResult result={lastResult} onClose={() => {
+        onClose(); // Закрываем модальное окно
+      }} />}
     </div>
   );
 };
