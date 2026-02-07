@@ -204,8 +204,8 @@ function App() {
   const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
-    // Небольшая задержка для обеспечения загрузки Telegram Web App
-    const timer = setTimeout(() => {
+    // Проверяем сразу при загрузке компонента
+    const checkAdminStatus = () => {
       const telegramUser = getTelegramUser();
       console.log('Telegram user data:', telegramUser); // Отладочное сообщение
       const ADMIN_TELEGRAM_IDS = ['478799066']; // @yanvtg
@@ -214,9 +214,27 @@ function App() {
       console.log('Is admin?', isAdminUser, 'User ID:', telegramUser?.id, 'String user ID:', telegramUser ? String(telegramUser.id) : 'No user'); // Расширенное отладочное сообщение
       setIsAdmin(isAdminUser);
       setCheckingAuth(false);
-    }, 1000); // Увеличил задержку для уверенности в загрузке
+    };
 
-    return () => clearTimeout(timer);
+    // Проверяем сразу
+    checkAdminStatus();
+
+    // Также подписываемся на событие изменения данных Telegram, если они становятся доступны позже
+    const handleThemeChanged = () => {
+      checkAdminStatus();
+    };
+
+    // Добавляем обработчик события, если Telegram WebApp доступен
+    const tg = getTelegramWebApp();
+    if (tg) {
+      tg.onEvent('theme_changed', handleThemeChanged);
+    }
+
+    return () => {
+      if (tg) {
+        tg.offEvent('theme_changed', handleThemeChanged);
+      }
+    };
   }, []);
 
   // Обработчик выигрыша в колесе
