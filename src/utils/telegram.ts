@@ -4,12 +4,21 @@
 
 import type { TelegramWebApp, TelegramUser } from '../types/telegram';
 
+// Хранилище для хранения данных пользователя
+let cachedTelegramUser: TelegramUser | null = null;
+let cachedTelegramWebApp: TelegramWebApp | null = null;
+
 /**
  * Получить экземпляр Telegram WebApp
  */
 export const getTelegramWebApp = (): TelegramWebApp | null => {
+  if (cachedTelegramWebApp) {
+    return cachedTelegramWebApp;
+  }
+  
   if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
-    return window.Telegram.WebApp;
+    cachedTelegramWebApp = window.Telegram.WebApp;
+    return cachedTelegramWebApp;
   }
   return null;
 };
@@ -18,13 +27,16 @@ export const getTelegramWebApp = (): TelegramWebApp | null => {
  * Инициализация Telegram WebApp
  */
 export const initTelegramWebApp = (): void => {
-  const tg = getTelegramWebApp();
-  if (tg) {
+  // Проверяем наличие объекта Telegram
+  if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
+    const tg = window.Telegram.WebApp;
+    cachedTelegramWebApp = tg;
+    
     tg.ready();
     tg.expand();
     tg.backgroundColor = '#0F172A';
     console.log("Telegram WebApp initialized and ready!");
-    
+
     // Установка цветовой схемы
     document.documentElement.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color || '#0A0A0A');
     document.documentElement.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color || '#FFFFFF');
@@ -32,6 +44,48 @@ export const initTelegramWebApp = (): void => {
     document.documentElement.style.setProperty('--tg-theme-link-color', tg.themeParams.link_color || '#FF6B35');
     document.documentElement.style.setProperty('--tg-theme-button-color', tg.themeParams.button_color || '#FF6B35');
     document.documentElement.style.setProperty('--tg-theme-button-text-color', tg.themeParams.button_text_color || '#FFFFFF');
+    
+    // Сохраняем данные пользователя, если они доступны
+    if (tg.initDataUnsafe?.user) {
+      cachedTelegramUser = tg.initDataUnsafe.user;
+      console.log("Telegram user data cached:", cachedTelegramUser);
+    }
+  } else {
+    // Если объект Telegram недоступен сразу, пробуем получить его позже
+    console.log("Telegram WebApp object not available immediately, will retry...");
+    
+    // Устанавливаем интервал для проверки доступности объекта
+    const checkInterval = setInterval(() => {
+      if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
+        clearInterval(checkInterval);
+        const tg = window.Telegram.WebApp;
+        cachedTelegramWebApp = tg;
+        
+        tg.ready();
+        tg.expand();
+        tg.backgroundColor = '#0F172A';
+        console.log("Telegram WebApp initialized and ready (delayed)!");
+
+        // Установка цветовой схемы
+        document.documentElement.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color || '#0A0A0A');
+        document.documentElement.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color || '#FFFFFF');
+        document.documentElement.style.setProperty('--tg-theme-hint-color', tg.themeParams.hint_color || '#999999');
+        document.documentElement.style.setProperty('--tg-theme-link-color', tg.themeParams.link_color || '#FF6B35');
+        document.documentElement.style.setProperty('--tg-theme-button-color', tg.themeParams.button_color || '#FF6B35');
+        document.documentElement.style.setProperty('--tg-theme-button-text-color', tg.themeParams.button_text_color || '#FFFFFF');
+        
+        // Сохраняем данные пользователя, если они доступны
+        if (tg.initDataUnsafe?.user) {
+          cachedTelegramUser = tg.initDataUnsafe.user;
+          console.log("Telegram user data cached:", cachedTelegramUser);
+        }
+      }
+    }, 100);
+    
+    // Останавливаем проверку через 10 секунд
+    setTimeout(() => {
+      clearInterval(checkInterval);
+    }, 10000);
   }
 };
 
@@ -39,8 +93,19 @@ export const initTelegramWebApp = (): void => {
  * Получить данные пользователя из Telegram
  */
 export const getTelegramUser = (): TelegramUser | null => {
+  // Возвращаем закэшированные данные, если они есть
+  if (cachedTelegramUser) {
+    return cachedTelegramUser;
+  }
+  
+  // Пытаемся получить данные из объекта Telegram
   const tg = getTelegramWebApp();
-  return tg?.initDataUnsafe?.user || null;
+  if (tg?.initDataUnsafe?.user) {
+    cachedTelegramUser = tg.initDataUnsafe.user;
+    return cachedTelegramUser;
+  }
+  
+  return null;
 };
 
 /**
