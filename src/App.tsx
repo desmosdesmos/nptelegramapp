@@ -189,10 +189,13 @@ function App() {
     // Небольшая задержка для обеспечения загрузки Telegram Web App
     const timer = setTimeout(() => {
       const telegramUser = getTelegramUser();
+      console.log('Telegram user data:', telegramUser); // Отладочное сообщение
       const ADMIN_TELEGRAM_IDS = ['478799066']; // @yanvtg
-      setIsAdmin(!!(telegramUser && ADMIN_TELEGRAM_IDS.includes(String(telegramUser.id))));
+      const isAdminUser = !!(telegramUser && ADMIN_TELEGRAM_IDS.includes(String(telegramUser.id)));
+      console.log('Is admin?', isAdminUser, 'User ID:', telegramUser?.id); // Отладочное сообщение
+      setIsAdmin(isAdminUser);
       setCheckingAuth(false);
-    }, 500);
+    }, 1000); // Увеличил задержку для уверенности в загрузке
 
     return () => clearTimeout(timer);
   }, []);
