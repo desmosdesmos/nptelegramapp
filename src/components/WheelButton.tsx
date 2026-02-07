@@ -15,7 +15,7 @@ const WheelButton: React.FC<WheelButtonProps> = ({ onOpenWheel }) => {
         let isTester = false;
         try {
           const telegramUser = getTelegramUser();
-          isTester = telegramUser && telegramUser.username === 'yanvtg';
+          isTester = Boolean(telegramUser?.username === 'yanvtg');
         } catch (e) {
           console.warn('Telegram user not available, defaulting to non-tester');
         }
