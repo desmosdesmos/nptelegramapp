@@ -41,6 +41,22 @@ function App() {
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [shouldRenderDock, setShouldRenderDock] = useState(false);
   const [showWheel, setShowWheel] = useState(false);
+  
+  // Проверяем Telegram Web App при загрузке
+  useEffect(() => {
+    const tg = window.Telegram?.WebApp;
+    const user = tg?.initDataUnsafe?.user;
+    
+    console.log('=== TELEGRAM WEB APP DIAGNOSTICS ===');
+    console.log('Telegram WebApp available:', !!tg);
+    console.log('User data available:', !!user);
+    console.log('User ID:', user?.id);
+    console.log('User data:', user);
+    console.log('Platform:', tg?.platform);
+    console.log('Version:', tg?.version);
+    console.log('===============================');
+  }, []);
+  
   const CurrentPageComponent = appPages[page].component;
 
   // Check for referral code on app load - NEW SIMPLE SYSTEM
