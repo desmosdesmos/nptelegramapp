@@ -204,7 +204,9 @@ function App() {
   const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
-    // Проверяем сразу при загрузке компонента
+    let checkInterval: number;
+    
+    // Функция для проверки статуса администратора
     const checkAdminStatus = () => {
       const telegramUser = getTelegramUser();
       console.log('=== ADMIN CHECK DEBUG ===');
@@ -222,12 +224,40 @@ function App() {
       console.log('Comparison result:', telegramUser ? ADMIN_TELEGRAM_IDS.includes(String(telegramUser.id)) : 'No user data');
       console.log('========================');
       
-      setIsAdmin(isAdminUser);
-      setCheckingAuth(false);
+      if (telegramUser) {
+        // Если пользователь доступен, устанавливаем статус и прекращаем проверки
+        setIsAdmin(isAdminUser);
+        setCheckingAuth(false);
+        
+        // Очищаем интервал, если он был
+        if (checkInterval) {
+          clearInterval(checkInterval);
+        }
+      }
     };
 
     // Проверяем сразу
     checkAdminStatus();
+    
+    // Если пользователь не доступен, проверяем каждые 500мс в течение 10 секунд
+    if (!getTelegramUser()) {
+      let attempts = 0;
+      const maxAttempts = 20; // 10 секунд с интервалом 500мс
+      
+      checkInterval = setInterval(() => {
+        attempts++;
+        console.log(`Попытка получения данных пользователя: ${attempts}/${maxAttempts}`);
+        checkAdminStatus();
+        
+        if (getTelegramUser() || attempts >= maxAttempts) {
+          clearInterval(checkInterval);
+          if (attempts >= maxAttempts && !getTelegramUser()) {
+            console.log('Не удалось получить данные пользователя за отведенное время');
+            setCheckingAuth(false);
+          }
+        }
+      }, 500);
+    }
   }, []);
 
   // Обработчик выигрыша в колесе
