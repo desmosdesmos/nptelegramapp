@@ -4,7 +4,7 @@ import { PageKey } from '../App';
 import { getTelegramWebApp, hapticFeedback, notificationFeedback, getTelegramUser } from '../utils/telegram';
 import { sendBookingToTelegram, validateBookingForm, type BookingFormData } from '../utils/booking';
 import { incrementBookedReferrals, getReferralCodeFromUrl, isValidReferralCode } from '../utils/simpleReferralSystem';
-import { getServiceById, getServiceOptionById, getAllServices, getAllServiceCategories } from '../data/services';
+import { getServiceById, getServiceOptionById, getAllServices, getOptionsForService } from '../data/services';
 import { getAllBrands, getModelsByBrand } from '../data/carBrands';
 import type { Service } from '../types/services';
 import { ServiceIcon } from '../utils/iconMapper';
@@ -578,10 +578,10 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
               ))}
             </div>
 
-            {(selectedMainService?.id === 'full-cleaning-basic' || selectedMainService?.id === 'pre-sale-prep') && selectedMainService.additionalOptions && (
+            {(selectedMainService?.id === 'full-cleaning-basic' || selectedMainService?.id === 'pre-sale-prep') && (
               <div className="pl-4 border-l-2 border-white/10 space-y-3 pt-4">
                  <label className="block text-sm font-medium text-gray-400 mb-2">Дополнительные опции</label>
-                {selectedMainService.additionalOptions.map(option => (
+                {getOptionsForService(selectedMainService.id).map(option => (
                   <button
                     key={option.id}
                     type="button"
