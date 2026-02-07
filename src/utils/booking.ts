@@ -2,7 +2,7 @@
  * Утилиты для работы с заявками
  */
 
-import { getServiceById, getServiceOptionById, getAllServices, mainServices } from '../data/services';
+import { getServiceById, getServiceOptionById, mainServices } from '../data/services';
 import { getTelegramUser } from './telegram';
 
 export interface BookingFormData {
