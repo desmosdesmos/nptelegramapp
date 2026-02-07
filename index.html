@@ -25,5 +25,17 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx?v=20260207"></script>
+    <script>
+      // Проверяем, открыто ли приложение в Telegram Web App
+      if (window.Telegram && window.Telegram.WebApp) {
+        // Добавляем параметр времени к URL для предотвращения кэширования
+        const urlParams = new URLSearchParams(window.location.search);
+        if (!urlParams.has('t')) {
+          const timestamp = Date.now();
+          const newUrl = window.location.pathname + '?t=' + timestamp + window.location.hash;
+          window.history.replaceState({}, document.title, newUrl);
+        }
+      }
+    </script>
   </body>
 </html>
