@@ -4,7 +4,7 @@ import { PageKey } from '../App';
 import { getTelegramWebApp, hapticFeedback, notificationFeedback, getTelegramUser } from '../utils/telegram';
 import { sendBookingToTelegram, validateBookingForm, type BookingFormData } from '../utils/booking';
 import { incrementBookedReferrals, getReferralCodeFromUrl, isValidReferralCode } from '../utils/simpleReferralSystem';
-import { getServiceById, getServiceOptionById, getAllServices, getOptionsForService } from '../data/services';
+import { getServiceById, getServiceOptionById, getAllServices, getOptionsForService, mainServices, localCleaningServices } from '../data/services';
 import { getAllBrands, getModelsByBrand } from '../data/carBrands';
 import type { Service } from '../types/services';
 import { ServiceIcon } from '../utils/iconMapper';
@@ -177,9 +177,8 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       }
     });
 
-    const allServices = getAllServices();
     const mainServiceId = formData.services.find(id =>
-      allServices.some(s => s.id === id)
+      mainServices.flatMap(cat => cat.services).some(s => s.id === id)
     );
     if (mainServiceId) {
       formData.additionalOptions.forEach(optionId => {
@@ -319,8 +318,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
     const isCurrentlySelected = currentServices.includes(serviceId);
 
     // Если основная услуга уже выбрана, не даем выбрать локальную
-    const allServices = getAllServices();
-    const hasMainService = formData.services.some(id => allServices.some(s => s.id === id));
+    const hasMainService = formData.services.some(id => mainServices.flatMap(cat => cat.services).some(s => s.id === id));
     if(hasMainService && !isCurrentlySelected) {
         notificationFeedback('error');
         tg?.showAlert('Нельзя комбинировать основную услугу с локальными.');
@@ -430,8 +428,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
   //   }
   // }, [tg, handleSubmit]);
     
-  const allServices = getAllServices();
-  const selectedMainService = allServices.find(s => formData.services.includes(s.id));
+  const selectedMainService = mainServices.flatMap(cat => cat.services).find(s => formData.services.includes(s.id));
   const today = new Date().toISOString().split('T')[0];
 
   return (
@@ -568,7 +565,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
           <FormSection title="Выберите услугу *">
             <div className="space-y-4">
               <h4 className="text-lg font-semibold text-white">Основные комплексы</h4>
-              {getAllServices().filter(service => service.category === 'detailing' || service.category === 'washing').map(service => (
+              {mainServices.flatMap(cat => cat.services).map(service => (
                 <ServiceRadioOption
                   key={service.id}
                   service={service}
@@ -581,7 +578,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
             {(selectedMainService?.id === 'full-cleaning-basic' || selectedMainService?.id === 'pre-sale-prep') && (
               <div className="pl-4 border-l-2 border-white/10 space-y-3 pt-4">
                  <label className="block text-sm font-medium text-gray-400 mb-2">Дополнительные опции</label>
-                {getOptionsForService(selectedMainService.id).map(option => (
+                {getOptionsForService(selectedMainService.id)?.map(option => (
                   <button
                     key={option.id}
                     type="button"
@@ -624,7 +621,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
             <div className="space-y-4 pt-4">
               <h4 className="text-lg font-semibold text-white">Локальная химчистка</h4>
               <div className="grid grid-cols-1 gap-4">
-                {getAllServices().filter(service => service.category === 'detailing').map(service => (
+                {localCleaningServices.flatMap(cat => cat.services).map(service => (
                     <ServiceCheckboxOption
                       key={service.id}
                       service={service}

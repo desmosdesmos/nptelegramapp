@@ -119,6 +119,90 @@ export const serviceCategories: ServiceCategory[] = [
   }
 ];
 
+// Структура для mainServices и localCleaningServices (совместимая с оригинальной структурой)
+export interface ServiceCategoryWithServices {
+  id: string;
+  name: string;
+  description?: string;
+  services: Service[];
+}
+
+// Основные комплексы услуг
+export const mainServices: ServiceCategoryWithServices[] = [
+  {
+    id: 'complex-services',
+    name: 'Основные комплексы',
+    description: 'Полные комплекты услуг для вашего автомобиля',
+    services: [
+      {
+        id: 'full-cleaning-basic',
+        name: 'Комплекс',
+        description: 'Полная уборка салона, мойка двигателя, мойка колес и дисков, мойка кузова',
+        price: 2500,
+        category: 'complex',
+        duration: '4-5 часов',
+        icon: '🧼'
+      },
+      {
+        id: 'pre-sale-prep',
+        name: 'Предпродажная подготовка',
+        description: 'Полная подготовка автомобиля к продаже',
+        price: 4000,
+        category: 'prep',
+        duration: '6-7 часов',
+        icon: '🚗'
+      }
+    ]
+  }
+];
+
+// Локальная химчистка услуг
+export const localCleaningServices: ServiceCategoryWithServices[] = [
+  {
+    id: 'local-cleaning',
+    name: 'Локальная химчистка',
+    description: 'Отдельные услуги по чистке отдельных зон автомобиля',
+    services: [
+      {
+        id: 'seats-cleaning',
+        name: 'Чистка сидений',
+        description: 'Химическая чистка сидений автомобиля',
+        price: 800,
+        category: 'detailing',
+        duration: '1-2 часа',
+        icon: '💺'
+      },
+      {
+        id: 'carpet-cleaning',
+        name: 'Чистка ковров',
+        description: 'Химическая чистка ковров и салона',
+        price: 1000,
+        category: 'detailing',
+        duration: '2-3 часа',
+        icon: '🧹'
+      },
+      {
+        id: 'leather-conditioning',
+        name: 'Уход за кожей',
+        description: 'Обработка кожаных элементов салона',
+        price: 1200,
+        category: 'detailing',
+        duration: '1-2 часа',
+        icon: '🧤'
+      },
+      {
+        id: 'glass-treatment',
+        name: 'Обработка стекол',
+        description: 'Обработка стекол от запотевания и загрязнений',
+        price: 500,
+        category: 'detailing',
+        duration: '30 мин',
+        icon: '🪟'
+      }
+    ]
+  }
+];
+
 // Подуслуги (опции)
 export const defaultServiceOptions: ServiceOption[] = [
   {

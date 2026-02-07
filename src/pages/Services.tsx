@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { PageKey } from '../App';
-import { getAllServices } from '../data/services';
+import { mainServices, localCleaningServices } from '../data/services';
 import type { Service } from '../types/services';
 import ScaleButton from '../components/ScaleButton';
 import ServicesHeader from '../components/ServicesHeader'; // Import the new header
@@ -93,7 +93,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
           <section>
             <ServicesHeader text="Основные комплексы" /> {/* Updated usage */}
             <div className="space-y-6">
-              {getAllServices().filter(service => service.category === 'detailing' || service.category === 'washing').map(service => (
+              {mainServices.flatMap(cat => cat.services).map(service => (
                 <ServiceCardComplex key={service.id} service={service} />
               ))}
             </div>
@@ -103,7 +103,7 @@ const Services: React.FC<ServicesProps> = ({ onNavigate }) => {
           <section>
             <ServicesHeader text="Локальная химчистка" /> {/* Updated usage */}
             <div className="space-y-3">
-              {getAllServices().filter(service => service.category === 'detailing').map(service => (
+              {localCleaningServices.flatMap(cat => cat.services).map(service => (
                 <ServiceRow key={service.id} service={service} />
               ))}
             </div>
