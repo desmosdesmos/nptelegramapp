@@ -187,7 +187,17 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-black overflow-hidden pb-24 relative">
+    <div className="min-h-screen bg-black overflow-hidden pb-24 relative" style={{paddingBottom: 'env(safe-area-inset-bottom, 0px)'}}>
+      <style>{`
+        /* Скрываем Vercel Toolbar */
+        div[data-vercel-toolbar] {
+          display: none !important;
+        }
+        /* Альтернативный селектор для Vercel Toolbar */
+        #__next > div:last-child:not([class]) {
+          display: none !important;
+        }
+      `}</style>
       <ErrorBoundary>
         <AnimatePresence mode='wait'>
           <motion.div
