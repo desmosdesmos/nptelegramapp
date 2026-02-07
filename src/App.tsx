@@ -266,9 +266,13 @@ function App() {
           <DockButton pageKey="Home" label="Главная" icon={<House className='w-6 h-6' />} />
           <DockButton pageKey="Booking" label="Запись" icon={<Calendar className='w-6 h-6' />} />
           <DockButton pageKey="Services" label="Услуги" icon={<Sparkles className='w-6 h-6' />} />
-          {!checkingAuth && isAdmin && (
+          {checkingAuth ? (
+            <div className="flex flex-col items-center justify-center w-16 h-16">
+              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-cyan-500"></div>
+            </div>
+          ) : isAdmin ? (
             <DockButton pageKey="Admin" label="Админ" icon={<Shield className='w-6 h-6' />} />
-          )}
+          ) : null}
           <DockButton pageKey="Profile" label="Профиль" icon={<User className='w-6 h-6' />} />
         </div>
       )}
