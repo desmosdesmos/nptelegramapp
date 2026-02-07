@@ -1,3 +1,0 @@
-@echo off
-echo Starting NP Telegram App API Server...
-node server.js

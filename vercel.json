@@ -1,5 +1,0 @@
-{
-  "name": "mini-apk",
-  "installCommand": "npm install",
-  "buildCommand": "npm run build"
-}
