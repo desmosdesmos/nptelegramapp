@@ -209,8 +209,9 @@ function App() {
       const telegramUser = getTelegramUser();
       console.log('Telegram user data:', telegramUser); // Отладочное сообщение
       const ADMIN_TELEGRAM_IDS = ['478799066']; // @yanvtg
+      console.log('Expected admin IDs:', ADMIN_TELEGRAM_IDS);
       const isAdminUser = !!(telegramUser && ADMIN_TELEGRAM_IDS.includes(String(telegramUser.id)));
-      console.log('Is admin?', isAdminUser, 'User ID:', telegramUser?.id); // Отладочное сообщение
+      console.log('Is admin?', isAdminUser, 'User ID:', telegramUser?.id, 'String user ID:', telegramUser ? String(telegramUser.id) : 'No user'); // Расширенное отладочное сообщение
       setIsAdmin(isAdminUser);
       setCheckingAuth(false);
     }, 1000); // Увеличил задержку для уверенности в загрузке
