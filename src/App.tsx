@@ -141,10 +141,7 @@ function App() {
   const handleNavigate = (pageKey: PageKey) => {
     // Проверяем, является ли пользователь администратором при попытке доступа к админ-панели
     if (pageKey === 'Admin') {
-      const telegramUser = getTelegramUser();
-      const ADMIN_TELEGRAM_IDS = ['478799066']; // @yanvtg
-      
-      if (telegramUser && ADMIN_TELEGRAM_IDS.includes(String(telegramUser.id))) {
+      if (isAdmin) {
         hapticFeedback('light');
         setPage(pageKey);
       } else {
@@ -185,11 +182,20 @@ function App() {
   };
 
   // Проверяем, является ли пользователь администратором для отображения админ-кнопки
-  const isAdminUser = () => {
-    const telegramUser = getTelegramUser();
-    const ADMIN_TELEGRAM_IDS = ['478799066']; // @yanvtg
-    return telegramUser && ADMIN_TELEGRAM_IDS.includes(String(telegramUser.id));
-  };
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    // Небольшая задержка для обеспечения загрузки Telegram Web App
+    const timer = setTimeout(() => {
+      const telegramUser = getTelegramUser();
+      const ADMIN_TELEGRAM_IDS = ['478799066']; // @yanvtg
+      setIsAdmin(telegramUser && ADMIN_TELEGRAM_IDS.includes(String(telegramUser.id)));
+      setCheckingAuth(false);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // Обработчик выигрыша в колесе
   const handleWheelWin = (result: WheelSpinResult) => {
@@ -257,7 +263,7 @@ function App() {
           <DockButton pageKey="Home" label="Главная" icon={<House className='w-6 h-6' />} />
           <DockButton pageKey="Booking" label="Запись" icon={<Calendar className='w-6 h-6' />} />
           <DockButton pageKey="Services" label="Услуги" icon={<Sparkles className='w-6 h-6' />} />
-          {isAdminUser() && (
+          {!checkingAuth && isAdmin && (
             <DockButton pageKey="Admin" label="Админ" icon={<Shield className='w-6 h-6' />} />
           )}
           <DockButton pageKey="Profile" label="Профиль" icon={<User className='w-6 h-6' />} />
