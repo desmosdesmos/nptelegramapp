@@ -4,7 +4,7 @@ import { PageKey } from '../App';
 import { getTelegramWebApp, hapticFeedback, notificationFeedback, getTelegramUser } from '../utils/telegram';
 import { sendBookingToTelegram, validateBookingForm, type BookingFormData } from '../utils/booking';
 import { incrementBookedReferrals, getReferralCodeFromUrl, isValidReferralCode } from '../utils/simpleReferralSystem';
-import { getAllServices, getServiceById, getServiceOptionById } from '../data/services';
+import { getServiceById, getServiceOptionById, getAllServices, getAllServiceCategories } from '../data/services';
 import { getAllBrands, getModelsByBrand } from '../data/carBrands';
 import type { Service } from '../types/services';
 import { ServiceIcon } from '../utils/iconMapper';
@@ -177,12 +177,13 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       }
     });
 
-    const mainServiceId = formData.services.find(id => 
-      mainServices.flatMap(cat => cat.services).some(s => s.id === id)
+    const allServices = getAllServices();
+    const mainServiceId = formData.services.find(id =>
+      allServices.some(s => s.id === id)
     );
     if (mainServiceId) {
       formData.additionalOptions.forEach(optionId => {
-        const option = getServiceOptionById(mainServiceId, optionId);
+        const option = getServiceOptionById(optionId);
         if (option) {
           total += option.price;
         }
@@ -318,7 +319,8 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
     const isCurrentlySelected = currentServices.includes(serviceId);
 
     // Если основная услуга уже выбрана, не даем выбрать локальную
-    const hasMainService = formData.services.some(id => mainServices.flatMap(cat => cat.services).some(s => s.id === id));
+    const allServices = getAllServices();
+    const hasMainService = formData.services.some(id => allServices.some(s => s.id === id));
     if(hasMainService && !isCurrentlySelected) {
         notificationFeedback('error');
         tg?.showAlert('Нельзя комбинировать основную услугу с локальными.');
@@ -428,7 +430,8 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
   //   }
   // }, [tg, handleSubmit]);
     
-  const selectedMainService = mainServices.flatMap(cat => cat.services).find(s => formData.services.includes(s.id));
+  const allServices = getAllServices();
+  const selectedMainService = allServices.find(s => formData.services.includes(s.id));
   const today = new Date().toISOString().split('T')[0];
 
   return (
@@ -565,7 +568,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
           <FormSection title="Выберите услугу *">
             <div className="space-y-4">
               <h4 className="text-lg font-semibold text-white">Основные комплексы</h4>
-              {mainServices.flatMap(cat => cat.services).map(service => (
+              {getAllServices().filter(service => service.category === 'detailing' || service.category === 'washing').map(service => (
                 <ServiceRadioOption
                   key={service.id}
                   service={service}
@@ -621,7 +624,7 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
             <div className="space-y-4 pt-4">
               <h4 className="text-lg font-semibold text-white">Локальная химчистка</h4>
               <div className="grid grid-cols-1 gap-4">
-                {localCleaningServices.flatMap(cat => cat.services).map(service => (
+                {getAllServices().filter(service => service.category === 'detailing').map(service => (
                     <ServiceCheckboxOption
                       key={service.id}
                       service={service}
