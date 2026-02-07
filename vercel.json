@@ -4,5 +4,18 @@
   "buildCommand": "npm run build",
   "ignoreCommand": "git branch --show-current | grep -q '^gh-pages$'",
   "framework": "vite",
-  "public": true
+  "public": true,
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Vercel-Toolbar",
+          "value": "hidden"
+        }
+      ]
+    }
+  ]
 }
