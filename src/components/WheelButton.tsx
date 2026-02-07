@@ -36,10 +36,13 @@ const WheelButton: React.FC<WheelButtonProps> = ({ onOpenWheel }) => {
       const interval = setInterval(checkSpinAvailability, 60000);
       
       // Добавляем слушатель события storage для обновления состояния при изменении из других вкладок
-      const handleStorageChange = () => {
-        checkSpinAvailability();
+      const handleStorageChange = (e: StorageEvent) => {
+        if (e.key === 'lastSpinTime') {
+          // Обновляем состояние немедленно при изменении lastSpinTime
+          checkSpinAvailability();
+        }
       };
-      
+
       window.addEventListener('storage', handleStorageChange);
       
       return () => {

@@ -173,15 +173,29 @@ function App() {
     console.log('Выигрыш в колесе:', result);
     // Время последнего вращения уже сохранено в WheelFortune
     // Обновляем состояние в localStorage для синхронизации с WheelButton
-    const event = new Event('storage');
-    window.dispatchEvent(event);
+    const now = Date.now();
+    const storageEvent = new StorageEvent('storage', {
+      key: 'lastSpinTime',
+      oldValue: null,
+      newValue: String(now),
+      url: window.location.href,
+      storageArea: localStorage
+    });
+    window.dispatchEvent(storageEvent);
   };
 
   const handleCloseWheel = () => {
     setShowWheel(false);
     // Обновляем состояние в localStorage для синхронизации с WheelButton
-    const event = new Event('storage');
-    window.dispatchEvent(event);
+    const now = Date.now();
+    const storageEvent = new StorageEvent('storage', {
+      key: 'lastSpinTime',
+      oldValue: null,
+      newValue: String(now),
+      url: window.location.href,
+      storageArea: localStorage
+    });
+    window.dispatchEvent(storageEvent);
   };
 
   return (
