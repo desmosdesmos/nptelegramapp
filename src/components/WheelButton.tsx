@@ -12,29 +12,17 @@ const WheelButton: React.FC<WheelButtonProps> = ({ onOpenWheel }) => {
   useEffect(() => {
     try {
       const checkSpinAvailability = () => {
-        let isTester = false;
-        try {
-          const telegramUser = getTelegramUser();
-          isTester = telegramUser !== null && telegramUser?.username === 'yanvtg';
-        } catch (e) {
-          console.warn('Telegram user not available, defaulting to non-tester');
-        }
+        const lastSpinStr = localStorage.getItem('lastSpinTime');
+        const lastSpin = lastSpinStr ? parseInt(lastSpinStr, 10) : 0;
+        const now = Date.now();
+        const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000;
 
-        if (isTester) {
-          setCanSpin(true);
-        } else {
-          const lastSpinStr = localStorage.getItem('lastSpinTime');
-          const lastSpin = lastSpinStr ? parseInt(lastSpinStr, 10) : 0;
-          const now = Date.now();
-          const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000;
-
-          setCanSpin(now >= nextSpinTime);
-        }
+        setCanSpin(now >= nextSpinTime);
       };
 
       checkSpinAvailability();
       const interval = setInterval(checkSpinAvailability, 60000);
-      
+
       // Добавляем слушатель события storage для обновления состояния при изменении из других вкладок
       const handleStorageChange = (e: StorageEvent) => {
         if (e.key === 'lastSpinTime') {
@@ -44,14 +32,14 @@ const WheelButton: React.FC<WheelButtonProps> = ({ onOpenWheel }) => {
       };
 
       window.addEventListener('storage', handleStorageChange);
-      
+
       return () => {
         clearInterval(interval);
         window.removeEventListener('storage', handleStorageChange);
       };
     } catch (e) {
       console.error('WheelButton useEffect failed:', e);
-      setCanSpin(true); // Критический fallback: всегда показываем кнопку при ошибке
+      setCanSpin(false); // Теперь даже в случае ошибки не показываем кнопку
     }
   }, []);
 

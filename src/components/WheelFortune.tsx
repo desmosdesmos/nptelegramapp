@@ -272,19 +272,15 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         });
       }
 
-      const telegramUser = getTelegramUser();
-      const isTester = telegramUser && telegramUser.username === 'yanvtg';
-
-      if (!isTester) {
-        const today = new Date().toISOString().split('T')[0];
-        const lastSpinDate = localStorage.getItem('wheel_last_spin_date_prev');
-        let newStreak = dailyStreak;
-        if (!lastSpinDate || lastSpinDate !== today) {
-          newStreak++;
-          localStorage.setItem('wheel_daily_streak', newStreak.toString());
-          setDailyStreak(newStreak);
-          localStorage.setItem('wheel_last_spin_date_prev', today);
-        }
+      // Убираем специальное поведение для тестеров - теперь все пользователи имеют одинаковые условия
+      const today = new Date().toISOString().split('T')[0];
+      const lastSpinDate = localStorage.getItem('wheel_last_spin_date_prev');
+      let newStreak = dailyStreak;
+      if (!lastSpinDate || lastSpinDate !== today) {
+        newStreak++;
+        localStorage.setItem('wheel_daily_streak', newStreak.toString());
+        setDailyStreak(newStreak);
+        localStorage.setItem('wheel_last_spin_date_prev', today);
       }
 
       await onWin(result);
