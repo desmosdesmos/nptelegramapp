@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { House, Calendar, Sparkles, User } from 'lucide-react';
+import { House, Calendar, Sparkles, User, Shield } from 'lucide-react';
 import { hapticFeedback } from './utils/telegram';
 
 // Import all pages
@@ -19,7 +19,7 @@ import WheelButton from './components/WheelButton';
 import { WheelSpinResult } from './types/wheel';
 
 // Define a type for the page keys
-export type PageKey = 'Home' | 'Booking' | 'Works' | 'Contacts' | 'Services' | 'Reviews' | 'Profile';
+export type PageKey = 'Home' | 'Booking' | 'Works' | 'Contacts' | 'Services' | 'Reviews' | 'Profile' | 'Admin';
 
 // Page mapping
 const appPages: Record<PageKey, { component: React.FC<any> }> = {
@@ -30,6 +30,7 @@ const appPages: Record<PageKey, { component: React.FC<any> }> = {
   Services: { component: Services },
   Reviews: { component: Reviews },
   Profile: { component: Profile },
+  Admin: { component: React.lazy(() => import('./pages/AdminPanel')) },
 };
 
 // --- Main App Component ---
@@ -138,8 +139,23 @@ function App() {
   }, []);
 
   const handleNavigate = (pageKey: PageKey) => {
-    hapticFeedback('light');
-    setPage(pageKey);
+    // Проверяем, является ли пользователь администратором при попытке доступа к админ-панели
+    if (pageKey === 'Admin') {
+      const telegramUser = getTelegramUser();
+      const ADMIN_TELEGRAM_IDS = ['210865441']; // Замените на ваш реальный Telegram ID
+      
+      if (telegramUser && ADMIN_TELEGRAM_IDS.includes(String(telegramUser.id))) {
+        hapticFeedback('light');
+        setPage(pageKey);
+      } else {
+        // Если пользователь не администратор, показываем сообщение или остаемся на текущей странице
+        alert('Доступ к админ-панели ограничен');
+        return;
+      }
+    } else {
+      hapticFeedback('light');
+      setPage(pageKey);
+    }
   };
 
   // Dock Button with 'Spring Physics' via CSS
@@ -166,6 +182,13 @@ function App() {
         <span className='text-[10px] font-medium'>{label}</span>
       </button>
     );
+  };
+
+  // Проверяем, является ли пользователь администратором для отображения админ-кнопки
+  const isAdminUser = () => {
+    const telegramUser = getTelegramUser();
+    const ADMIN_TELEGRAM_IDS = ['210865441']; // Замените на ваш реальный Telegram ID
+    return telegramUser && ADMIN_TELEGRAM_IDS.includes(String(telegramUser.id));
   };
 
   // Обработчик выигрыша в колесе
@@ -234,6 +257,9 @@ function App() {
           <DockButton pageKey="Home" label="Главная" icon={<House className='w-6 h-6' />} />
           <DockButton pageKey="Booking" label="Запись" icon={<Calendar className='w-6 h-6' />} />
           <DockButton pageKey="Services" label="Услуги" icon={<Sparkles className='w-6 h-6' />} />
+          {isAdminUser() && (
+            <DockButton pageKey="Admin" label="Админ" icon={<Shield className='w-6 h-6' />} />
+          )}
           <DockButton pageKey="Profile" label="Профиль" icon={<User className='w-6 h-6' />} />
         </div>
       )}
