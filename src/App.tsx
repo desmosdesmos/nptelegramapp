@@ -12,7 +12,7 @@ import Services from './pages/Services';
 import Reviews from './pages/Reviews';
 import Profile from './pages/Profile';
 import ErrorBoundary from './ErrorBoundary';
-import { getTelegramUser, getTelegramWebApp } from './utils/telegram';
+import { getTelegramUser } from './utils/telegram';
 import { getReferralCodeFromUrl, isValidReferralCode, hasUserBeenCounted, incrementTotalReferrals, setCurrentUserReferralCode } from './utils/simpleReferralSystem';
 import WheelFortune from './components/WheelFortune';
 import WheelButton from './components/WheelButton';
