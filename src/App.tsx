@@ -12,7 +12,7 @@ import Services from './pages/Services';
 import Reviews from './pages/Reviews';
 import Profile from './pages/Profile';
 import ErrorBoundary from './ErrorBoundary';
-import { getTelegramUser } from './utils/telegram';
+import { getTelegramUser, setupMainButton } from './utils/telegram';
 import { getReferralCodeFromUrl, isValidReferralCode, hasUserBeenCounted, incrementTotalReferrals, setCurrentUserReferralCode } from './utils/simpleReferralSystem';
 import WheelFortune from './components/WheelFortune';
 import WheelButton from './components/WheelButton';
@@ -228,6 +228,13 @@ function App() {
         // Если пользователь доступен, устанавливаем статус и прекращаем проверки
         setIsAdmin(isAdminUser);
         setCheckingAuth(false);
+        
+        // Если пользователь является администратором, показываем главную кнопку
+        if (isAdminUser) {
+          setupMainButton('Админ-панель', () => {
+            setPage('Admin');
+          });
+        }
         
         // Очищаем интервал, если он был
         if (checkInterval) {
