@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { House, Calendar, Sparkles, User, Shield } from 'lucide-react';
+import { House, Calendar, Sparkles, User } from 'lucide-react';
 import { hapticFeedback } from './utils/telegram';
 
 // Import all pages
@@ -12,14 +12,14 @@ import Services from './pages/Services';
 import Reviews from './pages/Reviews';
 import Profile from './pages/Profile';
 import ErrorBoundary from './ErrorBoundary';
-import { getTelegramUser, setupMainButton } from './utils/telegram';
+import { getTelegramUser } from './utils/telegram';
 import { getReferralCodeFromUrl, isValidReferralCode, hasUserBeenCounted, incrementTotalReferrals, setCurrentUserReferralCode } from './utils/simpleReferralSystem';
 import WheelFortune from './components/WheelFortune';
 import WheelButton from './components/WheelButton';
 import { WheelSpinResult } from './types/wheel';
 
 // Define a type for the page keys
-export type PageKey = 'Home' | 'Booking' | 'Works' | 'Contacts' | 'Services' | 'Reviews' | 'Profile' | 'Admin';
+export type PageKey = 'Home' | 'Booking' | 'Works' | 'Contacts' | 'Services' | 'Reviews' | 'Profile';
 
 // Page mapping
 const appPages: Record<PageKey, { component: React.FC<any> }> = {
@@ -30,7 +30,6 @@ const appPages: Record<PageKey, { component: React.FC<any> }> = {
   Services: { component: Services },
   Reviews: { component: Reviews },
   Profile: { component: Profile },
-  Admin: { component: React.lazy(() => import('./pages/AdminPanel')) },
 };
 
 // --- Main App Component ---
@@ -39,12 +38,12 @@ function App() {
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const [shouldRenderDock, setShouldRenderDock] = useState(false);
   const [showWheel, setShowWheel] = useState(false);
-  
+
   // Проверяем Telegram Web App при загрузке
   useEffect(() => {
     const tg = window.Telegram?.WebApp;
     const user = tg?.initDataUnsafe?.user;
-    
+
     console.log('=== TELEGRAM WEB APP DIAGNOSTICS ===');
     console.log('Telegram WebApp available:', !!tg);
     console.log('User data available:', !!user);
@@ -54,7 +53,7 @@ function App() {
     console.log('Version:', tg?.version);
     console.log('===============================');
   }, []);
-  
+
   const CurrentPageComponent = appPages[page].component;
 
   // Check for referral code on app load - NEW SIMPLE SYSTEM
@@ -84,12 +83,12 @@ function App() {
     }
   }, []);
 
-  // Setup activity tracking to process referrals when user becomes active
+  // Check for Telegram user initialization and handle pending referrer
   useEffect(() => {
     // Заглушка для setupActivityTracking, если функция не нужна
   }, []);
 
-  // Check for Telegram user initialization and handle pending referrer
+  // Setup activity tracking to process referrals when user becomes active
   useEffect(() => {
     const checkAndHandlePendingReferrer = () => {
       const pendingReferrerCode = localStorage.getItem('pending_referrer_code');
@@ -155,20 +154,8 @@ function App() {
   }, []);
 
   const handleNavigate = (pageKey: PageKey) => {
-    // Проверяем, является ли пользователь администратором при попытке доступа к админ-панели
-    if (pageKey === 'Admin') {
-      if (isAdmin) {
-        hapticFeedback('light');
-        setPage(pageKey);
-      } else {
-        // Если пользователь не администратор, показываем сообщение или остаемся на текущей странице
-        alert('Доступ к админ-панели ограничен');
-        return;
-      }
-    } else {
-      hapticFeedback('light');
-      setPage(pageKey);
-    }
+    hapticFeedback('light');
+    setPage(pageKey);
   };
 
   // Dock Button with 'Spring Physics' via CSS
@@ -196,74 +183,6 @@ function App() {
       </button>
     );
   };
-
-  // Проверяем, является ли пользователь администратором для отображения админ-кнопки
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [checkingAuth, setCheckingAuth] = useState(true);
-
-  useEffect(() => {
-    let checkInterval: any;
-    
-    // Функция для проверки статуса администратора
-    const checkAdminStatus = () => {
-      const telegramUser = getTelegramUser();
-      console.log('=== ADMIN CHECK DEBUG ===');
-      console.log('Full Telegram object:', window.Telegram);
-      console.log('Telegram WebApp available:', !!window.Telegram?.WebApp);
-      console.log('Init data unsafe:', window.Telegram?.WebApp?.initDataUnsafe);
-      console.log('Telegram user data:', telegramUser);
-      console.log('User ID type:', typeof telegramUser?.id, 'Value:', telegramUser?.id);
-      
-      const ADMIN_TELEGRAM_IDS = ['478799066']; // @yanvtg
-      console.log('Expected admin IDs:', ADMIN_TELEGRAM_IDS);
-      
-      const isAdminUser = !!(telegramUser && ADMIN_TELEGRAM_IDS.includes(String(telegramUser.id)));
-      console.log('Is admin?', isAdminUser, 'User ID:', telegramUser?.id, 'String user ID:', telegramUser ? String(telegramUser.id) : 'No user');
-      console.log('Comparison result:', telegramUser ? ADMIN_TELEGRAM_IDS.includes(String(telegramUser.id)) : 'No user data');
-      console.log('========================');
-      
-      if (telegramUser) {
-        // Если пользователь доступен, устанавливаем статус и прекращаем проверки
-        setIsAdmin(isAdminUser);
-        setCheckingAuth(false);
-        
-        // Если пользователь является администратором, показываем главную кнопку
-        if (isAdminUser) {
-          setupMainButton('Админ-панель', () => {
-            setPage('Admin');
-          });
-        }
-        
-        // Очищаем интервал, если он был
-        if (checkInterval) {
-          clearInterval(checkInterval);
-        }
-      }
-    };
-
-    // Проверяем сразу
-    checkAdminStatus();
-    
-    // Если пользователь не доступен, проверяем каждые 500мс в течение 10 секунд
-    if (!getTelegramUser()) {
-      let attempts = 0;
-      const maxAttempts = 20; // 10 секунд с интервалом 500мс
-      
-      checkInterval = setInterval(() => {
-        attempts++;
-        console.log(`Попытка получения данных пользователя: ${attempts}/${maxAttempts}`);
-        checkAdminStatus();
-        
-        if (getTelegramUser() || attempts >= maxAttempts) {
-          clearInterval(checkInterval);
-          if (attempts >= maxAttempts && !getTelegramUser()) {
-            console.log('Не удалось получить данные пользователя за отведенное время');
-            setCheckingAuth(false);
-          }
-        }
-      }, 500);
-    }
-  }, []);
 
   // Обработчик выигрыша в колесе
   const handleWheelWin = (result: WheelSpinResult) => {
@@ -331,13 +250,6 @@ function App() {
           <DockButton pageKey="Home" label="Главная" icon={<House className='w-6 h-6' />} />
           <DockButton pageKey="Booking" label="Запись" icon={<Calendar className='w-6 h-6' />} />
           <DockButton pageKey="Services" label="Услуги" icon={<Sparkles className='w-6 h-6' />} />
-          {checkingAuth ? (
-            <div className="flex flex-col items-center justify-center w-16 h-16">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-cyan-500"></div>
-            </div>
-          ) : isAdmin ? (
-            <DockButton pageKey="Admin" label="Админ" icon={<Shield className='w-6 h-6' />} />
-          ) : null}
           <DockButton pageKey="Profile" label="Профиль" icon={<User className='w-6 h-6' />} />
         </div>
       )}

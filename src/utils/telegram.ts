@@ -134,36 +134,6 @@ export const sendDataToTelegram = (data: Record<string, unknown>): void => {
   }
 };
 
-/**
- * Настроить главную кнопку в Telegram WebApp
- */
-export const setupMainButton = (text: string, onClick: () => void, isVisible: boolean = true, isActive: boolean = true): void => {
-  const tg = getTelegramWebApp();
-  if (tg?.MainButton) {
-    tg.MainButton.setText(text);
-    tg.MainButton.onClick(onClick);
-    if (isVisible) {
-      tg.MainButton.show();
-    } else {
-      tg.MainButton.hide();
-    }
-    if (isActive) {
-      tg.MainButton.enable();
-    } else {
-      tg.MainButton.disable();
-    }
-  }
-};
-
-/**
- * Скрыть главную кнопку
- */
-export const hideMainButton = (): void => {
-  const tg = getTelegramWebApp();
-  if (tg?.MainButton) {
-    tg.MainButton.hide();
-  }
-};
 
 /**
  * Открыть ссылку
