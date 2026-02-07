@@ -3,14 +3,21 @@ import { getTelegramUser } from '../utils/telegram';
 import { wheelPrizes } from '../data/wheelConfig';
 import { WheelPrize } from '../types/wheel';
 import { WheelSpinResult } from '../types/wheel';
+import { Service, getAllServices, saveServices, addService, updateServicePrice } from '../data/services';
 
 const AdminPanel: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState(false);
-  const [services, setServices] = useState<any[]>([]);
-  const [prices, setPrices] = useState<{[key: string]: number}>({});
+  const [services, setServices] = useState<Service[]>([]);
   const [wheelResults, setWheelResults] = useState<Array<WheelSpinResult & {userId?: number, userName?: string}>>([]);
   const [visits, setVisits] = useState<{userId: number, timestamp: number, firstName: string, lastName?: string, username?: string}[]>([]);
-  const [newService, setNewService] = useState({ name: '', price: 0 });
+  const [newService, setNewService] = useState<Omit<Service, 'id'>>({ 
+    name: '', 
+    price: 0,
+    description: '',
+    category: '',
+    duration: '',
+    icon: ''
+  });
   const [newPrize, setNewPrize] = useState<Pick<WheelPrize, 'name' | 'description' | 'type' | 'value'> & { type: WheelPrize['type'] }>({ 
     name: '', 
     description: '', 
@@ -32,26 +39,9 @@ const AdminPanel: React.FC = () => {
   }, []);
 
   const loadAdminData = () => {
-    // Загружаем список услуг и цены
-    // В реальном приложении это будет загружаться с сервера
-    const savedServices = localStorage.getItem('services');
-    if (savedServices) {
-      setServices(JSON.parse(savedServices));
-    } else {
-      // Значения по умолчанию
-      setServices([
-        { id: 'basic_wash', name: 'Базовая мойка', price: 500 },
-        { id: 'interior_detailing', name: 'Химчистка салона', price: 1500 },
-        { id: 'exterior_polish', name: 'Полировка кузова', price: 2000 },
-        { id: 'full_detailing', name: 'Полный детейлинг', price: 3500 },
-      ]);
-    }
-
-    // Загружаем цены
-    const savedPrices = localStorage.getItem('service_prices');
-    if (savedPrices) {
-      setPrices(JSON.parse(savedPrices));
-    }
+    // Загружаем список услуг
+    const allServices = getAllServices();
+    setServices(allServices);
 
     // Загружаем результаты колеса фортуны
     const savedResults = localStorage.getItem('wheel_results');
@@ -81,9 +71,12 @@ const AdminPanel: React.FC = () => {
   };
 
   const handleServicePriceChange = (serviceId: string, newPrice: number) => {
-    const updatedPrices = { ...prices, [serviceId]: newPrice };
-    setPrices(updatedPrices);
-    localStorage.setItem('service_prices', JSON.stringify(updatedPrices));
+    updateServicePrice(serviceId, newPrice);
+    // Обновляем состояние
+    const updatedServices = services.map(service => 
+      service.id === serviceId ? {...service, price: newPrice} : service
+    );
+    setServices(updatedServices);
   };
 
   const handleAddService = () => {
@@ -92,18 +85,24 @@ const AdminPanel: React.FC = () => {
       return;
     }
 
-    const newServiceObj = {
-      id: `service_${Date.now()}`,
-      name: newService.name,
-      price: newService.price
+    const newServiceObj: Service = {
+      ...newService,
+      id: `service_${Date.now()}`
     };
 
-    const updatedServices = [...services, newServiceObj];
-    setServices(updatedServices);
-    localStorage.setItem('services', JSON.stringify(updatedServices));
+    addService(newServiceObj);
+    // Обновляем состояние
+    setServices([...services, newServiceObj]);
 
     // Сброс формы
-    setNewService({ name: '', price: 0 });
+    setNewService({ 
+      name: '', 
+      price: 0,
+      description: '',
+      category: '',
+      duration: '',
+      icon: ''
+    });
   };
 
   const handleAddPrize = () => {
@@ -139,7 +138,7 @@ const AdminPanel: React.FC = () => {
     }));
   };
 
-  const handleServiceInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleServiceInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setNewService(prev => ({
       ...prev,
@@ -175,13 +174,14 @@ const AdminPanel: React.FC = () => {
                   <div key={service.id} className="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg">
                     <div>
                       <h3 className="font-medium">{service.name}</h3>
-                      <p className="text-sm text-gray-400">ID: {service.id}</p>
+                      <p className="text-sm text-gray-400">{service.description}</p>
+                      <p className="text-xs text-gray-500">ID: {service.id}</p>
                     </div>
                     <div className="flex items-center">
                       <span className="mr-3">Цена:</span>
                       <input
                         type="number"
-                        value={prices[service.id] || service.price || 0}
+                        value={service.price}
                         onChange={(e) => handleServicePriceChange(service.id, Number(e.target.value))}
                         className="bg-gray-700 border border-gray-600 rounded px-3 py-1 w-32 text-white"
                       />
@@ -217,6 +217,43 @@ const AdminPanel: React.FC = () => {
                     className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white"
                     placeholder="Например: 500"
                   />
+                </div>
+                
+                <div>
+                  <label className="block text-sm mb-1">Описание</label>
+                  <textarea
+                    name="description"
+                    value={newService.description}
+                    onChange={handleServiceInputChange}
+                    className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white"
+                    placeholder="Описание услуги"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm mb-1">Категория</label>
+                    <input
+                      type="text"
+                      name="category"
+                      value={newService.category}
+                      onChange={handleServiceInputChange}
+                      className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white"
+                      placeholder="Категория"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm mb-1">Продолжительность</label>
+                    <input
+                      type="text"
+                      name="duration"
+                      value={newService.duration}
+                      onChange={handleServiceInputChange}
+                      className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 text-white"
+                      placeholder="Например: 1 час"
+                    />
+                  </div>
                 </div>
                 
                 <button

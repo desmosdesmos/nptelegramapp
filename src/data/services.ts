@@ -1,140 +1,118 @@
-/**
- * Данные услуг и цен для NP Auto Detail
- * ТОЧНЫЙ прайс согласно требованиям
- */
+// src/data/services.ts
+export interface Service {
+  id: string;
+  name: string;
+  description?: string;
+  price: number;
+  category?: string;
+  duration?: string; // продолжительность услуги
+  icon?: string; // иконка услуги
+}
 
-import type { ServiceCategory } from '../types/services';
-
-// Основные услуги
-export const mainServices: ServiceCategory[] = [
+export const defaultServices: Service[] = [
   {
-    id: 'full-cleaning',
-    name: 'Полная химчистка',
-    services: [
-      {
-        id: 'full-cleaning-basic',
-        name: 'Полная химчистка салона',
-        price: 6999,
-        description: 'включает в себя: \n- химчистка всех сидений; \n- химчистка ковролина; \n- химчистка багажника; \n- химчистка торпедо, центральной консоли, порогов и всего пластика; \n- химчистка багажника',
-        icon: '🧹',
-        additionalOptions: [
-          {
-            id: 'ceiling',
-            name: 'Потолок',
-            price: 1999,
-            // Убрали эмодзи, ServiceIcon будет использовать логику определения иконки по названию
-          },
-          {
-            id: 'ozonation',
-            name: 'Озонация',
-            price: 999,
-            description: 'Устраняет стойкие запахи (сигареты, животные, сырость, еда), уничтожает бактерии и грибок',
-          },
-        ],
-      },
-    ],
+    id: 'basic_wash',
+    name: 'Базовая мойка',
+    description: 'Влажная уборка салона, мойка двигателя, мойка колес и дисков, мойка кузова',
+    price: 500,
+    category: 'washing',
+    duration: '1 час',
+    icon: '🚿'
   },
   {
-    id: 'pre-sale',
-    name: 'Предпродажная подготовка',
-    services: [
-      {
-        id: 'pre-sale-prep',
-        name: 'Предпродажная подготовка',
-        price: 4899,
-        icon: '🚗',
-        description: 'включает в себя: \n- химчистка всех сидений, \n- обеспыливание и пылесос ковролина без химии; \n- химчистка торпедо, центральной консоли, порогов и всего пластика; \n- химчистка багажника.',
-        additionalOptions: [
-          {
-            id: 'ozonation-pre-sale',
-            name: 'Озонация',
-            price: 999,
-            description: 'Устраняет стойкие запахи (сигареты, животные, сырость, еда), уничтожает бактерии и грибок',
-          },
-          {
-            id: 'carpeting-pre-sale',
-            name: 'Ковролин',
-            price: 2999,
-          },
-          {
-            id: 'ceiling-pre-sale',
-            name: 'Потолок',
-            price: 1999,
-          },
-        ],
-      },
-    ],
+    id: 'interior_detailing',
+    name: 'Химчистка салона',
+    description: 'Химическая чистка салона, обработка пятен, свежесть и чистота',
+    price: 1500,
+    category: 'detailing',
+    duration: '2-3 часа',
+    icon: '🧹'
   },
+  {
+    id: 'exterior_polish',
+    name: 'Полировка кузова',
+    description: 'Полировка кузова, защита от царапин, блеск и ухоженный вид',
+    price: 2000,
+    category: 'detailing',
+    duration: '3-4 часа',
+    icon: '✨'
+  },
+  {
+    id: 'full_detailing',
+    name: 'Полный детейлинг',
+    description: 'Полный комплекс услуг по уходу за автомобилем',
+    price: 3500,
+    category: 'detailing',
+    duration: '4-6 часов',
+    icon: '🚗'
+  },
+  {
+    id: 'engine_cleaning',
+    name: 'Мойка двигателя',
+    description: 'Химическая чистка двигателя и подкапотного пространства',
+    price: 800,
+    category: 'washing',
+    duration: '1-2 часа',
+    icon: '⚙️'
+  },
+  {
+    id: 'wheel_care',
+    name: 'Уход за дисками и шинами',
+    description: 'Очистка и защита дисков и шин от загрязнений',
+    price: 600,
+    category: 'washing',
+    duration: '1 час',
+    icon: '毂'
+  },
+  {
+    id: 'glass_treatment',
+    name: 'Обработка стекол',
+    description: 'Обработка стекол от запотевания и загрязнений',
+    price: 400,
+    category: 'detailing',
+    duration: '30 мин',
+    icon: '🪟'
+  },
+  {
+    id: 'waxing',
+    name: 'Нанесение воска',
+    description: 'Защита лакокрасочного покрытия воском',
+    price: 1200,
+    category: 'protection',
+    duration: '2 часа',
+    icon: '🍯'
+  }
 ];
 
-// Услуги по зонам
-export const localCleaningServices: ServiceCategory[] = [
-  {
-    id: 'partial-cleaning',
-    name: 'Химчистка отдельных зон',
-    services: [
-      {
-        id: 'seat',
-        name: 'Сиденье',
-        price: 1500,
-        icon: '🧽',
-      },
-      {
-        id: 'ceiling-only',
-        name: 'Потолок',
-        price: 3000,
-        icon: '☁️',
-      },
-      {
-        id: 'floor',
-        name: 'Пол + ковролин',
-        price: 3000,
-        icon: '🦶',
-      },
-      {
-        id: 'trunk',
-        name: 'Багажник',
-        price: 1000,
-        icon: '🎒',
-      },
-      {
-        id: 'door-cards',
-        name: 'Дверная карта',
-        price: 400,
-        icon: '🚪',
-      },
-      {
-        id: 'ozonation-local',
-        name: 'Озонация',
-        price: 999,
-        icon: '🌫️',
-        description: 'Устраняет стойкие запахи (сигареты, животные, сырость, еда), уничтожает бактерии и грибок',
-      },
-    ],
-  },
-];
-
-// Все категории услуг
-export const services: ServiceCategory[] = [...mainServices, ...localCleaningServices];
-
-/**
- * Получить все услуги в плоском виде
- */
-export const getAllServices = () => {
-  return services.flatMap(category => category.services);
+// Функции для работы с услугами
+export const getAllServices = (): Service[] => {
+  const savedServices = localStorage.getItem('services');
+  if (savedServices) {
+    return JSON.parse(savedServices);
+  }
+  return defaultServices;
 };
 
-/**
- * Получить услугу по ID
- */
-export const getServiceById = (id: string) => {
-  return getAllServices().find(service => service.id === id);
+export const saveServices = (services: Service[]): void => {
+  localStorage.setItem('services', JSON.stringify(services));
 };
 
-/**
- * Получить опцию услуги по ID
- */
-export const getServiceOptionById = (serviceId: string, optionId: string) => {
-  const service = getServiceById(serviceId);
-  return service?.additionalOptions?.find(option => option.id === optionId);
+export const getServiceById = (id: string): Service | undefined => {
+  const services = getAllServices();
+  return services.find(service => service.id === id);
+};
+
+export const updateServicePrice = (id: string, newPrice: number): void => {
+  const services = getAllServices();
+  const serviceIndex = services.findIndex(service => service.id === id);
+  if (serviceIndex !== -1) {
+    services[serviceIndex].price = newPrice;
+    saveServices(services);
+  }
+};
+
+export const addService = (service: Service): void => {
+  const services = getAllServices();
+  services.push(service);
+  saveServices(services);
 };
