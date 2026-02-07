@@ -13,9 +13,19 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
   const [spinning, setSpinning] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [lastResult, setLastResult] = useState<WheelSpinResult | null>(null);
-  const [canSpin, setCanSpin] = useState(true);
+  const [canSpin, setCanSpin] = useState(false); // Инициализируем как false, обновим в useEffect
   const [dailyStreak, setDailyStreak] = useState(0);
   const [hoveredSector, setHoveredSector] = useState<number | null>(null);
+
+  // Проверяем начальное состояние при монтировании компонента
+  useEffect(() => {
+    const lastSpinStr = localStorage.getItem('lastSpinTime');
+    const lastSpin = lastSpinStr ? parseInt(lastSpinStr, 10) : 0;
+    const now = Date.now();
+    const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000;
+
+    setCanSpin(now >= nextSpinTime);
+  }, []);
 
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
