@@ -309,10 +309,6 @@ function App() {
           display: none !important;
         }
       `}</style>
-      {/* Тестовое сообщение для проверки обновлений */}
-      <div className="absolute top-4 left-4 z-50 bg-red-500 text-white p-2 rounded text-xs">
-        Тест: 20260207
-      </div>
       <ErrorBoundary>
         <AnimatePresence mode='wait'>
           <motion.div
