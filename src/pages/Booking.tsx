@@ -4,7 +4,7 @@ import { PageKey } from '../App';
 import { getTelegramWebApp, hapticFeedback, notificationFeedback, getTelegramUser } from '../utils/telegram';
 import { sendBookingToTelegram, validateBookingForm, type BookingFormData } from '../utils/booking';
 import { incrementBookedReferrals, getReferralCodeFromUrl, isValidReferralCode } from '../utils/simpleReferralSystem';
-import { mainServices, localCleaningServices, getServiceById, getServiceOptionById } from '../data/services';
+import { getAllServices, getServiceById, getServiceOptionById } from '../data/services';
 import { getAllBrands, getModelsByBrand } from '../data/carBrands';
 import type { Service } from '../types/services';
 import { ServiceIcon } from '../utils/iconMapper';

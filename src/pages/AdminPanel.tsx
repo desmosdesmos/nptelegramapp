@@ -3,7 +3,7 @@ import { getTelegramUser } from '../utils/telegram';
 import { wheelPrizes } from '../data/wheelConfig';
 import { WheelPrize } from '../types/wheel';
 import { WheelSpinResult } from '../types/wheel';
-import { Service, getAllServices, saveServices, addService, updateServicePrice } from '../data/services';
+import { Service, getAllServices, addService, updateServicePrice } from '../data/services';
 
 const AdminPanel: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState(false);

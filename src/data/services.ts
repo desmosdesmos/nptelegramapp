@@ -9,6 +9,22 @@ export interface Service {
   icon?: string; // иконка услуги
 }
 
+// Определение категорий услуг
+export interface ServiceCategory {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+// Опции для бронирования (подуслуги)
+export interface ServiceOption {
+  id: string;
+  name: string;
+  description?: string;
+  price: number;
+  serviceId: string; // ID основной услуги
+}
+
 export const defaultServices: Service[] = [
   {
     id: 'basic_wash',
@@ -84,6 +100,50 @@ export const defaultServices: Service[] = [
   }
 ];
 
+// Категории услуг
+export const serviceCategories: ServiceCategory[] = [
+  {
+    id: 'washing',
+    name: 'Мойка',
+    description: 'Услуги по мойке автомобиля'
+  },
+  {
+    id: 'detailing',
+    name: 'Детейлинг',
+    description: 'Услуги по детальной очистке и уходу'
+  },
+  {
+    id: 'protection',
+    name: 'Защита',
+    description: 'Услуги по защите лакокрасочного покрытия'
+  }
+];
+
+// Подуслуги (опции)
+export const defaultServiceOptions: ServiceOption[] = [
+  {
+    id: 'premium_soap',
+    name: 'Премиум-мыло',
+    description: 'Использование дорогого мыла для мойки',
+    price: 200,
+    serviceId: 'basic_wash'
+  },
+  {
+    id: 'tire_shine',
+    name: 'Блеск шин',
+    description: 'Обработка шин для придания блеска',
+    price: 300,
+    serviceId: 'basic_wash'
+  },
+  {
+    id: 'leather_conditioning',
+    name: 'Уход за кожей',
+    description: 'Обработка кожаных элементов салона',
+    price: 500,
+    serviceId: 'interior_detailing'
+  }
+];
+
 // Функции для работы с услугами
 export const getAllServices = (): Service[] => {
   const savedServices = localStorage.getItem('services');
@@ -115,4 +175,38 @@ export const addService = (service: Service): void => {
   const services = getAllServices();
   services.push(service);
   saveServices(services);
+};
+
+// Функции для работы с категориями
+export const getAllServiceCategories = (): ServiceCategory[] => {
+  return serviceCategories;
+};
+
+export const getCategoryById = (id: string): ServiceCategory | undefined => {
+  return serviceCategories.find(cat => cat.id === id);
+};
+
+// Функции для работы с опциями
+export const getAllServiceOptions = (): ServiceOption[] => {
+  const savedOptions = localStorage.getItem('service_options');
+  if (savedOptions) {
+    return JSON.parse(savedOptions);
+  }
+  return defaultServiceOptions;
+};
+
+export const getServiceOptionById = (id: string): ServiceOption | undefined => {
+  const options = getAllServiceOptions();
+  return options.find(option => option.id === id);
+};
+
+export const getOptionsForService = (serviceId: string): ServiceOption[] => {
+  const options = getAllServiceOptions();
+  return options.filter(option => option.serviceId === serviceId);
+};
+
+export const addServiceOption = (option: ServiceOption): void => {
+  const options = getAllServiceOptions();
+  options.push(option);
+  localStorage.setItem('service_options', JSON.stringify(options));
 };

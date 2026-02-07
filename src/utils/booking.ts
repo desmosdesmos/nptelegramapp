@@ -2,7 +2,7 @@
  * Утилиты для работы с заявками
  */
 
-import { getServiceById, getServiceOptionById, mainServices } from '../data/services';
+import { getServiceById, getServiceOptionById, getAllServices } from '../data/services';
 import { getTelegramUser } from './telegram';
 
 export interface BookingFormData {
@@ -39,14 +39,15 @@ export const sendBookingToTelegram = async (formData: BookingFormData): Promise<
   });
 
   // Ищем основную услугу для получения доп. опций
-  const mainServiceId = formData.services.find(id => 
-    mainServices.flatMap(cat => cat.services).some(s => s.id === id)
+  const allServices = getAllServices();
+  const mainServiceId = formData.services.find(id =>
+    allServices.some(s => s.id === id)
   );
 
   // Получаем названия дополнительных опций
   const additionalOptionsNames = mainServiceId ? formData.additionalOptions.map(optionId => {
-    const option = getServiceOptionById(mainServiceId, optionId);
-    return option ? `${option.icon || ''} ${option.name}`.trim() : optionId;
+    const option = getServiceOptionById(optionId);
+    return option ? `${option?.name ? option.name : optionId}`.trim() : optionId;
   }) : [];
   
   const telegramUser = getTelegramUser();
