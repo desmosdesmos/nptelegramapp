@@ -8,7 +8,7 @@ const AdminPanel: React.FC = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [services, setServices] = useState<any[]>([]);
   const [prices, setPrices] = useState<{[key: string]: number}>({});
-  const [wheelResults, setWheelResults] = useState<WheelSpinResult[]>([]);
+  const [wheelResults, setWheelResults] = useState<Array<WheelSpinResult & {userId?: number, userName?: string}>>([]);
   const [visits, setVisits] = useState<{userId: number, timestamp: number, firstName: string, lastName?: string, username?: string}[]>([]);
   const [newService, setNewService] = useState({ name: '', price: 0 });
   const [newPrize, setNewPrize] = useState<Pick<WheelPrize, 'name' | 'description' | 'type' | 'value'> & { type: WheelPrize['type'] }>({ 
@@ -347,7 +347,7 @@ const AdminPanel: React.FC = () => {
                     <tr key={index} className="border-b border-gray-800">
                       <td className="py-3">{new Date(result.timestamp).toLocaleString()}</td>
                       <td className="py-3">
-                        {result.prize.user ? `${result.prize.user.first_name} (${result.prize.user.id})` : 'Неизвестный'}
+                        {result.userName ? `${result.userName} (${result.userId})` : 'Неизвестный'}
                       </td>
                       <td className="py-3">{result.prize.name}</td>
                       <td className="py-3">{result.prize.type}</td>

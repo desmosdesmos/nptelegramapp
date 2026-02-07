@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { House, Calendar, Sparkles, User, Shield, Wrench } from 'lucide-react';
+import { House, Calendar, Sparkles, User, Shield } from 'lucide-react';
 import { hapticFeedback } from './utils/telegram';
 
 // Import all pages
