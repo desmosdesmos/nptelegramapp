@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Gift } from 'lucide-react';
-import { getTelegramUser } from '../utils/telegram';
 
 interface WheelButtonProps {
   onOpenWheel: () => void;

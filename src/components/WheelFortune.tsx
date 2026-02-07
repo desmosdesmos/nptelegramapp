@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { WheelSpinResult } from '../types/wheel';
 import { wheelPrizes, prizeProbabilities } from '../data/wheelConfig';
-import { hapticFeedback, getTelegramUser } from '../utils/telegram';
+import { hapticFeedback } from '../utils/telegram';
 import { addPoints, addPrize } from '../utils/rewardsSystem';
 
 interface WheelFortuneProps {
