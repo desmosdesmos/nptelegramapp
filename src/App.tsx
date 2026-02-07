@@ -224,16 +224,11 @@ function App() {
       checkAdminStatus();
     };
 
-    // Добавляем обработчик события, если Telegram WebApp доступен
-    const tg = getTelegramWebApp();
-    if (tg) {
-      tg.onEvent('theme_changed', handleThemeChanged);
-    }
+    // В Telegram Web Apps события обрабатываются через window.addEventListener
+    window.addEventListener('theme_changed', handleThemeChanged);
 
     return () => {
-      if (tg) {
-        tg.offEvent('theme_changed', handleThemeChanged);
-      }
+      window.removeEventListener('theme_changed', handleThemeChanged);
     };
   }, []);
 
