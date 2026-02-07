@@ -204,7 +204,7 @@ function App() {
   const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
-    let checkInterval: number;
+    let checkInterval: any;
     
     // Функция для проверки статуса администратора
     const checkAdminStatus = () => {
