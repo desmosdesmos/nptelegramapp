@@ -3,7 +3,7 @@ import { getTelegramUser } from '../utils/telegram';
 
 // Список разрешенных Telegram ID администраторов
 const ADMIN_TELEGRAM_IDS = [
-  '210865441' // Замените на ваш реальный Telegram ID
+  '478799066' // @yanvtg
 ];
 
 const AdminPanel: React.FC = () => {

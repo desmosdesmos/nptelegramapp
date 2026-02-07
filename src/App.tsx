@@ -142,7 +142,7 @@ function App() {
     // Проверяем, является ли пользователь администратором при попытке доступа к админ-панели
     if (pageKey === 'Admin') {
       const telegramUser = getTelegramUser();
-      const ADMIN_TELEGRAM_IDS = ['210865441']; // Замените на ваш реальный Telegram ID
+      const ADMIN_TELEGRAM_IDS = ['478799066']; // @yanvtg
       
       if (telegramUser && ADMIN_TELEGRAM_IDS.includes(String(telegramUser.id))) {
         hapticFeedback('light');
@@ -187,7 +187,7 @@ function App() {
   // Проверяем, является ли пользователь администратором для отображения админ-кнопки
   const isAdminUser = () => {
     const telegramUser = getTelegramUser();
-    const ADMIN_TELEGRAM_IDS = ['210865441']; // Замените на ваш реальный Telegram ID
+    const ADMIN_TELEGRAM_IDS = ['478799066']; // @yanvtg
     return telegramUser && ADMIN_TELEGRAM_IDS.includes(String(telegramUser.id));
   };
 
