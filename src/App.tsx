@@ -218,18 +218,6 @@ function App() {
 
     // Проверяем сразу
     checkAdminStatus();
-
-    // Также подписываемся на событие изменения данных Telegram, если они становятся доступны позже
-    const handleThemeChanged = () => {
-      checkAdminStatus();
-    };
-
-    // В Telegram Web Apps события обрабатываются через window.addEventListener
-    window.addEventListener('theme_changed', handleThemeChanged);
-
-    return () => {
-      window.removeEventListener('theme_changed', handleThemeChanged);
-    };
   }, []);
 
   // Обработчик выигрыша в колесе
