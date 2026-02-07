@@ -224,6 +224,21 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     setSpinning(true);
     setLastResult(null);
 
+    // Немедленно устанавливаем canSpin в false и сохраняем время вращения
+    const now = Date.now();
+    localStorage.setItem('lastSpinTime', String(now));
+    setCanSpin(false);
+
+    // Вызываем событие для обновления состояния в других компонентах
+    const storageEvent = new StorageEvent('storage', {
+      key: 'lastSpinTime',
+      oldValue: null,
+      newValue: String(now),
+      url: window.location.href,
+      storageArea: localStorage
+    });
+    window.dispatchEvent(storageEvent);
+
     const extraRotations = 3 + Math.floor(Math.random() * 4);
     const winningIndex = getRandomPrizeIndex();
     const calibrationOffset = -144;
@@ -260,13 +275,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
       const telegramUser = getTelegramUser();
       const isTester = telegramUser && telegramUser.username === 'yanvtg';
 
-      if (isTester) {
-        setCanSpin(true);
-      } else {
-        setCanSpin(false);
-        localStorage.setItem('wheel_last_spin_date', new Date().toISOString().split('T')[0]);
-      }
-
       if (!isTester) {
         const today = new Date().toISOString().split('T')[0];
         const lastSpinDate = localStorage.getItem('wheel_last_spin_date_prev');
@@ -278,14 +286,6 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
           localStorage.setItem('wheel_last_spin_date_prev', today);
         }
       }
-
-      // Сохраняем точное время последнего вращения для таймера
-      const now = Date.now();
-      console.log('[Wheel] Saving lastSpinTime:', new Date(now).toISOString(), 'timestamp:', now);
-      localStorage.setItem('lastSpinTime', String(now));
-      
-      // Обновляем состояние canSpin для скрытия кнопки
-      setCanSpin(false);
 
       await onWin(result);
     }, 4000);

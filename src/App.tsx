@@ -171,9 +171,7 @@ function App() {
   // Обработчик выигрыша в колесе
   const handleWheelWin = (result: WheelSpinResult) => {
     console.log('Выигрыш в колесе:', result);
-    // Сохраняем время последнего вращения для таймера
-    localStorage.setItem('lastSpinTime', String(Date.now()));
-    
+    // Время последнего вращения уже сохранено в WheelFortune
     // Обновляем состояние в localStorage для синхронизации с WheelButton
     const event = new Event('storage');
     window.dispatchEvent(event);
