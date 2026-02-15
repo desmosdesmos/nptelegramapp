@@ -26,7 +26,7 @@ export const getUserReferralInfo = async (): Promise<ReferralInfo> => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('adminToken') || 'mock-token'}`
+        'Authorization': 'Bearer mock-token'
       }
     });
 
@@ -101,7 +101,7 @@ export const getUserReferralStats = async (): Promise<ReferralStats> => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('adminToken') || 'mock-token'}`
+        'Authorization': 'Bearer mock-token'
       }
     });
 
@@ -173,7 +173,7 @@ export const awardBonusForReferral = async (referrerId: string, referralId: stri
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('adminToken') || 'mock-token'}`
+        'Authorization': 'Bearer mock-token'
       },
       body: JSON.stringify({
         referrerId,
@@ -205,7 +205,7 @@ export const isValidReferralForBonus = async (referrerId: string, referralId: st
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('adminToken') || 'mock-token'}`
+        'Authorization': 'Bearer mock-token'
       },
       body: JSON.stringify({
         referrerId,

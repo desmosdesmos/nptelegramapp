@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <script>
+        // Генерируем уникальный параметр времени для предотвращения кэширования
+        const timestamp = new Date().getTime();
+        const redirectUrl = window.location.origin + '?v=' + timestamp;
+        window.location.replace(redirectUrl);
+    </script>
+</head>
+<body>
+    <p>Перенаправление...</p>
+</body>
+</html>
