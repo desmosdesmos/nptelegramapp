@@ -5,9 +5,11 @@
 export interface Service {
   id: string;
   name: string;
-  price: number;
   description?: string;
-  icon?: string;
+  price: number;
+  category?: string;
+  duration?: string; // продолжительность услуги
+  icon?: string; // иконка услуги
   additionalOptions?: ServiceOption[];
   needsQuantity?: boolean;
   unitLabel?: string;
