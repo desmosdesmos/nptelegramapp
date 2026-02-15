@@ -39,8 +39,9 @@ export const sendBookingToTelegram = async (formData: BookingFormData): Promise<
   });
 
   // Ищем основную услугу для получения доп. опций
+  const allMainServices = mainServices.flatMap((cat) => cat.services);
   const mainServiceId = formData.services.find(id =>
-    mainServices.flatMap(cat => cat.services).some(s => s.id === id)
+    allMainServices.some((s) => s.id === id)
   );
 
   // Получаем названия дополнительных опций

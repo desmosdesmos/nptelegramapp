@@ -4,7 +4,7 @@ import { PageKey } from '../App';
 import { getTelegramWebApp, hapticFeedback, notificationFeedback, getTelegramUser } from '../utils/telegram';
 import { sendBookingToTelegram, validateBookingForm, type BookingFormData } from '../utils/booking';
 import { incrementBookedReferrals, getReferralCodeFromUrl, isValidReferralCode } from '../utils/simpleReferralSystem';
-import { getServiceById, getServiceOptionById, getOptionsForService, mainServices, localCleaningServices } from '../data/services';
+import { getServiceById, mainServices, localCleaningServices } from '../data/services';
 import { getAllBrands, getModelsByBrand } from '../data/carBrands';
 import type { Service } from '../types/services';
 import { ServiceIcon } from '../utils/iconMapper';
@@ -181,14 +181,17 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
       mainServices.flatMap(cat => cat.services).some(s => s.id === id)
     );
     if (mainServiceId) {
-      formData.additionalOptions.forEach(optionId => {
-        const option = getServiceOptionById(optionId);
-        if (option) {
-          total += option.price;
-        }
-      });
+      const mainService = getServiceById(mainServiceId);
+      if (mainService && mainService.additionalOptions) {
+        formData.additionalOptions.forEach(optionId => {
+          const option = mainService.additionalOptions?.find(opt => opt.id === optionId);
+          if (option) {
+            total += option.price;
+          }
+        });
+      }
     }
-    
+
     return total;
   }, [formData.services, formData.additionalOptions, quantities]);
 
@@ -575,10 +578,10 @@ const Booking: React.FC<BookingProps> = ({ onNavigate }) => {
               ))}
             </div>
 
-            {(selectedMainService?.id === 'full-cleaning-basic' || selectedMainService?.id === 'pre-sale-prep') && (
+            {(selectedMainService?.id === 'full-cleaning-basic' || selectedMainService?.id === 'pre-sale-prep') && selectedMainService.additionalOptions && (
               <div className="pl-4 border-l-2 border-white/10 space-y-3 pt-4">
                  <label className="block text-sm font-medium text-gray-400 mb-2">Дополнительные опции</label>
-                {getOptionsForService(selectedMainService.id)?.map(option => (
+                {selectedMainService.additionalOptions.map(option => (
                   <button
                     key={option.id}
                     type="button"
