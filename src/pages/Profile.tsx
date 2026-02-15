@@ -147,6 +147,7 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
             )}
           </div>
           <p className="text-white/70 text-sm">Накопленные бонусы можно использовать для оплаты услуг</p>
+          <p className="text-white/50 text-xs mt-1">Можно списать на детейлинг-услуги до 50%</p>
         </div>
 
         {/* Призы */}
