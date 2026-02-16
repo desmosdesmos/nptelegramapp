@@ -13,24 +13,19 @@ interface TelegramPost {
 }
 
 const CHANNEL_NAME = 'npdetailing';
+const API_BASE_URL = 'http://185.171.202.83:3001';
 
 /**
  * Получить последние посты из Telegram-канала
  */
 export const getChannelPosts = async (): Promise<TelegramPost[]> => {
   try {
-    // Используем прокси-сервер для получения публичных постов из Telegram-канала
-    // Так как Telegram не предоставляет прямого API для публичного чтения каналов,
-    // мы используем косвенные методы получения данных
-    
-    // В реальном приложении здесь будет вызов вашего серверного API
-    // который реализует получение данных из Telegram-канала
-    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/channel-posts`, {
+    const response = await fetch(`${API_BASE_URL}/api/channel-posts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ channel: CHANNEL_NAME }),
+      body: JSON.stringify({ channel: CHANNEL_NAME, limit: 10 }),
     });
 
     if (!response.ok) {
@@ -42,34 +37,9 @@ export const getChannelPosts = async (): Promise<TelegramPost[]> => {
   } catch (error) {
     console.error('Error fetching channel posts:', error);
     
-    // Возвращаем фиктивные данные в случае ошибки
-    // В реальном приложении вы можете реализовать резервный источник данных
-    return [
-      {
-        id: 1,
-        date: new Date(Date.now() - 86400000).toISOString(), // Вчера
-        text: 'Новая услуга - комплексная химчистка салона автомобиля. Специальное предложение для новых клиентов!',
-        photo: 'https://placehold.co/600x400/cccccc/333333?text=Photo+1',
-        views: 125,
-        forwards: 5
-      },
-      {
-        id: 2,
-        date: new Date(Date.now() - 172800000).toISOString(), // Позавчера
-        text: 'Мы расширяемся! Теперь доступна химчистка ковров и сидений в наших новых филиалах.',
-        photo: 'https://placehold.co/600x400/cccccc/333333?text=Photo+2',
-        views: 89,
-        forwards: 3
-      },
-      {
-        id: 3,
-        date: new Date(Date.now() - 259200000).toISOString(), // Три дня назад
-        text: 'Акция! При заказе химчистки салона - озонирование бесплатно! Успейте воспользоваться предложением.',
-        photo: 'https://placehold.co/600x400/cccccc/333333?text=Photo+3',
-        views: 204,
-        forwards: 12
-      }
-    ];
+    // Возвращаем пустой массив в случае ошибки
+    // Компонент отобразит сообщение об ошибке
+    throw error;
   }
 };
 
