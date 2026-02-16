@@ -36,9 +36,6 @@ export const getChannelPosts = async (): Promise<TelegramPost[]> => {
     return data.posts || [];
   } catch (error) {
     console.error('Error fetching channel posts:', error);
-    
-    // Возвращаем пустой массив в случае ошибки
-    // Компонент отобразит сообщение об ошибке
     throw error;
   }
 };
