@@ -3,6 +3,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Стили для текста новостей */
+.news-text {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
 @layer base {
   :root {
     --foreground: #F3F4F6; /* Off-White */

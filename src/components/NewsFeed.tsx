@@ -23,7 +23,13 @@ const NewsFeed: React.FC = () => {
       try {
         setLoading(true);
         const posts = await getChannelPosts();
-        setNews(posts);
+        
+        // Сортируем посты от новых к старым (по дате)
+        const sortedPosts = posts.sort((a, b) => {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        });
+        
+        setNews(sortedPosts);
         setError(null);
       } catch (err) {
         console.error('Error fetching news:', err);
@@ -163,13 +169,7 @@ const NewsFeed: React.FC = () => {
 
             {/* Текст поста */}
             <div className="p-4 pt-3">
-              <div 
-                className="text-white/90 text-sm leading-relaxed mb-3"
-                style={{ 
-                  whiteSpace: 'pre-wrap',
-                  wordBreak: 'break-word'
-                }}
-              >
+              <div className="text-white/90 text-sm leading-relaxed mb-3 news-text">
                 {displayText}
               </div>
 
