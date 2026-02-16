@@ -26,6 +26,12 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
     setCanSpin(now >= nextSpinTime);
     
+    // Загружаем актуальное значение dailyStreak из localStorage
+    const storedStreak = localStorage.getItem('wheel_daily_streak');
+    if (storedStreak) {
+      setDailyStreak(parseInt(storedStreak, 10));
+    }
+    
     // Загружаем актуальные данные о наградах при открытии колеса
     const loadRewards = async () => {
       try {
