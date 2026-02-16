@@ -19,6 +19,8 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://iatrochemical-wint
  * Получить последние посты из Telegram-канала
  */
 export const getChannelPosts = async (): Promise<TelegramPost[]> => {
+  console.log('Fetching posts from Telegram channel:', CHANNEL_NAME);
+  
   try {
     const response = await fetch(`${API_BASE_URL}/api/channel-posts`, {
       method: 'POST',
@@ -34,6 +36,7 @@ export const getChannelPosts = async (): Promise<TelegramPost[]> => {
     }
 
     const data = await response.json();
+    console.log('Successfully fetched posts:', data.count);
     return data.posts || [];
   } catch (error) {
     console.error('Error fetching channel posts:', error);
