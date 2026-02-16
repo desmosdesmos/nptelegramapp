@@ -41,7 +41,7 @@ const NewsFeed: React.FC = () => {
     fetchNews();
   }, []);
 
-  // Разделяем текст по первому предложению (до точки или эмодзи в конце)
+  // Разделяем текст по первому предложению (до точки или начала нового текста)
   const parsePostText = (text: string) => {
     // Ищем первую точку
     const firstDotIndex = text.indexOf('.');
@@ -53,15 +53,16 @@ const NewsFeed: React.FC = () => {
       return { title, content };
     }
     
-    // Ищем эмодзи в конце заголовка (разделитель)
-    const emojiEndRegex = /( 🧼| 🎄| ✨| 😎| 🚗| 📍| 📲| 💎| 🎁| 👉| 🔥| 🎉)/;
-    const emojiMatch = text.match(emojiEndRegex);
+    // Ищем начало нового текста (заглавная буква после 30+ символов)
+    const newSentenceRegex = /([.!?]|\s)([А-Я][а-я]+)\s/;
+    const sentenceMatch = text.slice(30).match(newSentenceRegex);
     
-    // Если нашли эмодзи разделитель
-    if (emojiMatch && emojiMatch.index && emojiMatch.index > 20 && emojiMatch.index < 200) {
-      const title = text.slice(0, emojiMatch.index).trim();
-      const content = text.slice(emojiMatch.index).trim();
-      if (content.length > 10) {
+    // Если нашли начало нового предложения
+    if (sentenceMatch && sentenceMatch.index) {
+      const titleEnd = 30 + sentenceMatch.index;
+      const title = text.slice(0, titleEnd).trim();
+      const content = text.slice(titleEnd).trim();
+      if (content.length > 20 && title.length < 200) {
         return { title, content };
       }
     }
