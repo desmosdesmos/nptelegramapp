@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getChannelPosts, getPostUrl } from '../api/newsApi';
-import { ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 
 interface NewsItem {
   id: number;
@@ -16,7 +16,6 @@ const NewsFeed: React.FC = () => {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [expandedPosts, setExpandedPosts] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -42,48 +41,26 @@ const NewsFeed: React.FC = () => {
     fetchNews();
   }, []);
 
-  const toggleExpand = (postId: number) => {
-    setExpandedPosts(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(postId)) {
-        newSet.delete(postId);
-      } else {
-        newSet.add(postId);
-      }
-      return newSet;
-    });
-  };
-
   // Разделяем текст по первому предложению (до точки)
   const parsePostText = (text: string) => {
     // Ищем первую точку
     const firstDotIndex = text.indexOf('.');
     
     // Если точка есть и она не слишком близко к началу
-    if (firstDotIndex > 30 && firstDotIndex < 120) {
+    if (firstDotIndex > 20 && firstDotIndex < 150) {
       const title = text.slice(0, firstDotIndex + 1).trim();
       const content = text.slice(firstDotIndex + 1).trim();
-      // Проверяем, что контент не пустой
-      if (content.length > 20) {
-        return { title, content };
-      }
-    }
-    
-    // Если не нашли подходящую точку, берём первые 70 символов
-    if (text.length > 70) {
-      const title = text.slice(0, 70) + '...';
-      const content = text.slice(70).trim();
       return { title, content };
     }
     
-    // Если текст короткий, возвращаем как есть
+    // Если не нашли точку, возвращаем весь текст как заголовок
     return { title: text, content: '' };
   };
 
   // Форматируем текст для отображения с сохранением пробелов
   const formatText = (text: string) => {
     // Добавляем пробелы после точек, если их нет
-    return text.replace(/([.!?])([А-ЯA-Z🎉🔥✨📍📲🚗💎🎄🎁👉])/g, '$1 $2');
+    return text.replace(/([.!?])([А-ЯA-Z🎉🔥✨📍📲🚗💎🎄🎁👉🧼😎])/g, '$1 $2');
   };
 
   if (loading) {
@@ -134,10 +111,7 @@ const NewsFeed: React.FC = () => {
   return (
     <div className="p-4 space-y-4">
       {news.map(item => {
-        const isExpanded = expandedPosts.has(item.id);
-        const { title, content } = parsePostText(item.text);
-        const hasContent = content.length > 0;
-        const displayTitle = isExpanded ? title : (title.length > 100 ? title.slice(0, 100) + '...' : title);
+        const { title } = parsePostText(item.text);
 
         return (
           <div 
@@ -194,52 +168,21 @@ const NewsFeed: React.FC = () => {
               </div>
             )}
 
-            {/* Текст поста */}
+            {/* Текст поста - только заголовок */}
             <div className="p-4 pt-2">
-              {/* Заголовок */}
               <div 
-                className="text-white font-semibold text-base mb-3 news-text-title"
+                className="text-white font-semibold text-base mb-4 news-text-title"
                 style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
               >
-                {formatText(displayTitle)}
+                {formatText(title)}
               </div>
-
-              {/* Основной текст */}
-              {hasContent && isExpanded && (
-                <div 
-                  className="text-white/80 text-sm leading-relaxed mt-3 news-text border-t border-white/10 pt-3"
-                  style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
-                >
-                  {formatText(content)}
-                </div>
-              )}
-
-              {/* Кнопка "Читать далее" */}
-              {hasContent && (
-                <button
-                  onClick={() => toggleExpand(item.id)}
-                  className="flex items-center gap-1.5 text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors mt-3 -ml-1"
-                >
-                  {isExpanded ? (
-                    <>
-                      <ChevronUp className="w-4 h-4" />
-                      Свернуть
-                    </>
-                  ) : (
-                    <>
-                      <ChevronDown className="w-4 h-4" />
-                      Читать далее
-                    </>
-                  )}
-                </button>
-              )}
 
               {/* Ссылка на Telegram в стиле iOS */}
               <a 
                 href={getPostUrl(item.id)} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="group flex items-center justify-center gap-2.5 w-full py-3.5 px-4 bg-gradient-to-r from-cyan-500/90 to-blue-500/90 hover:from-cyan-400 hover:to-blue-400 rounded-2xl text-white font-semibold text-sm transition-all duration-300 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 active:scale-[0.98] backdrop-blur-sm mt-3"
+                className="group flex items-center justify-center gap-2.5 w-full py-3.5 px-4 bg-gradient-to-r from-cyan-500/90 to-blue-500/90 hover:from-cyan-400 hover:to-blue-400 rounded-2xl text-white font-semibold text-sm transition-all duration-300 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 active:scale-[0.98] backdrop-blur-sm"
               >
                 <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                 <span>Открыть в Telegram</span>
