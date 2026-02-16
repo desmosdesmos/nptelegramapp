@@ -41,27 +41,29 @@ const NewsFeed: React.FC = () => {
     fetchNews();
   }, []);
 
-  // Разделяем текст по первому предложению (до точки или эмодзи)
+  // Разделяем текст по первому предложению (до точки или эмодзи в конце)
   const parsePostText = (text: string) => {
     // Ищем первую точку
     const firstDotIndex = text.indexOf('.');
-    
-    // Ищем эмодзи после основного текста (начало нового блока)
-    const emojiBlockRegex = /\s+(🎉|🔥|✨|📍|📲|🚗|💎|🎄|🎁|👉|🧼|😎|🚚|🌫️|📋|✅|📞|💬|☑️)/;
-    const emojiMatch = text.match(emojiBlockRegex);
-    
-    // Если нашли эмодзи блок
-    if (emojiMatch && emojiMatch.index && emojiMatch.index > 30 && emojiMatch.index < 200) {
-      const title = text.slice(0, emojiMatch.index).trim();
-      const content = text.slice(emojiMatch.index).trim();
-      return { title, content };
-    }
     
     // Если точка есть и она не слишком близко к началу
     if (firstDotIndex > 20 && firstDotIndex < 250) {
       const title = text.slice(0, firstDotIndex + 1).trim();
       const content = text.slice(firstDotIndex + 1).trim();
       return { title, content };
+    }
+    
+    // Ищем эмодзи в конце заголовка (разделитель)
+    const emojiEndRegex = /( 🧼| 🎄| ✨| 😎| 🚗| 📍| 📲| 💎| 🎁| 👉| 🔥| 🎉)/;
+    const emojiMatch = text.match(emojiEndRegex);
+    
+    // Если нашли эмодзи разделитель
+    if (emojiMatch && emojiMatch.index && emojiMatch.index > 20 && emojiMatch.index < 200) {
+      const title = text.slice(0, emojiMatch.index).trim();
+      const content = text.slice(emojiMatch.index).trim();
+      if (content.length > 10) {
+        return { title, content };
+      }
     }
     
     // Если не нашли, возвращаем весь текст как заголовок
