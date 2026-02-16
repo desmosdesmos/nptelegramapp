@@ -41,32 +41,19 @@ const NewsFeed: React.FC = () => {
     fetchNews();
   }, []);
 
-  // Разделяем текст по первому предложению (до точки или эмодзи)
+  // Разделяем текст по первому предложению (до точки)
   const parsePostText = (text: string) => {
     // Ищем первую точку
     const firstDotIndex = text.indexOf('.');
     
-    // Ищем первое эмодзи (начало нового блока)
-    const emojiRegex = /[🎉🔥✨📍📲🚗💎🎄🎁👉🧼😎🚚🌫️📋✅📞💬]/;
-    const emojiMatch = text.slice(50).search(emojiRegex); // Ищем после 50 символа
-    
-    // Если нашли эмодзи после 50 символа
-    if (emojiMatch > 0) {
-      const title = text.slice(0, emojiMatch + 50).trim();
-      const content = text.slice(emojiMatch + 50).trim();
-      if (content.length > 20) {
-        return { title, content };
-      }
-    }
-    
     // Если точка есть и она не слишком близко к началу
-    if (firstDotIndex > 20 && firstDotIndex < 150) {
+    if (firstDotIndex > 20 && firstDotIndex < 200) {
       const title = text.slice(0, firstDotIndex + 1).trim();
       const content = text.slice(firstDotIndex + 1).trim();
       return { title, content };
     }
     
-    // Если не нашли, возвращаем весь текст как заголовок
+    // Если не нашли точку, возвращаем весь текст как заголовок
     return { title: text, content: '' };
   };
 
@@ -190,7 +177,7 @@ const NewsFeed: React.FC = () => {
                 {formatText(title)}
               </div>
 
-              {/* Ссылка на Telegram в стиле iOS */}
+              {/* Кнопка "Читать полностью" */}
               <a 
                 href={getPostUrl(item.id)} 
                 target="_blank" 
@@ -198,7 +185,7 @@ const NewsFeed: React.FC = () => {
                 className="group flex items-center justify-center gap-2.5 w-full py-3.5 px-4 bg-gradient-to-r from-cyan-500/90 to-blue-500/90 hover:from-cyan-400 hover:to-blue-400 rounded-2xl text-white font-semibold text-sm transition-all duration-300 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 active:scale-[0.98] backdrop-blur-sm"
               >
                 <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-                <span>Открыть в Telegram</span>
+                <span>Читать полностью</span>
               </a>
             </div>
           </div>
