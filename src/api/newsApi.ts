@@ -24,6 +24,7 @@ export const getChannelPosts = async (): Promise<TelegramPost[]> => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true',
       },
       body: JSON.stringify({ channel: CHANNEL_NAME, limit: 10 }),
     });
