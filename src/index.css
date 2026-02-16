@@ -8,6 +8,14 @@
   white-space: pre-wrap !important;
   word-break: break-word !important;
   overflow-wrap: break-word !important;
+  line-height: 1.6 !important;
+}
+
+.news-text-title {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  line-height: 1.4 !important;
 }
 
 @layer base {

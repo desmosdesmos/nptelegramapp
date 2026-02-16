@@ -54,12 +54,21 @@ const NewsFeed: React.FC = () => {
     });
   };
 
-  // Разделяем текст на заголовок (первая строка) и основной текст
+  // Разделяем текст на заголовок (первое предложение до точки или эмодзи) и основной текст
   const parsePostText = (text: string) => {
-    const lines = text.split('\n').filter(line => line.trim() !== '');
-    const title = lines[0] || '';
-    const content = lines.slice(1).join('\n');
-    return { title, content };
+    // Ищем первую точку, за которой следует пробел и заглавная буква (начало нового предложения)
+    // Или эмодзи в начале следующей строки
+    const firstSentenceEnd = text.search(/(?<=[.!?])\s+(?=[А-ЯA-Z🎉🔥✨📍📲🚗💎🎄🎁👉])/);
+    
+    if (firstSentenceEnd > 0 && firstSentenceEnd < 150) {
+      const title = text.slice(0, firstSentenceEnd).trim();
+      const content = text.slice(firstSentenceEnd).trim();
+      return { title, content };
+    }
+    
+    // Если не нашли, берём первые 100 символов как заголовок
+    const title = text.length > 100 ? text.slice(0, 100) + '...' : text;
+    return { title, content: '' };
   };
 
   if (loading) {
@@ -173,8 +182,8 @@ const NewsFeed: React.FC = () => {
 
             {/* Текст поста */}
             <div className="p-4 pt-2">
-              {/* Заголовок (первая строка) */}
-              <div className="text-white font-semibold text-base mb-2 news-text">
+              {/* Заголовок (первое предложение) */}
+              <div className="text-white font-semibold text-base mb-3 news-text-title">
                 {displayTitle}
               </div>
 
