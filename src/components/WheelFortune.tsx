@@ -25,6 +25,18 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000;
 
     setCanSpin(now >= nextSpinTime);
+    
+    // Загружаем актуальные данные о наградах при открытии колеса
+    const loadRewards = async () => {
+      try {
+        // Просто вызываем getUserRewards, чтобы обновить кэш
+        await import('../utils/rewardsSystem').then(({ getUserRewards }) => getUserRewards());
+      } catch (error) {
+        console.error('Error loading rewards when opening wheel:', error);
+      }
+    };
+    
+    loadRewards();
   }, []);
 
   const svgRef = useRef<SVGSVGElement>(null);

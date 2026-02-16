@@ -22,6 +22,12 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
     const loadRewards = async () => {
       try {
         setLoading(true);
+        
+        // Принудительно обновляем кэш данных с сервера при открытии профиля
+        const rewardsModule = await import('../utils/rewardsSystem');
+        await rewardsModule.getUserRewards(); // Это обновит кэш
+        
+        // Затем получаем обновленные данные
         const pointsData = await getPoints();
         const prizesData = await getPrizes();
         setPoints(pointsData);

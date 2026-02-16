@@ -92,6 +92,7 @@ export const saveUserRewardsToServer = async (rewards: RewardData): Promise<void
 
 /**
  * Добавить очки пользователю на сервере
+ * @deprecated Используйте saveUserRewardsToServer напрямую для обновления всех данных
  */
 export const addPointsToServer = async (points: number): Promise<RewardData> => {
   const currentRewards = await getUserRewardsFromServer();
@@ -108,6 +109,7 @@ export const addPointsToServer = async (points: number): Promise<RewardData> => 
 
 /**
  * Добавить приз пользователю на сервере
+ * @deprecated Используйте saveUserRewardsToServer напрямую для обновления всех данных
  */
 export const addPrizeToServer = async (prize: { id: string; name: string; type: string; description?: string }): Promise<RewardData> => {
   const currentRewards = await getUserRewardsFromServer();

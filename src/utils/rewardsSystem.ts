@@ -1,5 +1,5 @@
 // Система хранения и управления наградами
-import { getUserRewardsFromServer, addPointsToServer, addPrizeToServer } from '../api/rewardsApi';
+import { getUserRewardsFromServer, saveUserRewardsToServer } from '../api/rewardsApi';
 
 // Кэш для локального хранения данных до синхронизации
 const REWARDS_CACHE_KEY = 'user_rewards_cache';
@@ -49,7 +49,17 @@ export const getUserRewards = async () => {
 // Добавить бонусы (сохраняем на сервере и в кэше)
 export const addPoints = async (points: number) => {
   try {
-    const updated = await addPointsToServer(points);
+    // Получаем текущие награды с сервера перед добавлением новых
+    const current = await getUserRewardsFromServer();
+    const newPoints = current.points + points;
+
+    const updated = {
+      ...current,
+      points: newPoints
+    };
+
+    // Сохраняем обновленные награды на сервере
+    await saveUserRewardsToServer(updated);
 
     // Обновляем кэш
     const cacheData = {
@@ -85,7 +95,8 @@ export const addPoints = async (points: number) => {
 // Добавить приз (сохраняем на сервере и в кэше)
 export const addPrize = async (prize: { id: string; name: string; type: string; description?: string }) => {
   try {
-    const current = await getUserRewards();
+    // Получаем текущие награды с сервера перед добавлением нового приза
+    const current = await getUserRewardsFromServer();
 
     // Проверяем, нет ли уже этого приза (для уникальных призов)
     const existingPrizeIndex = current.prizes.findIndex((p: { id: string }) => p.id === prize.id);
@@ -94,7 +105,18 @@ export const addPrize = async (prize: { id: string; name: string; type: string; 
       return current;
     }
 
-    const updated = await addPrizeToServer(prize);
+    const newPrize = {
+      ...prize,
+      timestamp: Date.now()
+    };
+
+    const updated = {
+      ...current,
+      prizes: [...current.prizes, newPrize]
+    };
+
+    // Сохраняем обновленные награды на сервере
+    await saveUserRewardsToServer(updated);
 
     // Обновляем кэш
     const cacheData = {
