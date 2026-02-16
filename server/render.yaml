@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: np-telegram-backend
+    env: node
+    region: frankfurt
+    plan: free
+    buildCommand: cd server && npm install
+    startCommand: cd server && node server.js
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: PORT
+        value: 3001
+      - key: CORS_ORIGIN
+        value: '*'
