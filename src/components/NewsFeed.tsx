@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getChannelPosts, getPostUrl } from '../api/newsApi';
-import { ExternalLink } from 'lucide-react';
+import { getChannelPosts, getPostUrl, getCachedPosts } from '../api/newsApi';
+import { ExternalLink, RefreshCw } from 'lucide-react';
 
 interface NewsItem {
   id: number;
@@ -16,30 +16,48 @@ const NewsFeed: React.FC = () => {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isFromCache, setIsFromCache] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        setLoading(true);
-        const posts = await getChannelPosts();
-        
-        // Сортируем посты от новых к старым (по дате)
-        const sortedPosts = posts.sort((a, b) => {
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-        });
-        
-        setNews(sortedPosts);
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching news:', err);
-        setError('Не удалось загрузить новости. Попробуйте обновить страницу.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchNews();
   }, []);
+
+  const fetchNews = async () => {
+    try {
+      setLoading(true);
+      const posts = await getChannelPosts();
+
+      // Сортируем посты от новых к старым (по дате)
+      const sortedPosts = posts.sort((a, b) => {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      });
+
+      setNews(sortedPosts);
+      setError(null);
+      
+      // Проверяем, есть ли кэш
+      const cached = getCachedPosts();
+      setIsFromCache(!!cached);
+      
+      // Получаем время последнего обновления
+      const timestamp = localStorage.getItem('np_news_cache_timestamp');
+      if (timestamp) {
+        const date = new Date(parseInt(timestamp));
+        setLastUpdated(date.toLocaleDateString('ru-RU', { 
+          day: 'numeric', 
+          month: 'long',
+          hour: '2-digit',
+          minute: '2-digit'
+        }));
+      }
+    } catch (err) {
+      console.error('Error fetching news:', err);
+      setError('Не удалось загрузить новости. Попробуйте обновить страницу.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Разделяем текст по первому предложению или конкретным фразам
   const parsePostText = (text: string) => {
@@ -121,9 +139,21 @@ const NewsFeed: React.FC = () => {
   if (error) {
     return (
       <div className="p-4">
-        <div className="bg-red-500/20 border border-red-500/30 rounded-xl p-4 text-red-200 text-center">
+        <div className="bg-red-500/20 border border-red-500/30 rounded-xl p-4 text-red-200 text-center mb-4">
           {error}
         </div>
+        {news.length > 0 && (
+          <div className="text-center text-white/50 text-sm mb-4">
+            Показаны кэшированные новости
+          </div>
+        )}
+        <button
+          onClick={fetchNews}
+          className="group flex items-center justify-center gap-2 w-full py-3 px-4 bg-white/10 hover:bg-white/20 rounded-xl text-white font-medium text-sm transition-all"
+        >
+          <RefreshCw className="w-4 h-4" />
+          <span>Попробовать снова</span>
+        </button>
       </div>
     );
   }
@@ -140,6 +170,17 @@ const NewsFeed: React.FC = () => {
 
   return (
     <div className="p-4 space-y-4">
+      {/* Индикатор статуса */}
+      <div className="flex items-center justify-between text-xs text-white/50 mb-2">
+        <div className="flex items-center gap-2">
+          <div className={`w-2 h-2 rounded-full ${isFromCache ? 'bg-yellow-500' : 'bg-green-500'}`} />
+          <span>{isFromCache ? 'Кэш' : 'Онлайн'}</span>
+        </div>
+        {lastUpdated && (
+          <span>Обновлено: {lastUpdated}</span>
+        )}
+      </div>
+      
       {news.map(item => {
         const { title } = parsePostText(item.text);
 
@@ -221,6 +262,16 @@ const NewsFeed: React.FC = () => {
           </div>
         );
       })}
+      
+      {/* Кнопка обновления */}
+      <button
+        onClick={fetchNews}
+        disabled={loading}
+        className="group flex items-center justify-center gap-2 w-full py-3 px-4 bg-gradient-to-r from-cyan-500/50 to-blue-500/50 hover:from-cyan-500/70 hover:to-blue-500/70 rounded-xl text-white font-medium text-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+        <span>{loading ? 'Загрузка...' : 'Обновить новости'}</span>
+      </button>
     </div>
   );
 };

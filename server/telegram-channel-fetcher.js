@@ -18,29 +18,49 @@ async function getChannelPosts(channelName, limit = 10) {
   try {
     // URL публичного доступа к каналу
     const url = `https://t.me/s/${channelName}`;
-    
+    console.log(`Fetching URL: ${url}`);
+
     // Получаем HTML-страницу с постами
     const response = await axios.get(url, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
       }
     });
-    
+
     const html = response.data;
-    const $ = cheerio.load(html);
+    console.log(`Received HTML length: ${html.length}`);
     
+    const $ = cheerio.load(html);
+
     const posts = [];
     
-    // Находим элементы постов
-    $('.tgme_widget_message_wrap').each((index, element) => {
+    // Находим элементы постов - используем data-post атрибут для надёжности
+    const elements = $('[data-post]').toArray();
+    console.log(`Found ${elements.length} elements with data-post attribute`);
+
+    $('[data-post]').each((index, element) => {
       if (posts.length >= limit) return false; // Ограничиваем количество
-      
+
       const $element = $(element);
       const postId = $element.attr('data-post');
       
-      // Извлекаем дату
-      const dateElement = $element.find('.tgme_widget_message_meta .time');
-      const date = dateElement.text().trim();
+      console.log(`Processing element ${index}: data-post="${postId}"`);
+
+      // Пропускаем элементы без полного data-post (например, реакции)
+      if (!postId || !postId.includes('/')) {
+        console.log(`Skipping element - invalid postId`);
+        return true;
+      }
+      
+      // Извлекаем дату из datetime атрибута или из текста
+      let date = null;
+      const datetimeElement = $element.find('.tgme_widget_message_date time');
+      if (datetimeElement.length > 0 && datetimeElement.attr('datetime')) {
+        date = datetimeElement.attr('datetime');
+      } else {
+        const dateElement = $element.find('.tgme_widget_message_meta .time');
+        date = formatDate(dateElement.text().trim());
+      }
       
       // Извлекаем текст
       const textElement = $element.find('.tgme_widget_message_text');
@@ -101,10 +121,16 @@ async function getChannelPosts(channelName, limit = 10) {
         });
       }
     });
+
+    console.log(`Parsed ${posts.length} posts`);
+    if (posts.length > 0) {
+      console.log('First post:', JSON.stringify(posts[0], null, 2));
+    }
     
     return posts;
   } catch (error) {
     console.error('Ошибка при получении постов из Telegram-канала:', error.message);
+    console.error(error.stack);
     throw error;
   }
 }
@@ -130,11 +156,11 @@ function parseNumberWithSuffix(value, suffix) {
  * Преобразовать дату из формата Telegram в ISO
  */
 function formatDate(telegramDate) {
-  if (!telegramDate) {
+  if (!telegramDate || telegramDate.length < 3) {
     return new Date().toISOString();
   }
   
-  // Telegram дает дату в формате "16 февр.", "16 февраля 2026", "Yesterday at 15:30" или "Today at 10:15"
+  // Telegram дает дату в формате "16 февр.", "16 февраля 2026", "11:34", "Yesterday at 15:30" или "Today at 10:15"
   
   if (telegramDate.includes('Today') || telegramDate.includes('Сегодня')) {
     const time = telegramDate.replace(/.*at /, '').replace(/в /, '');
@@ -151,6 +177,14 @@ function formatDate(telegramDate) {
     const [hours, minutes] = time.split(':').map(Number);
     yesterday.setHours(hours || 0, minutes || 0, 0, 0);
     return yesterday.toISOString();
+  }
+  
+  // Если только время (например, "11:34") - это сегодня
+  if (/^\d{1,2}:\d{2}$/.test(telegramDate)) {
+    const today = new Date();
+    const [hours, minutes] = telegramDate.split(':').map(Number);
+    today.setHours(hours || 0, minutes || 0, 0, 0);
+    return today.toISOString();
   }
   
   // Для формата "16 февр.", "16 февраля 2026"
