@@ -137,7 +137,7 @@ export const getUserReferralStats = async (): Promise<ReferralStats> => {
 export const shareReferralCode = (referralCode: string) => {
   // Создаем ссылку на Telegram бота с реферальным кодом
   const referralLink = `https://t.me/nptime_bot/app?start=${referralCode}`;
-  const shareText = `Привет! Переходи по моей ссылке для записи на комплексную химчистку и получай озонирование салона совершенно бесплатно! ❤️\n\n${referralLink}`;
+  const shareText = `Привет! Переходи по моей ссылке для записи на комплексную химчистку и получай озонирование салона совершенно бесплатно! ❤️\n\nПосле перехода по ссылке нажми на кнопку "NP Fast" в чате с ботом.\n\n${referralLink}`;
 
   if (navigator.share) {
     navigator.share({

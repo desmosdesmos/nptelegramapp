@@ -142,7 +142,7 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
           <TrendingUp className="w-6 h-6 text-yellow-300" />
           <h2 className="text-2xl font-bold text-white">Реферальная программа</h2>
         </div>
-        <p className="text-white/80 mb-6">Приведи друга на комплексную химчистку и получи 300₽ на карту!</p>
+        <p className="text-white/80 mb-6">Приведи друга на комплексную химчистку и получи 300₽ на карту!<br/>После перехода по ссылке другу нужно нажать на кнопку "NP Fast" в чате с ботом.</p>
 
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 text-center">
