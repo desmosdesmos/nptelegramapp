@@ -80,6 +80,12 @@ const NewsFeed: React.FC = () => {
     return { title: text, content: '' };
   };
 
+  // Форматируем текст для отображения с сохранением пробелов
+  const formatText = (text: string) => {
+    // Добавляем пробелы после точек, если их нет
+    return text.replace(/([.!?])([А-ЯA-Z🎉🔥✨📍📲🚗💎🎄🎁👉])/g, '$1 $2');
+  };
+
   if (loading) {
     return (
       <div className="p-4">
@@ -195,7 +201,7 @@ const NewsFeed: React.FC = () => {
                 className="text-white font-semibold text-base mb-3 news-text-title"
                 style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
               >
-                {displayTitle}
+                {formatText(displayTitle)}
               </div>
 
               {/* Основной текст */}
@@ -204,7 +210,7 @@ const NewsFeed: React.FC = () => {
                   className="text-white/80 text-sm leading-relaxed mt-3 news-text border-t border-white/10 pt-3"
                   style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
                 >
-                  {content}
+                  {formatText(content)}
                 </div>
               )}
 
