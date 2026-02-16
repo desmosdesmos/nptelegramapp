@@ -54,31 +54,29 @@ const NewsFeed: React.FC = () => {
     });
   };
 
-  // Разделяем текст по двойному переносу строки или по первому предложению
+  // Разделяем текст по первому предложению (до точки)
   const parsePostText = (text: string) => {
-    // Сначала пробуем найти двойной перенос строки (разделение на абзацы)
-    const doubleNewLineIndex = text.indexOf('\n\n');
-    if (doubleNewLineIndex > 0 && doubleNewLineIndex < 200) {
-      const title = text.slice(0, doubleNewLineIndex).trim();
-      const content = text.slice(doubleNewLineIndex + 2).trim();
-      return { title, content };
-    }
+    // Ищем первую точку
+    const firstDotIndex = text.indexOf('.');
     
-    // Ищем первую точку с пробелом после неё
-    const firstDotIndex = text.search(/[.!?]\s/);
-    if (firstDotIndex > 20 && firstDotIndex < 150) {
+    // Если точка есть и она не слишком близко к началу
+    if (firstDotIndex > 30 && firstDotIndex < 120) {
       const title = text.slice(0, firstDotIndex + 1).trim();
       const content = text.slice(firstDotIndex + 1).trim();
+      // Проверяем, что контент не пустой
+      if (content.length > 20) {
+        return { title, content };
+      }
+    }
+    
+    // Если не нашли подходящую точку, берём первые 70 символов
+    if (text.length > 70) {
+      const title = text.slice(0, 70) + '...';
+      const content = text.slice(70).trim();
       return { title, content };
     }
     
-    // Если не нашли, берём первые 80 символов как заголовок
-    if (text.length > 80) {
-      const title = text.slice(0, 80) + '...';
-      const content = text.slice(80).trim();
-      return { title, content };
-    }
-    
+    // Если текст короткий, возвращаем как есть
     return { title: text, content: '' };
   };
 
