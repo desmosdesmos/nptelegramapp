@@ -163,7 +163,13 @@ const NewsFeed: React.FC = () => {
 
             {/* Текст поста */}
             <div className="p-4 pt-3">
-              <div className="text-white/90 text-sm leading-relaxed whitespace-pre-wrap mb-3">
+              <div 
+                className="text-white/90 text-sm leading-relaxed mb-3"
+                style={{ 
+                  whiteSpace: 'pre-wrap',
+                  wordBreak: 'break-word'
+                }}
+              >
                 {displayText}
               </div>
 
@@ -171,7 +177,7 @@ const NewsFeed: React.FC = () => {
               {hasMoreText && (
                 <button
                   onClick={() => toggleExpand(item.id)}
-                  className="flex items-center gap-1 text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors mb-3"
+                  className="flex items-center gap-1.5 text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors mb-4 -ml-1"
                 >
                   {isExpanded ? (
                     <>
@@ -187,15 +193,15 @@ const NewsFeed: React.FC = () => {
                 </button>
               )}
 
-              {/* Ссылка на Telegram */}
+              {/* Ссылка на Telegram в стиле iOS */}
               <a 
                 href={getPostUrl(item.id)} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-2.5 px-4 bg-cyan-500/20 hover:bg-cyan-500/30 border border-cyan-500/30 rounded-lg text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-all"
+                className="group flex items-center justify-center gap-2.5 w-full py-3.5 px-4 bg-gradient-to-r from-cyan-500/90 to-blue-500/90 hover:from-cyan-400 hover:to-blue-400 rounded-2xl text-white font-semibold text-sm transition-all duration-300 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 active:scale-[0.98] backdrop-blur-sm"
               >
-                <ExternalLink className="w-4 h-4" />
-                Открыть в Telegram
+                <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+                <span>Открыть в Telegram</span>
               </a>
             </div>
           </div>
