@@ -1,13 +1,13 @@
 /**
  * API маршрут для получения постов из Telegram-канала
- * 
+ *
  * Этот файл должен быть размещен на серверной стороне
  * для обхода CORS ограничений при получении данных из Telegram
  */
 
 const express = require('express');
 const router = express.Router();
-const { getChannelPosts } = require('../server/telegram-channel-fetcher');
+const { getChannelPosts } = require('../telegram-channel-fetcher');
 
 // Маршрут для получения постов из Telegram-канала
 router.post('/channel-posts', async (req, res) => {
