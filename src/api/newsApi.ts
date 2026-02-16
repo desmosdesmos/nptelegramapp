@@ -13,7 +13,7 @@ interface TelegramPost {
 }
 
 const CHANNEL_NAME = 'npdetailing';
-const API_BASE_URL = 'https://iatrochemical-winterishly-kenda.ngrok-free.dev';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://iatrochemical-winterishly-kenda.ngrok-free.dev';
 
 /**
  * Получить последние посты из Telegram-канала
