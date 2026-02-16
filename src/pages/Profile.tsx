@@ -41,6 +41,13 @@ const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
       }
     };
 
+    // Также обновляем данные рефералов при открытии профиля
+    const referralCardElement = document.querySelector('.referral-card');
+    if (referralCardElement) {
+      // Если компонент уже загружен, вызываем обновление
+      window.dispatchEvent(new CustomEvent('referralUpdate'));
+    }
+
     loadRewards();
   }, []);
 

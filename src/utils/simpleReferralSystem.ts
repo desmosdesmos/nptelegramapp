@@ -50,6 +50,9 @@ export const incrementTotalReferrals = (referrerCode: string) => {
 
   // Уведомляем о событии
   window.dispatchEvent(new CustomEvent('referralUpdate'));
+  
+  // Также триггерим событие storage для синхронизации между вкладками
+  localStorage.setItem('referral_last_update', Date.now().toString());
 
   console.log(`Incremented total referrals to: ${newTotal}`);
 };
@@ -67,6 +70,9 @@ export const incrementBookedReferrals = () => {
 
   // Уведомляем о событии
   window.dispatchEvent(new CustomEvent('referralUpdate'));
+  
+  // Также триггерим событие storage для синхронизации между вкладками
+  localStorage.setItem('referral_last_update', Date.now().toString());
 
   console.log(`Incremented booked referrals to: ${newBooked}`);
 };

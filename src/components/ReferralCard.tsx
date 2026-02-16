@@ -58,7 +58,7 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
 
     // Добавляем слушатель для изменений в localStorage
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key && e.key.startsWith('referral_')) {
+      if (e.key && (e.key.includes('referral') || e.key.includes('simple_referral'))) {
         loadReferralInfo();
       }
     };
@@ -86,6 +86,21 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
     };
   }, []);
 
+  // Добавим прослушивание события обновления localStorage
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'referral_last_update') {
+        loadReferralInfo();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+
   const handleCopyLink = async () => {
     if (referralInfo?.referralLink) {
       const success = await copyReferralLink(referralInfo.referralLink);
@@ -104,7 +119,7 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
 
   if (loading) {
     return (
-      <div className={`w-full p-6 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 ${className}`}>
+      <div className={`referral-card w-full p-6 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 ${className}`}>
         <div className="animate-pulse">
           <h2 className="text-2xl font-bold text-white mb-2">Загрузка...</h2>
           <p className="text-white/80 mb-4">Ваша реферальная информация</p>
