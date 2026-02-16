@@ -74,7 +74,14 @@ const NewsFeed: React.FC = () => {
   // Форматируем текст для отображения с сохранением пробелов
   const formatText = (text: string) => {
     // Добавляем пробелы после точек, если их нет
-    return text.replace(/([.!?])([А-ЯA-Z🎉🔥✨📍📲🚗💎🎄🎁👉🧼😎])/g, '$1 $2');
+    let formatted = text.replace(/([.!?])([А-ЯA-Z🎉🔥✨📍📲🚗💎🎄🎁👉🧼😎])/g, '$1 $2');
+    
+    // Добавляем точку после конкретных заголовков
+    formatted = formatted.replace(/(✨🎄 Итоги года NP 🎄✨)([^.])/g, '$1.$2');
+    formatted = formatted.replace(/(🚚 5 машин — 5 разных историй за одну неделю)([^.])/g, '$1.$2');
+    formatted = formatted.replace(/(🚗 Что мы сделали с Kia Cerato — полный разбор и глубокая химчистка салона)([^.])/g, '$1.$2');
+    
+    return formatted;
   };
 
   if (loading) {
