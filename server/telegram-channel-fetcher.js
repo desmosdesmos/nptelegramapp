@@ -130,33 +130,43 @@ function parseNumberWithSuffix(value, suffix) {
  * Преобразовать дату из формата Telegram в ISO
  */
 function formatDate(telegramDate) {
-  // Telegram дает дату в формате "15 February 2024", "Yesterday at 15:30" или "Today at 10:15"
-  // Преобразуем в ISO формат
+  if (!telegramDate) {
+    return new Date().toISOString();
+  }
   
-  if (telegramDate.includes('Today')) {
-    const time = telegramDate.replace('Today at ', '');
+  // Telegram дает дату в формате "16 февр.", "16 февраля 2026", "Yesterday at 15:30" или "Today at 10:15"
+  
+  if (telegramDate.includes('Today') || telegramDate.includes('Сегодня')) {
+    const time = telegramDate.replace(/.*at /, '').replace(/в /, '');
     const today = new Date();
     const [hours, minutes] = time.split(':').map(Number);
-    today.setHours(hours, minutes, 0, 0);
+    today.setHours(hours || 0, minutes || 0, 0, 0);
     return today.toISOString();
   }
   
-  if (telegramDate.includes('Yesterday')) {
-    const time = telegramDate.replace('Yesterday at ', '');
+  if (telegramDate.includes('Yesterday') || telegramDate.includes('Вчера')) {
+    const time = telegramDate.replace(/.*at /, '').replace(/в /, '');
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const [hours, minutes] = time.split(':').map(Number);
-    yesterday.setHours(hours, minutes, 0, 0);
+    yesterday.setHours(hours || 0, minutes || 0, 0, 0);
     return yesterday.toISOString();
   }
   
-  // Для формата "15 February 2024" или "15 February 2024 at 15:30"
+  // Для формата "16 февр.", "16 февраля 2026"
   try {
-    return new Date(telegramDate).toISOString();
+    const currentYear = new Date().getFullYear();
+    // Добавляем текущий год, если его нет
+    const dateWithYear = telegramDate.includes('20') ? telegramDate : `${telegramDate} ${currentYear}`;
+    const parsedDate = new Date(dateWithYear);
+    if (!isNaN(parsedDate.getTime())) {
+      return parsedDate.toISOString();
+    }
   } catch (e) {
     console.warn('Не удалось распознать дату:', telegramDate);
-    return new Date().toISOString();
   }
+  
+  return new Date().toISOString();
 }
 
 module.exports = {
