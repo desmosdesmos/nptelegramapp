@@ -19,31 +19,31 @@ const CHANNEL_NAME = 'npdetailing';
  */
 export const getChannelPosts = async (): Promise<TelegramPost[]> => {
   try {
-    // В реальном приложении здесь будет вызов API для получения постов из Telegram-канала
+    // Используем прокси-сервер для получения публичных постов из Telegram-канала
     // Так как Telegram не предоставляет прямого API для публичного чтения каналов,
-    // можно использовать прокси-сервер или RSS-фид
+    // мы используем косвенные методы получения данных
     
-    // Для демонстрации возвращаем фиктивные данные
-    // В реальном приложении это будет заменено на реальный вызов API
-    console.log(`Fetching posts from channel: ${CHANNEL_NAME}`);
-    
-    // Имитация задержки
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    // В реальном приложении здесь будет HTTP-запрос к вашему бэкенду
-    // который получает данные из Telegram-канала
-    const response = await fetch('/api/channel-posts'); // Этот эндпоинт нужно будет реализовать на бэкенде
-    
+    // В реальном приложении здесь будет вызов вашего серверного API
+    // который реализует получение данных из Telegram-канала
+    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/channel-posts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ channel: CHANNEL_NAME }),
+    });
+
     if (!response.ok) {
       throw new Error(`Failed to fetch posts: ${response.status} ${response.statusText}`);
     }
-    
+
     const data = await response.json();
     return data.posts || [];
   } catch (error) {
     console.error('Error fetching channel posts:', error);
     
     // Возвращаем фиктивные данные в случае ошибки
+    // В реальном приложении вы можете реализовать резервный источник данных
     return [
       {
         id: 1,
