@@ -41,8 +41,24 @@ const NewsFeed: React.FC = () => {
     fetchNews();
   }, []);
 
-  // Разделяем текст по первому предложению или эмодзи в начале
+  // Разделяем текст по первому предложению или конкретным фразам
   const parsePostText = (text: string) => {
+    // Ищем конкретные фразы и разделяем по ним
+    const specificTitles = [
+      '✨🎄 Итоги года NP 🎄✨',
+      '🚚 5 машин — 5 разных историй за одну неделю',
+      '🚗 Что мы сделали с Kia Cerato — полный разбор и глубокая химчистка салона'
+    ];
+    
+    for (const phrase of specificTitles) {
+      if (text.startsWith(phrase)) {
+        // Нашли фразу в начале - добавляем точку и разделяем
+        const title = phrase + '.';
+        const content = text.slice(phrase.length).trim();
+        return { title, content };
+      }
+    }
+    
     // Ищем первую точку
     const firstDotIndex = text.indexOf('.');
     
@@ -51,23 +67,6 @@ const NewsFeed: React.FC = () => {
       const title = text.slice(0, firstDotIndex + 1).trim();
       const content = text.slice(firstDotIndex + 1).trim();
       return { title, content };
-    }
-    
-    // Ищем конкретные фразы и добавляем точку
-    const specificTitles = [
-      '✨🎄 Итоги года NP 🎄✨',
-      '🚚 5 машин — 5 разных историй за одну неделю',
-      '🚗 Что мы сделали с Kia Cerato — полный разбор и глубокая химчистка салона'
-    ];
-    
-    for (const phrase of specificTitles) {
-      if (text.includes(phrase)) {
-        const phraseIndex = text.indexOf(phrase);
-        const titleEnd = phraseIndex + phrase.length;
-        const title = text.slice(0, titleEnd).trim() + '.';
-        const content = text.slice(titleEnd).trim();
-        return { title, content };
-      }
     }
     
     // Ищем эмодзи в начале текста (заголовок до эмодзи)
