@@ -25,7 +25,7 @@ const ReferralCard: React.FC<ReferralCardProps> = ({ className = '' }) => {
       // Получаем данные пользователя
       const telegramUser = getTelegramUser();
       const referralCode = telegramUser ? `USER${String(telegramUser.id).slice(-6)}` : 'USER000000';
-      const referralLink = `https://t.me/nptime_bot/npfast?start=${referralCode}`;
+      const referralLink = `https://t.me/nptime_bot/app?start=${referralCode}`;
 
       // Формируем данные для отображения
       const updatedData = {
