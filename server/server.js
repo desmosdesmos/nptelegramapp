@@ -10,8 +10,9 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware - CORS должен быть первым
+const corsOrigin = process.env.CORS_ORIGIN || '*';
 app.use(cors({
-  origin: '*',
+  origin: corsOrigin,
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'ngrok-skip-browser-warning']
 }));
