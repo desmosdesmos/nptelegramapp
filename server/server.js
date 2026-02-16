@@ -9,12 +9,16 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
-app.use(cors());
+// Middleware - CORS должен быть первым
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'ngrok-skip-browser-warning']
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// API Routes
+// API Routes - импортируем и используем роуты
 const channelPostsRoute = require('./routes/channelPosts');
 app.use('/api', channelPostsRoute);
 
@@ -23,10 +27,24 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// Основной маршрут для тестирования
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'NP Telegram API Server',
+    endpoints: {
+      health: '/health',
+      channelPosts: '/api/channel-posts'
+    }
+  });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
+  console.error('Error:', err.stack);
+  res.status(500).json({ 
+    error: 'Something went wrong!',
+    message: err.message 
+  });
 });
 
 // 404 handler
@@ -34,8 +52,10 @@ app.use('*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
+// Запускаем сервер на всех интерфейсах
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);
+  console.log(`API endpoint: http://localhost:${PORT}/api/channel-posts`);
   console.log(`External access: http://185.171.202.83:${PORT}/health`);
 });
