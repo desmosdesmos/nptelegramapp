@@ -47,7 +47,7 @@ const NewsFeed: React.FC = () => {
     const firstDotIndex = text.indexOf('.');
     
     // Если точка есть и она не слишком близко к началу
-    if (firstDotIndex > 20 && firstDotIndex < 200) {
+    if (firstDotIndex > 20 && firstDotIndex < 250) {
       const title = text.slice(0, firstDotIndex + 1).trim();
       const content = text.slice(firstDotIndex + 1).trim();
       return { title, content };
