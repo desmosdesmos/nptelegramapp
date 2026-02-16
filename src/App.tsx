@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { House, Calendar, Sparkles, User } from 'lucide-react';
+import { House, Calendar, Sparkles, User, Newspaper } from 'lucide-react';
 import { hapticFeedback } from './utils/telegram';
 
 // Import all pages
@@ -19,7 +19,7 @@ import WheelButton from './components/WheelButton';
 import { WheelSpinResult } from './types/wheel';
 
 // Define a type for the page keys
-export type PageKey = 'Home' | 'Booking' | 'Works' | 'Contacts' | 'Services' | 'Reviews' | 'Profile';
+export type PageKey = 'Home' | 'Booking' | 'Works' | 'Contacts' | 'Services' | 'Reviews' | 'Profile' | 'News';
 
 // Page mapping
 const appPages: Record<PageKey, { component: React.FC<any> }> = {
@@ -30,6 +30,7 @@ const appPages: Record<PageKey, { component: React.FC<any> }> = {
   Services: { component: Services },
   Reviews: { component: Reviews },
   Profile: { component: Profile },
+  News: { component: React.lazy(() => import('./pages/NewsPage')) },
 };
 
 // --- Main App Component ---
@@ -250,6 +251,7 @@ function App() {
           <DockButton pageKey="Home" label="Главная" icon={<House className='w-6 h-6' />} />
           <DockButton pageKey="Booking" label="Запись" icon={<Calendar className='w-6 h-6' />} />
           <DockButton pageKey="Services" label="Услуги" icon={<Sparkles className='w-6 h-6' />} />
+          <DockButton pageKey="News" label="Новости" icon={<Newspaper className='w-6 h-6' />} />
           <DockButton pageKey="Profile" label="Профиль" icon={<User className='w-6 h-6' />} />
         </div>
       )}
