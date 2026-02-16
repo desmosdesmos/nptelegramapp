@@ -54,9 +54,12 @@ const NewsFeed: React.FC = () => {
     });
   };
 
-  const truncateText = (text: string, maxLength: number = 200) => {
-    if (text.length <= maxLength) return text;
-    return text.slice(0, maxLength) + '...';
+  // Разделяем текст на заголовок (первая строка) и основной текст
+  const parsePostText = (text: string) => {
+    const lines = text.split('\n').filter(line => line.trim() !== '');
+    const title = lines[0] || '';
+    const content = lines.slice(1).join('\n');
+    return { title, content };
   };
 
   if (loading) {
@@ -108,8 +111,10 @@ const NewsFeed: React.FC = () => {
     <div className="p-4 space-y-4">
       {news.map(item => {
         const isExpanded = expandedPosts.has(item.id);
-        const displayText = isExpanded ? item.text : truncateText(item.text, 200);
-        const hasMoreText = item.text.length > 200;
+        const { title, content } = parsePostText(item.text);
+        const hasContent = content.length > 0;
+        const truncateTitle = (title.length > 100) ? title.slice(0, 100) + '...' : title;
+        const displayTitle = isExpanded ? title : truncateTitle;
 
         return (
           <div 
@@ -117,13 +122,12 @@ const NewsFeed: React.FC = () => {
             className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden"
           >
             {/* Заголовок с датой */}
-            <div className="p-4 pb-3">
+            <div className="p-4 pb-2">
               <div className="flex justify-between items-start mb-2">
                 <span className="text-white/60 text-xs">
                   {new Date(item.date).toLocaleDateString('ru-RU', {
                     day: 'numeric',
-                    month: 'long',
-                    year: 'numeric'
+                    month: 'long'
                   })}
                 </span>
                 <div className="flex gap-2 text-white/50 text-xs">
@@ -168,16 +172,24 @@ const NewsFeed: React.FC = () => {
             )}
 
             {/* Текст поста */}
-            <div className="p-4 pt-3">
-              <div className="text-white/90 text-sm leading-relaxed mb-3 news-text">
-                {displayText}
+            <div className="p-4 pt-2">
+              {/* Заголовок (первая строка) */}
+              <div className="text-white font-semibold text-base mb-2 news-text">
+                {displayTitle}
               </div>
 
+              {/* Основной текст */}
+              {hasContent && isExpanded && (
+                <div className="text-white/80 text-sm leading-relaxed mt-3 news-text border-t border-white/10 pt-3">
+                  {content}
+                </div>
+              )}
+
               {/* Кнопка "Читать далее" */}
-              {hasMoreText && (
+              {hasContent && (
                 <button
                   onClick={() => toggleExpand(item.id)}
-                  className="flex items-center gap-1.5 text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors mb-4 -ml-1"
+                  className="flex items-center gap-1.5 text-cyan-400 hover:text-cyan-300 text-sm font-medium transition-colors mt-3 -ml-1"
                 >
                   {isExpanded ? (
                     <>
@@ -198,7 +210,7 @@ const NewsFeed: React.FC = () => {
                 href={getPostUrl(item.id)} 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="group flex items-center justify-center gap-2.5 w-full py-3.5 px-4 bg-gradient-to-r from-cyan-500/90 to-blue-500/90 hover:from-cyan-400 hover:to-blue-400 rounded-2xl text-white font-semibold text-sm transition-all duration-300 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 active:scale-[0.98] backdrop-blur-sm"
+                className="group flex items-center justify-center gap-2.5 w-full py-3.5 px-4 bg-gradient-to-r from-cyan-500/90 to-blue-500/90 hover:from-cyan-400 hover:to-blue-400 rounded-2xl text-white font-semibold text-sm transition-all duration-300 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 active:scale-[0.98] backdrop-blur-sm mt-3"
               >
                 <ExternalLink className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                 <span>Открыть в Telegram</span>
