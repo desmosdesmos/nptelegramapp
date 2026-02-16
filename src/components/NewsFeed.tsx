@@ -41,10 +41,23 @@ const NewsFeed: React.FC = () => {
     fetchNews();
   }, []);
 
-  // Разделяем текст по первому предложению (до точки)
+  // Разделяем текст по первому предложению (до точки или эмодзи)
   const parsePostText = (text: string) => {
     // Ищем первую точку
     const firstDotIndex = text.indexOf('.');
+    
+    // Ищем первое эмодзи (начало нового блока)
+    const emojiRegex = /[🎉🔥✨📍📲🚗💎🎄🎁👉🧼😎🚚🌫️📋✅📞💬]/;
+    const emojiMatch = text.slice(50).search(emojiRegex); // Ищем после 50 символа
+    
+    // Если нашли эмодзи после 50 символа
+    if (emojiMatch > 0) {
+      const title = text.slice(0, emojiMatch + 50).trim();
+      const content = text.slice(emojiMatch + 50).trim();
+      if (content.length > 20) {
+        return { title, content };
+      }
+    }
     
     // Если точка есть и она не слишком близко к началу
     if (firstDotIndex > 20 && firstDotIndex < 150) {
@@ -53,7 +66,7 @@ const NewsFeed: React.FC = () => {
       return { title, content };
     }
     
-    // Если не нашли точку, возвращаем весь текст как заголовок
+    // Если не нашли, возвращаем весь текст как заголовок
     return { title: text, content: '' };
   };
 
