@@ -4,14 +4,37 @@ import { PageKey } from '../App';
 import { getTelegramUser } from '../utils/telegram';
 import ReferralCard from '../components/ReferralCard';
 import { getPoints, getPrizes } from '../utils/rewardsSystem';
-import { useDailySpinTimer } from '../hooks/useDailySpinTimer';
 
 interface ProfileProps {
   onNavigate: (page: PageKey) => void;
 }
 
 const Profile: React.FC<ProfileProps> = ({ onNavigate }) => {
-  const { timeLeft, canSpin } = useDailySpinTimer();
+  const [timerData, setTimerData] = useState({ timeLeft: null as { hours: number; minutes: number; seconds: number } | null, canSpin: true });
+
+  useEffect(() => {
+    const initializeTimer = async () => {
+      // Так как хук нельзя вызвать асинхронно, будем использовать его напрямую
+      const rewards = await import('../utils/rewardsSystem').then(mod => mod.getUserRewards());
+      const lastSpin = rewards.lastSpinTime || 0;
+      const now = Date.now();
+      const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000; // +24 часа
+      const diff = nextSpinTime - now;
+
+      if (diff <= 0) {
+        setTimerData({ timeLeft: null, canSpin: true });
+      } else {
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        setTimerData({ timeLeft: { hours, minutes, seconds }, canSpin: false });
+      }
+    };
+
+    initializeTimer();
+  }, []);
+
+  const { timeLeft, canSpin } = timerData;
   const [phoneCopied, setPhoneCopied] = useState(false);
   const [points, setPoints] = useState<number>(0);
   const [prizes, setPrizes] = useState<Array<{ id: string; name: string; type: string; description?: string; timestamp: number }>>([]);

@@ -19,26 +19,36 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
 
   // Проверяем начальное состояние при монтировании компонента
   useEffect(() => {
-    const lastSpinStr = localStorage.getItem('lastSpinTime');
-    const lastSpin = lastSpinStr ? parseInt(lastSpinStr, 10) : 0;
-    const now = Date.now();
-    const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000;
-
-    setCanSpin(now >= nextSpinTime);
-    
-    // Загружаем актуальное значение dailyStreak из localStorage
-    const storedStreak = localStorage.getItem('wheel_daily_streak');
-    if (storedStreak) {
-      setDailyStreak(parseInt(storedStreak, 10));
-    }
-    
     // Загружаем актуальные данные о наградах при открытии колеса
     const loadRewards = async () => {
       try {
-        // Просто вызываем getUserRewards, чтобы обновить кэш
-        await import('../utils/rewardsSystem').then(({ getUserRewards }) => getUserRewards());
+        const rewardsModule = await import('../utils/rewardsSystem');
+        const rewards = await rewardsModule.getUserRewards();
+        
+        // Используем серверное время последнего вращения
+        const lastSpin = rewards.lastSpinTime || 0;
+        const now = Date.now();
+        const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000;
+
+        setCanSpin(now >= nextSpinTime);
+        
+        // Загружаем актуальное значение dailyStreak из серверных данных
+        setDailyStreak(rewards.dailyStreak || 0);
       } catch (error) {
         console.error('Error loading rewards when opening wheel:', error);
+        
+        // Резервная логика на случай ошибки
+        const lastSpinStr = localStorage.getItem('lastSpinTime');
+        const lastSpin = lastSpinStr ? parseInt(lastSpinStr, 10) : 0;
+        const now = Date.now();
+        const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000;
+
+        setCanSpin(now >= nextSpinTime);
+        
+        const storedStreak = localStorage.getItem('wheel_daily_streak');
+        if (storedStreak) {
+          setDailyStreak(parseInt(storedStreak, 10));
+        }
       }
     };
     
@@ -300,16 +310,31 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         });
       }
 
-      // Убираем специальное поведение для тестеров - теперь все пользователи имеют одинаковые условия
+      // Обновляем время последнего вращения на сервере
+      const rewardsModule = await import('../utils/rewardsSystem');
+      await rewardsModule.updateLastSpinTime();
+
+      // Обновляем серию дней подряд
       const today = new Date().toISOString().split('T')[0];
-      const lastSpinDate = localStorage.getItem('wheel_last_spin_date_prev');
-      let newStreak = dailyStreak;
+      const currentRewards = await rewardsModule.getUserRewards();
+      let newStreak = currentRewards.dailyStreak || dailyStreak;
+      
+      // Проверяем, отличается ли сегодняшняя дата от последней даты вращения
+      const lastSpinDate = currentRewards.lastSpinDate;
       if (!lastSpinDate || lastSpinDate !== today) {
         newStreak++;
-        localStorage.setItem('wheel_daily_streak', newStreak.toString());
-        setDailyStreak(newStreak);
-        localStorage.setItem('wheel_last_spin_date_prev', today);
       }
+
+      // Обновляем серию дней подряд на сервере
+      const updatedRewards = {
+        ...currentRewards,
+        dailyStreak: newStreak,
+        lastSpinDate: today
+      };
+
+      await import('../api/rewardsApi').then(api => api.saveUserRewardsToServer(updatedRewards));
+
+      setDailyStreak(newStreak);
 
       await onWin(result);
     }, 4000);

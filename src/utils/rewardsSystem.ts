@@ -92,6 +92,50 @@ export const addPoints = async (points: number) => {
   }
 };
 
+// Обновить время последнего вращения колеса
+export const updateLastSpinTime = async () => {
+  try {
+    const current = await getUserRewardsFromServer();
+    const now = Date.now();
+
+    const updated = {
+      ...current,
+      lastSpinTime: now
+    };
+
+    await saveUserRewardsToServer(updated);
+
+    // Обновляем кэш
+    const cacheData = {
+      data: updated,
+      cacheTimestamp: Date.now()
+    };
+    localStorage.setItem(REWARDS_CACHE_KEY, JSON.stringify(cacheData));
+
+    return updated;
+  } catch (error) {
+    console.error('Error updating last spin time:', error);
+
+    // В случае ошибки обновляем только локально
+    const current = await getUserRewards();
+    const now = Date.now();
+
+    const updatedLocal = {
+      ...current,
+      lastSpinTime: now
+    };
+
+    // Обновляем кэш
+    const cacheData = {
+      data: updatedLocal,
+      cacheTimestamp: Date.now()
+    };
+    localStorage.setItem(REWARDS_CACHE_KEY, JSON.stringify(cacheData));
+
+    return updatedLocal;
+  }
+};
+
 // Добавить приз (сохраняем на сервере и в кэше)
 export const addPrize = async (prize: { id: string; name: string; type: string; description?: string }) => {
   try {

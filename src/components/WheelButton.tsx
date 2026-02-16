@@ -11,19 +11,26 @@ const WheelButton: React.FC<WheelButtonProps> = ({ onOpenWheel }) => {
   useEffect(() => {
     try {
       const checkSpinAvailability = async () => {
-        const lastSpinStr = localStorage.getItem('lastSpinTime');
-        const lastSpin = lastSpinStr ? parseInt(lastSpinStr, 10) : 0;
-        const now = Date.now();
-        const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000;
-
-        setCanSpin(now >= nextSpinTime);
-        
-        // Обновляем кэш наград при проверке доступности вращения
         try {
+          // Получаем награды с сервера, чтобы получить актуальное время последнего вращения
           const rewardsModule = await import('../utils/rewardsSystem');
-          await rewardsModule.getUserRewards(); // Обновляем кэш данных
+          const rewards = await rewardsModule.getUserRewards();
+          
+          const lastSpin = rewards.lastSpinTime || 0;
+          const now = Date.now();
+          const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000;
+
+          setCanSpin(now >= nextSpinTime);
         } catch (rewardsError) {
-          console.error('Error updating rewards cache in WheelButton:', rewardsError);
+          console.error('Error getting rewards in WheelButton:', rewardsError);
+          
+          // Резервная логика на случай ошибки
+          const lastSpinStr = localStorage.getItem('lastSpinTime');
+          const lastSpin = lastSpinStr ? parseInt(lastSpinStr, 10) : 0;
+          const now = Date.now();
+          const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000;
+
+          setCanSpin(now >= nextSpinTime);
         }
       };
 

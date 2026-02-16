@@ -14,6 +14,9 @@ interface RewardData {
     description?: string;
     timestamp: number;
   }>;
+  lastSpinTime?: number; // Время последнего вращения колеса
+  dailyStreak?: number; // Текущая серия дней подряд
+  lastSpinDate?: string; // Дата последнего вращения (для подсчета серии)
 }
 
 /**
@@ -101,6 +104,22 @@ export const addPointsToServer = async (points: number): Promise<RewardData> => 
   const updatedRewards = {
     ...currentRewards,
     points: newPoints
+  };
+
+  await saveUserRewardsToServer(updatedRewards);
+  return updatedRewards;
+};
+
+/**
+ * Обновить время последнего вращения колеса
+ */
+export const updateLastSpinTime = async (): Promise<RewardData> => {
+  const currentRewards = await getUserRewardsFromServer();
+  const now = Date.now();
+  
+  const updatedRewards = {
+    ...currentRewards,
+    lastSpinTime: now
   };
 
   await saveUserRewardsToServer(updatedRewards);
