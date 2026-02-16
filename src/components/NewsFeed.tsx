@@ -54,21 +54,32 @@ const NewsFeed: React.FC = () => {
     });
   };
 
-  // Разделяем текст на заголовок (первое предложение до точки или эмодзи) и основной текст
+  // Разделяем текст по двойному переносу строки или по первому предложению
   const parsePostText = (text: string) => {
-    // Ищем первую точку, за которой следует пробел и заглавная буква (начало нового предложения)
-    // Или эмодзи в начале следующей строки
-    const firstSentenceEnd = text.search(/(?<=[.!?])\s+(?=[А-ЯA-Z🎉🔥✨📍📲🚗💎🎄🎁👉])/);
-    
-    if (firstSentenceEnd > 0 && firstSentenceEnd < 150) {
-      const title = text.slice(0, firstSentenceEnd).trim();
-      const content = text.slice(firstSentenceEnd).trim();
+    // Сначала пробуем найти двойной перенос строки (разделение на абзацы)
+    const doubleNewLineIndex = text.indexOf('\n\n');
+    if (doubleNewLineIndex > 0 && doubleNewLineIndex < 200) {
+      const title = text.slice(0, doubleNewLineIndex).trim();
+      const content = text.slice(doubleNewLineIndex + 2).trim();
       return { title, content };
     }
     
-    // Если не нашли, берём первые 100 символов как заголовок
-    const title = text.length > 100 ? text.slice(0, 100) + '...' : text;
-    return { title, content: '' };
+    // Ищем первую точку с пробелом после неё
+    const firstDotIndex = text.search(/[.!?]\s/);
+    if (firstDotIndex > 20 && firstDotIndex < 150) {
+      const title = text.slice(0, firstDotIndex + 1).trim();
+      const content = text.slice(firstDotIndex + 1).trim();
+      return { title, content };
+    }
+    
+    // Если не нашли, берём первые 80 символов как заголовок
+    if (text.length > 80) {
+      const title = text.slice(0, 80) + '...';
+      const content = text.slice(80).trim();
+      return { title, content };
+    }
+    
+    return { title: text, content: '' };
   };
 
   if (loading) {
@@ -122,8 +133,7 @@ const NewsFeed: React.FC = () => {
         const isExpanded = expandedPosts.has(item.id);
         const { title, content } = parsePostText(item.text);
         const hasContent = content.length > 0;
-        const truncateTitle = (title.length > 100) ? title.slice(0, 100) + '...' : title;
-        const displayTitle = isExpanded ? title : truncateTitle;
+        const displayTitle = isExpanded ? title : (title.length > 100 ? title.slice(0, 100) + '...' : title);
 
         return (
           <div 
@@ -182,14 +192,20 @@ const NewsFeed: React.FC = () => {
 
             {/* Текст поста */}
             <div className="p-4 pt-2">
-              {/* Заголовок (первое предложение) */}
-              <div className="text-white font-semibold text-base mb-3 news-text-title">
+              {/* Заголовок */}
+              <div 
+                className="text-white font-semibold text-base mb-3 news-text-title"
+                style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+              >
                 {displayTitle}
               </div>
 
               {/* Основной текст */}
               {hasContent && isExpanded && (
-                <div className="text-white/80 text-sm leading-relaxed mt-3 news-text border-t border-white/10 pt-3">
+                <div 
+                  className="text-white/80 text-sm leading-relaxed mt-3 news-text border-t border-white/10 pt-3"
+                  style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+                >
                   {content}
                 </div>
               )}
