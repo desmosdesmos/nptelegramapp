@@ -6,21 +6,37 @@ interface ReviewsProps {
   onNavigate: (page: PageKey) => void;
 }
 
+interface Review {
+  name: string;
+  text: string;
+  avatar: string;
+  date: string;
+  rating: number;
+  photos?: string[]; // Фото работ до/после
+}
+
 const Reviews: React.FC<ReviewsProps> = ({ onNavigate }) => {
-  const reviews = [
+  const reviews: Review[] = [
     {
       name: 'Евгений Л.',
       text: 'Я думал ковролин у меня на столько грязный что нужно будет его менять. Ехал без особых надежд, но парни сделали чудо. Делал чистку сидений (со снятием), пластика, карт, ковролина и багажника',
       avatar: 'https://via.placeholder.com/40',
       date: '2026-01-12',
-      rating: 5
+      rating: 5,
+      photos: [
+        'https://via.placeholder.com/300x200?text=До',
+        'https://via.placeholder.com/300x200?text=После'
+      ]
     },
     {
       name: 'Владислав',
       text: 'Работа выполнена отлично, качественно, быстро, недорого. Результат очень порадовал. На сообщения отвечали быстро, сразу подобрали удобную дату и время. Рекомендую.',
       avatar: 'https://via.placeholder.com/40',
       date: '2026-01-11',
-      rating: 5
+      rating: 5,
+      photos: [
+        'https://via.placeholder.com/300x200?text=Салон+после'
+      ]
     },
     {
       name: 'Андрей',
@@ -92,7 +108,25 @@ const Reviews: React.FC<ReviewsProps> = ({ onNavigate }) => {
               {[...Array(5)].map((_, j) => <Star key={j} className='w-4 h-4 fill-current' />)}
             </div>
             <p className='text-sm text-gray-300'>{review.text}</p>
-            <p className='text-xs text-gray-500 mt-3 font-bold'>— {review.name}</p>
+            
+            {/* Фотографии */}
+            {review.photos && review.photos.length > 0 && (
+              <div className='mt-3 flex gap-2 overflow-x-auto pb-2'>
+                {review.photos.map((photo, idx) => (
+                  <img
+                    key={idx}
+                    src={photo}
+                    alt={`Фото ${idx + 1}`}
+                    className='w-40 h-28 object-cover rounded-lg flex-shrink-0 border border-white/10'
+                  />
+                ))}
+              </div>
+            )}
+            
+            <div className='flex items-center justify-between mt-3'>
+              <p className='text-xs text-gray-500 font-bold'>— {review.name}</p>
+              <p className='text-xs text-gray-600'>{new Date(review.date).toLocaleDateString('ru-RU')}</p>
+            </div>
           </div>
         ))}
       </div>
