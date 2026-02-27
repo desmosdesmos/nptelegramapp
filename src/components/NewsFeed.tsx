@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getChannelPosts, getPostUrl, getCachedPosts } from '../api/newsApi';
+import { getChannelPosts, getPostUrl } from '../api/newsApi';
 import { ExternalLink, RefreshCw } from 'lucide-react';
 
 interface NewsItem {
@@ -17,8 +17,6 @@ const NewsFeed: React.FC = () => {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isFromCache, setIsFromCache] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
   useEffect(() => {
     fetchNews();
@@ -36,22 +34,6 @@ const NewsFeed: React.FC = () => {
 
       setNews(sortedPosts);
       setError(null);
-      
-      // Проверяем, есть ли кэш
-      const cached = getCachedPosts();
-      setIsFromCache(!!cached);
-      
-      // Получаем время последнего обновления
-      const timestamp = localStorage.getItem('np_news_cache_timestamp');
-      if (timestamp) {
-        const date = new Date(parseInt(timestamp));
-        setLastUpdated(date.toLocaleDateString('ru-RU', { 
-          day: 'numeric', 
-          month: 'long',
-          hour: '2-digit',
-          minute: '2-digit'
-        }));
-      }
     } catch (err) {
       console.error('Error fetching news:', err);
       setError('Не удалось загрузить новости. Попробуйте обновить страницу.');
@@ -135,17 +117,6 @@ const NewsFeed: React.FC = () => {
 
   return (
     <div className="p-4 space-y-4">
-      {/* Индикатор статуса */}
-      <div className="flex items-center justify-between text-xs text-white/50 mb-2">
-        <div className="flex items-center gap-2">
-          <div className={`w-2 h-2 rounded-full ${isFromCache ? 'bg-yellow-500' : 'bg-green-500'}`} />
-          <span>{isFromCache ? 'Кэш' : 'Онлайн'}</span>
-        </div>
-        {lastUpdated && (
-          <span>Обновлено: {lastUpdated}</span>
-        )}
-      </div>
-      
       {news.map(item => {
         // Используем title из данных, если есть, иначе парсим из текста
         const displayTitle = item.title || parsePostText(item.text).title;
@@ -155,30 +126,6 @@ const NewsFeed: React.FC = () => {
             key={item.id}
             className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden"
           >
-            {/* Заголовок с датой */}
-            <div className="p-4 pb-2">
-              <div className="flex justify-between items-start mb-2">
-                <span className="text-white/60 text-xs">
-                  {new Date(item.date).toLocaleDateString('ru-RU', {
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric'
-                  })}
-                </span>
-                <div className="flex gap-2 text-white/50 text-xs">
-                  {item.views !== undefined && item.views > 0 && (
-                    <span className="flex items-center gap-1">
-                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                        <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-                      </svg>
-                      {item.views}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-
             {/* Изображение или видео */}
             {(item.photo || item.video) && (
               <div className="relative">
