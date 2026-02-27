@@ -16,6 +16,7 @@ interface TelegramPost {
 
 const CACHE_KEY = 'np_news_cache';
 const CACHE_TIMESTAMP_KEY = 'np_news_cache_timestamp';
+const CACHE_LAST_UPDATED_KEY = 'np_news_last_updated';
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 часа
 
 /**
@@ -28,12 +29,12 @@ export const getCachedPosts = (): TelegramPost[] | null => {
 
     if (!cached || !timestamp) return null;
 
-    // Проверяем, что кэш не старше указанного времени
+    // Проверяем, не устарел ли кэш
     const cacheAge = Date.now() - parseInt(timestamp);
-
     if (cacheAge > CACHE_DURATION) {
       localStorage.removeItem(CACHE_KEY);
       localStorage.removeItem(CACHE_TIMESTAMP_KEY);
+      localStorage.removeItem(CACHE_LAST_UPDATED_KEY);
       return null;
     }
 
@@ -47,10 +48,13 @@ export const getCachedPosts = (): TelegramPost[] | null => {
 /**
  * Сохранить посты в кэш
  */
-export const savePostsToCache = (posts: TelegramPost[]): void => {
+export const savePostsToCache = (posts: TelegramPost[], lastUpdated?: string): void => {
   try {
     localStorage.setItem(CACHE_KEY, JSON.stringify(posts));
     localStorage.setItem(CACHE_TIMESTAMP_KEY, String(Date.now()));
+    if (lastUpdated) {
+      localStorage.setItem(CACHE_LAST_UPDATED_KEY, lastUpdated);
+    }
     console.log('Posts cached successfully:', posts.length);
   } catch (error) {
     console.error('Error saving cache:', error);
@@ -70,6 +74,8 @@ export const getChannelPosts = async (): Promise<TelegramPost[]> => {
       headers: {
         'Content-Type': 'application/json',
       },
+      // Не используем кэш браузера
+      cache: 'no-cache'
     });
 
     if (!response.ok) {
@@ -78,11 +84,12 @@ export const getChannelPosts = async (): Promise<TelegramPost[]> => {
 
     const data = await response.json();
     const posts = data.posts || [];
+    const lastUpdated = data.lastUpdated;
 
     console.log('Successfully loaded news:', posts.length);
 
-    // Кэшируем полученные посты
-    savePostsToCache(posts);
+    // Кэшируем полученные посты с lastUpdated
+    savePostsToCache(posts, lastUpdated);
 
     return posts;
   } catch (error) {

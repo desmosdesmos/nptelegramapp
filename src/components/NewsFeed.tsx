@@ -216,8 +216,8 @@ const NewsFeed: React.FC = () => {
                 {displayTitle}
               </div>
 
-              {/* Основной текст (если есть) */}
-              {item.title && item.text && (
+              {/* Основной текст (если есть и отличается от заголовка) */}
+              {item.title && item.text && item.text !== item.title && (
                 <div
                   className="text-white/80 text-sm mb-4 whitespace-pre-wrap"
                   style={{ wordBreak: 'break-word' }}
