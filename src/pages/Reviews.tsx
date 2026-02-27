@@ -1,5 +1,5 @@
-import React from 'react';
-import { Star, ArrowLeft } from 'lucide-react';
+import React, { useState } from 'react';
+import { Star, ArrowLeft, X } from 'lucide-react';
 import { PageKey } from '../App';
 
 interface ReviewsProps {
@@ -16,6 +16,8 @@ interface Review {
 }
 
 const Reviews: React.FC<ReviewsProps> = ({ onNavigate }) => {
+  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
+  
   const reviews: Review[] = [
     {
       name: 'Евгений Л.',
@@ -89,7 +91,7 @@ const Reviews: React.FC<ReviewsProps> = ({ onNavigate }) => {
       rating: 5,
       photos: ['/images/reviews/Александр.jpg']
     }
-  ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  ];
 
   return (
     <div className='w-full min-h-screen flex flex-col p-6 pt-12 pb-28 bg-black text-white'>
@@ -110,28 +112,57 @@ const Reviews: React.FC<ReviewsProps> = ({ onNavigate }) => {
               {[...Array(5)].map((_, j) => <Star key={j} className='w-4 h-4 fill-current' />)}
             </div>
             <p className='text-sm text-gray-300'>{review.text}</p>
-            
+
             {/* Фотографии */}
             {review.photos && review.photos.length > 0 && (
-              <div className='mt-3 flex gap-2 overflow-x-auto pb-2'>
+              <div className='mt-3 flex gap-3 overflow-x-auto pb-2'>
                 {review.photos.map((photo, idx) => (
-                  <img
+                  <button
                     key={idx}
-                    src={photo}
-                    alt={`Фото ${idx + 1}`}
-                    className='w-40 h-28 object-cover rounded-lg flex-shrink-0 border border-white/10'
-                  />
+                    onClick={() => setSelectedPhoto(photo)}
+                    className='flex-shrink-0 transition-transform hover:scale-105 active:scale-95'
+                  >
+                    <img
+                      src={photo}
+                      alt={`Фото отзыва ${review.name}`}
+                      className='w-44 h-32 object-cover rounded-2xl flex-shrink-0 border border-white/20 shadow-lg shadow-black/30'
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                      }}
+                    />
+                  </button>
                 ))}
               </div>
             )}
-            
-            <div className='flex items-center justify-between mt-3'>
-              <p className='text-xs text-gray-500 font-bold'>— {review.name}</p>
-              <p className='text-xs text-gray-600'>{new Date(review.date).toLocaleDateString('ru-RU')}</p>
+
+            <div className='flex items-center mt-3'>
+              <p className='text-sm text-gray-400 font-medium'>— {review.name}</p>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Модальное окно для просмотра фото */}
+      {selectedPhoto && (
+        <div 
+          className='fixed inset-0 bg-black/95 backdrop-blur-xl z-50 flex items-center justify-center p-4'
+          onClick={() => setSelectedPhoto(null)}
+        >
+          <button
+            onClick={() => setSelectedPhoto(null)}
+            className='absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors'
+          >
+            <X className='w-6 h-6 text-white' />
+          </button>
+          <img
+            src={selectedPhoto}
+            alt='Фото отзыва'
+            className='max-w-full max-h-[85vh] object-contain rounded-lg'
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 };
