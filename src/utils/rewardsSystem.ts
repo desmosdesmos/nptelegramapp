@@ -15,7 +15,21 @@ export const getUserRewards = async () => {
       const cacheTime = parsed.cacheTimestamp || 0;
       const fiveMinutes = 5 * 60 * 1000; // 5 минут в миллисекундах
 
+      // Проверяем актуальность кэша по времени
       if (Date.now() - cacheTime < fiveMinutes) {
+        // Дополнительно проверяем localStorage на наличие более свежего lastSpinTime
+        const localLastSpinTime = localStorage.getItem('lastSpinTime');
+        if (localLastSpinTime) {
+          const localTime = parseInt(localLastSpinTime, 10);
+          const cachedTime = parsed.data.lastSpinTime || 0;
+          
+          // Если в localStorage время больше, используем его
+          if (localTime > cachedTime) {
+            parsed.data.lastSpinTime = localTime;
+            return parsed.data;
+          }
+        }
+        
         return parsed.data;
       }
     } catch (e) {
@@ -26,6 +40,18 @@ export const getUserRewards = async () => {
   // Если кэш устарел или не существует, получаем с сервера
   try {
     const serverRewards = await getUserRewardsFromServer();
+
+    // Проверяем localStorage на наличие более свежего lastSpinTime
+    const localLastSpinTime = localStorage.getItem('lastSpinTime');
+    if (localLastSpinTime) {
+      const localTime = parseInt(localLastSpinTime, 10);
+      const serverTime = serverRewards.lastSpinTime || 0;
+      
+      // Если в localStorage время больше, используем его
+      if (localTime > serverTime) {
+        serverRewards.lastSpinTime = localTime;
+      }
+    }
 
     // Сохраняем в кэш
     const cacheData = {

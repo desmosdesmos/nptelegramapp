@@ -262,20 +262,13 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
     setSpinning(true);
     setLastResult(null);
 
-    // Немедленно устанавливаем canSpin в false и сохраняем время вращения
     const now = Date.now();
+    
+    // СРАЗУ обновляем localStorage для синхронизации
     localStorage.setItem('lastSpinTime', String(now));
-    setCanSpin(false);
 
     // Вызываем событие для обновления состояния в других компонентах
-    const storageEvent = new StorageEvent('storage', {
-      key: 'lastSpinTime',
-      oldValue: null,
-      newValue: String(now),
-      url: window.location.href,
-      storageArea: localStorage
-    });
-    window.dispatchEvent(storageEvent);
+    window.dispatchEvent(new Event('lastSpinTimeUpdated'));
 
     const extraRotations = 3 + Math.floor(Math.random() * 4);
     const winningIndex = getRandomPrizeIndex();
@@ -358,6 +351,9 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         cacheTimestamp: Date.now()
       };
       localStorage.setItem('user_rewards_cache', JSON.stringify(cacheData));
+      
+      // Снова отправляем событие после сохранения
+      window.dispatchEvent(new Event('lastSpinTimeUpdated'));
 
       await onWin(result);
     }, 4000);

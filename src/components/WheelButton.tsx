@@ -9,52 +9,55 @@ const WheelButton: React.FC<WheelButtonProps> = ({ onOpenWheel }) => {
   const [canSpin, setCanSpin] = useState(false);
 
   useEffect(() => {
-    try {
-      const checkSpinAvailability = async () => {
-        try {
-          // Получаем награды с сервера, чтобы получить актуальное время последнего вращения
-          const rewardsModule = await import('../utils/rewardsSystem');
-          const rewards = await rewardsModule.getUserRewards();
-          
-          const lastSpin = rewards.lastSpinTime || 0;
-          const now = Date.now();
-          const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000;
+    const checkSpinAvailability = async () => {
+      try {
+        // Получаем награды с сервера, чтобы получить актуальное время последнего вращения
+        const rewardsModule = await import('../utils/rewardsSystem');
+        const rewards = await rewardsModule.getUserRewards();
 
-          setCanSpin(now >= nextSpinTime);
-        } catch (rewardsError) {
-          console.error('Error getting rewards in WheelButton:', rewardsError);
-          
-          // Резервная логика на случай ошибки
-          const lastSpinStr = localStorage.getItem('lastSpinTime');
-          const lastSpin = lastSpinStr ? parseInt(lastSpinStr, 10) : 0;
-          const now = Date.now();
-          const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000;
+        const lastSpin = rewards.lastSpinTime || 0;
+        const now = Date.now();
+        const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000;
 
-          setCanSpin(now >= nextSpinTime);
+        const available = now >= nextSpinTime;
+        setCanSpin(available);
+        
+        // Также сохраняем в localStorage для синхронизации
+        if (!available) {
+          localStorage.setItem('lastSpinTime', String(lastSpin));
         }
-      };
+      } catch (rewardsError) {
+        console.error('Error getting rewards in WheelButton:', rewardsError);
 
+        // Резервная логика на случай ошибки
+        const lastSpinStr = localStorage.getItem('lastSpinTime');
+        const lastSpin = lastSpinStr ? parseInt(lastSpinStr, 10) : 0;
+        const now = Date.now();
+        const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000;
+
+        setCanSpin(now >= nextSpinTime);
+      }
+    };
+
+    // Проверяем сразу
+    checkSpinAvailability();
+    
+    // Проверяем каждую минуту
+    const interval = setInterval(checkSpinAvailability, 60000);
+
+    // Добавляем слушатель события для обновления состояния при вращении из других вкладок/компонентов
+    const handleSpinUpdate = () => {
       checkSpinAvailability();
-      const interval = setInterval(checkSpinAvailability, 60000);
+    };
 
-      // Добавляем слушатель события storage для обновления состояния при изменении из других вкладок
-      const handleStorageChange = (e: StorageEvent) => {
-        if (e.key === 'lastSpinTime') {
-          // Обновляем состояние немедленно при изменении lastSpinTime
-          checkSpinAvailability();
-        }
-      };
+    window.addEventListener('lastSpinTimeUpdated', handleSpinUpdate);
+    window.addEventListener('storage', handleSpinUpdate);
 
-      window.addEventListener('storage', handleStorageChange);
-
-      return () => {
-        clearInterval(interval);
-        window.removeEventListener('storage', handleStorageChange);
-      };
-    } catch (e) {
-      console.error('WheelButton useEffect failed:', e);
-      setCanSpin(false); // Теперь даже в случае ошибки не показываем кнопку
-    }
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('lastSpinTimeUpdated', handleSpinUpdate);
+      window.removeEventListener('storage', handleSpinUpdate);
+    };
   }, []);
 
   return (
