@@ -27,12 +27,8 @@ const NewsFeed: React.FC = () => {
       setLoading(true);
       const posts = await getChannelPosts();
 
-      // Сортируем посты от новых к старым (по дате)
-      const sortedPosts = posts.sort((a, b) => {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
-      });
-
-      setNews(sortedPosts);
+      // Порядок уже правильный в JSON файле (от новых к старым)
+      setNews(posts);
       setError(null);
     } catch (err) {
       console.error('Error fetching news:', err);
