@@ -1,10 +1,12 @@
 /**
- * API функции для получения новостей из Telegram-канала
+ * API функции для получения новостей
+ * Работает без сервера - загружает новости из JSON-файла
  */
 
 interface TelegramPost {
   id: number;
   date: string;
+  title?: string;
   text: string;
   photo?: string;
   video?: string;
@@ -12,10 +14,9 @@ interface TelegramPost {
   forwards?: number;
 }
 
-const CHANNEL_NAME = 'npdetailing';
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 const CACHE_KEY = 'np_news_cache';
 const CACHE_TIMESTAMP_KEY = 'np_news_cache_timestamp';
+const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 часа
 
 /**
  * Получить кэшированные посты из localStorage
@@ -24,19 +25,18 @@ export const getCachedPosts = (): TelegramPost[] | null => {
   try {
     const cached = localStorage.getItem(CACHE_KEY);
     const timestamp = localStorage.getItem(CACHE_TIMESTAMP_KEY);
-    
+
     if (!cached || !timestamp) return null;
-    
-    // Проверяем, что кэш не старше 7 дней
+
+    // Проверяем, что кэш не старше указанного времени
     const cacheAge = Date.now() - parseInt(timestamp);
-    const maxAge = 7 * 24 * 60 * 60 * 1000; // 7 дней
-    
-    if (cacheAge > maxAge) {
+
+    if (cacheAge > CACHE_DURATION) {
       localStorage.removeItem(CACHE_KEY);
       localStorage.removeItem(CACHE_TIMESTAMP_KEY);
       return null;
     }
-    
+
     return JSON.parse(cached);
   } catch (error) {
     console.error('Error reading cache:', error);
@@ -58,51 +58,51 @@ export const savePostsToCache = (posts: TelegramPost[]): void => {
 };
 
 /**
- * Получить последние посты из Telegram-канала
+ * Получить новости из JSON-файла
  */
 export const getChannelPosts = async (): Promise<TelegramPost[]> => {
-  console.log('Fetching posts from Telegram channel:', CHANNEL_NAME);
+  console.log('Fetching news from public/news.json');
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/channel-posts`, {
-      method: 'POST',
+    // Загружаем новости из JSON-файла в public папке
+    const response = await fetch('/news.json', {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': 'true',
       },
-      body: JSON.stringify({ channel: CHANNEL_NAME, limit: 10 }),
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch posts: ${response.status} ${response.statusText}`);
+      throw new Error(`Failed to fetch news: ${response.status} ${response.statusText}`);
     }
 
     const data = await response.json();
     const posts = data.posts || [];
-    
-    console.log('Successfully fetched posts:', posts.length);
-    
+
+    console.log('Successfully loaded news:', posts.length);
+
     // Кэшируем полученные посты
     savePostsToCache(posts);
-    
+
     return posts;
   } catch (error) {
-    console.error('Error fetching channel posts:', error);
-    
+    console.error('Error fetching news:', error);
+
     // Пытаемся вернуть кэшированные данные
     const cached = getCachedPosts();
     if (cached) {
-      console.log('Returning cached posts:', cached.length);
+      console.log('Returning cached news:', cached.length);
       return cached;
     }
-    
-    throw error;
+
+    // Возвращаем пустой массив в случае ошибки
+    return [];
   }
 };
 
 /**
- * Получить URL для прямого доступа к посту в Telegram
+ * Получить URL для прямого доступа к посту в Telegram (если нужно)
  */
 export const getPostUrl = (postId: number): string => {
-  return `https://t.me/${CHANNEL_NAME}/${postId}`;
+  return `https://t.me/npdetailing/${postId}`;
 };

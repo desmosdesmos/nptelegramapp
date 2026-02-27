@@ -5,6 +5,7 @@ import { ExternalLink, RefreshCw } from 'lucide-react';
 interface NewsItem {
   id: number;
   date: string;
+  title?: string;
   text: string;
   photo?: string;
   video?: string;
@@ -61,54 +62,18 @@ const NewsFeed: React.FC = () => {
 
   // Разделяем текст по первому предложению или конкретным фразам
   const parsePostText = (text: string) => {
-    // Ищем конкретные фразы и разделяем по ним
-    const specificTitles = [
-      '✨🎄 Итоги года NP 🎄✨',
-      '🚚 5 машин — 5 разных историй за одну неделю',
-      '🚗 Что мы сделали с Kia Cerato — полный разбор и глубокая химчистка салона'
-    ];
-    
-    for (const phrase of specificTitles) {
-      if (text.startsWith(phrase)) {
-        // Нашли фразу в начале - добавляем точку и разделяем
-        const title = phrase + '.';
-        const content = text.slice(phrase.length).trim();
-        return { title, content };
-      }
-    }
-    
     // Ищем первую точку
     const firstDotIndex = text.indexOf('.');
-    
+
     // Если точка есть и она не слишком близко к началу
     if (firstDotIndex > 20 && firstDotIndex < 250) {
       const title = text.slice(0, firstDotIndex + 1).trim();
       const content = text.slice(firstDotIndex + 1).trim();
       return { title, content };
     }
-    
-    // Ищем эмодзи в начале текста (заголовок до эмодзи)
-    const emojiStartRegex = /(✨|😎|🧼|🚚|🚗|📍|📲|💎|🎄|🎁|👉|🔥|🎉)/;
-    const emojiMatch = text.slice(10).match(emojiStartRegex);
-    
-    // Если нашли эмодзи после 10 символов
-    if (emojiMatch && emojiMatch.index) {
-      const titleEnd = 10 + emojiMatch.index;
-      const title = text.slice(0, titleEnd).trim();
-      const content = text.slice(titleEnd).trim();
-      if (content.length > 20 && title.length < 200) {
-        return { title, content };
-      }
-    }
-    
+
     // Если не нашли, возвращаем весь текст как заголовок
     return { title: text, content: '' };
-  };
-
-  // Форматируем текст для отображения с сохранением пробелов
-  const formatText = (text: string) => {
-    // Добавляем пробелы после точек, если их нет
-    return text.replace(/([.!?])([А-ЯA-Z🎉🔥✨📍📲🚗💎🎄🎁👉🧼😎])/g, '$1 $2');
   };
 
   if (loading) {
@@ -182,11 +147,12 @@ const NewsFeed: React.FC = () => {
       </div>
       
       {news.map(item => {
-        const { title } = parsePostText(item.text);
+        // Используем title из данных, если есть, иначе парсим из текста
+        const displayTitle = item.title || parsePostText(item.text).title;
 
         return (
-          <div 
-            key={item.id} 
+          <div
+            key={item.id}
             className="bg-white/10 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden"
           >
             {/* Заголовок с датой */}
@@ -195,7 +161,8 @@ const NewsFeed: React.FC = () => {
                 <span className="text-white/60 text-xs">
                   {new Date(item.date).toLocaleDateString('ru-RU', {
                     day: 'numeric',
-                    month: 'long'
+                    month: 'long',
+                    year: 'numeric'
                   })}
                 </span>
                 <div className="flex gap-2 text-white/50 text-xs">
@@ -216,42 +183,53 @@ const NewsFeed: React.FC = () => {
             {(item.photo || item.video) && (
               <div className="relative">
                 {item.photo && (
-                  <img 
-                    src={item.photo} 
-                    alt={`Post ${item.id}`} 
+                  <img
+                    src={item.photo}
+                    alt={item.title || `Post ${item.id}`}
                     className="w-full h-48 object-cover"
                     loading="lazy"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.onerror = null;
-                      target.src = 'https://placehold.co/600x400/333333/cccccc?text=Image+Not+Found';
+                      target.style.display = 'none';
                     }}
                   />
                 )}
-                
+
                 {item.video && (
-                  <video 
-                    src={item.video} 
-                    controls 
+                  <video
+                    src={item.video}
+                    controls
                     className="w-full h-48 object-cover"
                   />
                 )}
               </div>
             )}
 
-            {/* Текст поста - только заголовок */}
+            {/* Текст новости */}
             <div className="p-4 pt-2">
-              <div 
-                className="text-white font-semibold text-base mb-4 news-text-title"
+              {/* Заголовок */}
+              <div
+                className="text-white font-bold text-lg mb-3"
                 style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
               >
-                {formatText(title)}
+                {displayTitle}
               </div>
 
+              {/* Основной текст (если есть) */}
+              {item.title && item.text && (
+                <div
+                  className="text-white/80 text-sm mb-4 whitespace-pre-wrap"
+                  style={{ wordBreak: 'break-word' }}
+                >
+                  {item.text}
+                </div>
+              )}
+
               {/* Кнопка "Читать полностью" */}
-              <a 
-                href={getPostUrl(item.id)} 
-                target="_blank" 
+              <a
+                href={getPostUrl(item.id)}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="group flex items-center justify-center gap-2.5 w-full py-3.5 px-4 bg-gradient-to-r from-cyan-500/90 to-blue-500/90 hover:from-cyan-400 hover:to-blue-400 rounded-2xl text-white font-semibold text-sm transition-all duration-300 shadow-lg shadow-cyan-500/25 hover:shadow-cyan-500/40 active:scale-[0.98] backdrop-blur-sm"
               >
