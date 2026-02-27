@@ -21,7 +21,10 @@ app.use(express.urlencoded({ extended: true }));
 
 // API Routes - импортируем и используем роуты
 const channelPostsRoute = require('./routes/channelPosts');
+const referralsRoute = require('./routes/referrals');
+
 app.use('/api', channelPostsRoute);
+app.use('/api/referrals', referralsRoute);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

@@ -310,31 +310,54 @@ const WheelFortune: React.FC<WheelFortuneProps> = ({ onWin, onClose }) => {
         });
       }
 
-      // Обновляем время последнего вращения на сервере
+      // Обновляем время последнего вращения на сервере и подсчитываем серию дней подряд
       const rewardsModule = await import('../utils/rewardsSystem');
-      await rewardsModule.updateLastSpinTime();
-
-      // Обновляем серию дней подряд
-      const today = new Date().toISOString().split('T')[0];
       const currentRewards = await rewardsModule.getUserRewards();
-      let newStreak = currentRewards.dailyStreak || dailyStreak;
       
-      // Проверяем, отличается ли сегодняшняя дата от последней даты вращения
+      const today = new Date();
+      const todayStr = today.toISOString().split('T')[0];
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+      
+      // Вычисляем новую серию дней подряд
+      let newStreak = currentRewards.dailyStreak || 0;
       const lastSpinDate = currentRewards.lastSpinDate;
-      if (!lastSpinDate || lastSpinDate !== today) {
-        newStreak++;
+      
+      if (!lastSpinDate) {
+        // Первое вращение
+        newStreak = 1;
+      } else if (lastSpinDate === todayStr) {
+        // Уже вращались сегодня - серия не прерывается, но и не увеличивается
+        newStreak = currentRewards.dailyStreak || 1;
+      } else if (lastSpinDate === yesterdayStr) {
+        // Вращались вчера - увеличиваем серию
+        newStreak = (currentRewards.dailyStreak || 0) + 1;
+      } else {
+        // Вращались давно - серия прерывается, начинаем заново
+        newStreak = 1;
       }
 
-      // Обновляем серию дней подряд на сервере
+      // Обновляем данные на сервере
       const updatedRewards = {
         ...currentRewards,
-        dailyStreak: newStreak,
-        lastSpinDate: today
+        lastSpinTime: now,
+        lastSpinDate: todayStr,
+        dailyStreak: newStreak
       };
 
-      await import('../api/rewardsApi').then(api => api.saveUserRewardsToServer(updatedRewards));
+      const rewardsApi = await import('../api/rewardsApi');
+      await rewardsApi.saveUserRewardsToServer(updatedRewards);
 
+      // Обновляем локальное состояние
       setDailyStreak(newStreak);
+      
+      // Обновляем кэш в localStorage
+      const cacheData = {
+        data: updatedRewards,
+        cacheTimestamp: Date.now()
+      };
+      localStorage.setItem('user_rewards_cache', JSON.stringify(cacheData));
 
       await onWin(result);
     }, 4000);

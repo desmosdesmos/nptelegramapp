@@ -73,9 +73,13 @@ function App() {
         if (telegramUser) {
           const currentUserReferralCode = `USER${String(telegramUser.id).slice(-6)}`;
           setCurrentUserReferralCode(currentUserReferralCode);
+          
+          console.log(`Referral visit: user ${telegramUser.id} came via link ${referralCode}. Incrementing "Total Referrals" counter.`);
+        } else {
+          // Если пользователь еще не доступен, сохраняем реферер в pending
+          localStorage.setItem('pending_referrer_code', referralCode);
+          console.log(`Telegram user not available yet, saved pending referrer: ${referralCode}`);
         }
-
-        console.log(`Referral visit: user came via link ${referralCode}. Incrementing "Total Referrals" counter.`);
       } else {
         console.log('User already counted for referral, skipping increment');
       }
@@ -86,32 +90,43 @@ function App() {
 
   // Check for Telegram user initialization and handle pending referrer
   useEffect(() => {
-    // Заглушка для setupActivityTracking, если функция не нужна
-  }, []);
-
-  // Setup activity tracking to process referrals when user becomes active
-  useEffect(() => {
-    const checkAndHandlePendingReferrer = () => {
+    const handlePendingReferrer = () => {
       const pendingReferrerCode = localStorage.getItem('pending_referrer_code');
       const telegramUser = getTelegramUser();
 
-      if (pendingReferrerCode && telegramUser) {
-        // Remove the pending code (we're using the new system now)
+      if (pendingReferrerCode && telegramUser && isValidReferralCode(pendingReferrerCode)) {
+        // Проверяем, не был ли пользователь уже учтен
+        if (!hasUserBeenCounted()) {
+          // Increment total referrals counter for the referrer
+          incrementTotalReferrals(pendingReferrerCode);
+          
+          // Сохраняем реферальный код текущего пользователя
+          const currentUserReferralCode = `USER${String(telegramUser.id).slice(-6)}`;
+          setCurrentUserReferralCode(currentUserReferralCode);
+          
+          console.log(`Processed pending referrer: ${pendingReferrerCode} for user ${telegramUser.id}`);
+        }
+        
+        // Удаляем pending код после обработки
         localStorage.removeItem('pending_referrer_code');
-
-        console.log(`Processed pending referrer: ${pendingReferrerCode} for user`);
       }
     };
 
-    // Check immediately
-    checkAndHandlePendingReferrer();
+    // Проверяем сразу
+    handlePendingReferrer();
 
-    // Check periodically in case Telegram user becomes available later
-    const interval = setInterval(checkAndHandlePendingReferrer, 1000);
+    // Проверяем периодически на случай если Telegram user станет доступен позже
+    const interval = setInterval(handlePendingReferrer, 1000);
 
     return () => {
       clearInterval(interval);
     };
+  }, []);
+
+  // Setup activity tracking to process referrals when user becomes active
+  useEffect(() => {
+    // Эта функция теперь обрабатывается в предыдущем useEffect
+    // Оставляем для совместимости
   }, []);
 
 

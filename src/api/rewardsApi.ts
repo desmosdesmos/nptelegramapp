@@ -41,23 +41,36 @@ export const getUserRewardsFromServer = async (): Promise<RewardData> => {
     });
 
     if (!response.ok) {
-      // Если пользователя нет на сервере, возвращаем пустые награды
+      // Если пользователя нет на сервере, возвращаем пустые награды с инициализированным dailyStreak
       if (response.status === 404) {
         return {
           points: 0,
-          prizes: []
+          prizes: [],
+          dailyStreak: 0,
+          lastSpinTime: 0,
+          lastSpinDate: undefined
         };
       }
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    return await response.json();
+    const data = await response.json();
+    
+    // Убеждаемся, что dailyStreak всегда определен
+    return {
+      ...data,
+      dailyStreak: data.dailyStreak || 0,
+      lastSpinTime: data.lastSpinTime || 0
+    };
   } catch (error) {
     console.error('Error fetching user rewards:', error);
-    // В случае ошибки возвращаем пустые награды
+    // В случае ошибки возвращаем пустые награды с инициализированным dailyStreak
     return {
       points: 0,
-      prizes: []
+      prizes: [],
+      dailyStreak: 0,
+      lastSpinTime: 0,
+      lastSpinDate: undefined
     };
   }
 };

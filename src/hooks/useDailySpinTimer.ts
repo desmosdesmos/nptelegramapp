@@ -4,6 +4,7 @@ import { getUserRewards } from '../utils/rewardsSystem';
 export const useDailySpinTimer = () => {
   const [timeLeft, setTimeLeft] = useState<{ hours: number; minutes: number; seconds: number } | null>(null);
   const [canSpin, setCanSpin] = useState(true);
+  const [dailyStreak, setDailyStreak] = useState(0);
 
   useEffect(() => {
     const updateTimer = async () => {
@@ -14,6 +15,9 @@ export const useDailySpinTimer = () => {
         const now = Date.now();
         const nextSpinTime = lastSpin + 24 * 60 * 60 * 1000; // +24 часа
         const diff = nextSpinTime - now;
+
+        // Обновляем dailyStreak из серверных данных
+        setDailyStreak(rewards.dailyStreak || 0);
 
         if (diff <= 0) {
           setCanSpin(true);
@@ -27,7 +31,7 @@ export const useDailySpinTimer = () => {
         }
       } catch (error) {
         console.error('Error getting rewards in timer hook:', error);
-        
+
         // Резервная логика на случай ошибки
         const lastSpinStr = localStorage.getItem('lastSpinTime');
         const lastSpin = lastSpinStr ? parseInt(lastSpinStr, 10) : 0;
@@ -56,5 +60,5 @@ export const useDailySpinTimer = () => {
     return () => clearInterval(interval);
   }, []);
 
-  return { timeLeft, canSpin };
-};
+  return { timeLeft, canSpin, dailyStreak };
+}

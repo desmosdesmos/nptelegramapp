@@ -133,8 +133,9 @@ export const getReferralCodeFromUrl = (): string | null => {
   }
 
   // Затем проверяем данные Telegram Web App (для запуска через бота)
+  // Telegram передает start_param в initDataUnsafe при открытии через бота
   const tg = (window as any).Telegram?.WebApp;
-  if (tg && tg.initDataUnsafe?.start_param) {
+  if (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
     return tg.initDataUnsafe.start_param;
   }
 

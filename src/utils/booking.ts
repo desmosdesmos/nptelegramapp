@@ -27,7 +27,7 @@ export const sendBookingToTelegram = async (formData: BookingFormData): Promise<
   const BOT_TOKEN = '8547724331:AAH0VcR3_yDvzgxHdRlC0FSPId71P5XKK6M';
   // ЗАМЕНИТЕ НА ВАШ ЧАТ ID
   const CHAT_ID = '478799066';
-  
+
   // Получаем названия всех выбранных услуг
   const serviceNames = formData.services.map(serviceId => {
     const service = getServiceById(serviceId);
@@ -49,14 +49,15 @@ export const sendBookingToTelegram = async (formData: BookingFormData): Promise<
     const option = getServiceOptionById(optionId);
     return option ? `${option?.name ? option.name : optionId}`.trim() : optionId;
   }) : [];
-  
+
   const telegramUser = getTelegramUser();
-  const userLink = telegramUser?.username 
-    ? `@${telegramUser.username}` 
+  const userLink = telegramUser?.username
+    ? `@${telegramUser.username}`
     : `tg://user?id=${telegramUser?.id}`;
 
   console.log('Отправка заявки с реферером:', formData.referrer);
-const message = [
+
+  const message = [
     '🎯 *Новая заявка на запись*',
     '',
     `👤 *Имя:* ${formData.name}`,
