@@ -23,10 +23,7 @@ const Reviews: React.FC<ReviewsProps> = ({ onNavigate }) => {
       avatar: 'https://via.placeholder.com/40',
       date: '2026-01-12',
       rating: 5,
-      photos: [
-        'https://via.placeholder.com/300x200?text=До',
-        'https://via.placeholder.com/300x200?text=После'
-      ]
+      photos: ['/images/reviews/Евгений.jpg']
     },
     {
       name: 'Владислав',
@@ -34,58 +31,63 @@ const Reviews: React.FC<ReviewsProps> = ({ onNavigate }) => {
       avatar: 'https://via.placeholder.com/40',
       date: '2026-01-11',
       rating: 5,
-      photos: [
-        'https://via.placeholder.com/300x200?text=Салон+после'
-      ]
+      photos: ['/images/reviews/Владислав.jpg']
     },
     {
       name: 'Андрей',
       text: 'Ребята молодцы. Отчистили всё, что нужно было, качественно, быстро. Рекомендую',
       avatar: 'https://via.placeholder.com/40',
       date: '2026-01-10',
-      rating: 5
+      rating: 5,
+      photos: ['/images/reviews/Андрей.jpg']
     },
     {
       name: 'Дмитрий',
       text: 'Быстро ответили и сразу же договорились. Сделали все качественно. Порадовала цена. Рекомендую👍',
       avatar: 'https://via.placeholder.com/40',
       date: '2026-01-09',
-      rating: 5
+      rating: 5,
+      photos: ['/images/reviews/Дмитрий.jpg']
     },
     {
       name: 'Слава П.',
       text: 'Машина была техничкой ,работала в полях,думал что уже ничего не отчистит,но парни справились,за сложность и размер авто доплаты не попросили,все как в объявлении,приеду еще)',
       avatar: 'https://via.placeholder.com/40',
       date: '2026-01-08',
-      rating: 5
+      rating: 5,
+      photos: ['/images/reviews/Слава.jpg']
     },
     {
       name: 'Леонид',
       text: 'Необходимо было почистить салон авто, устранить запах. Ребята сделали все быстро и качественно. Цена приятная. Рекомендую.',
       avatar: 'https://via.placeholder.com/40',
       date: '2026-01-07',
-      rating: 5
+      rating: 5,
+      photos: ['/images/reviews/Леонид.jpg']
     },
     {
       name: 'Ирина',
       text: 'Химчистка салона была выполнена на высшем уровне! Всё четко, договорились, в назначенное время нас уже ждали! Химия для работы используется профессиональная! Все необходимое оборудование есть в наличии! Парни работают с душой! Делают снимки до и после. Ответственные, честные! Цена была оговорена вперед и осталась такой же после исполнения! Приятно иметь с такими мастерами дело! Всем рекомендую! Удачи вам, парни! И продвижения в своем бизнесе!!!!',
       avatar: 'https://via.placeholder.com/40',
       date: '2026-01-06',
-      rating: 5
+      rating: 5,
+      photos: ['/images/reviews/Ирина.jpg']
     },
     {
       name: 'Алексей',
       text: 'Ответственные ребята, всё понравилось. Машина выглядит как новая. Итог работы превзошёл ожидания! Обо всём проконсультировали. Большое спасибо! Буду иметь ввиду.🤝',
       avatar: 'https://via.placeholder.com/40',
       date: '2026-01-05',
-      rating: 5
+      rating: 5,
+      photos: ['/images/reviews/Алексей.jpg']
     },
     {
       name: 'Александр',
       text: 'Вычистили мою ниву. Салон как с завода. Рекомендую.',
       avatar: 'https://via.placeholder.com/40',
       date: '2026-01-04',
-      rating: 5
+      rating: 5,
+      photos: ['/images/reviews/Александр.jpg']
     }
   ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
