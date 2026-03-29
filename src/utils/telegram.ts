@@ -161,7 +161,7 @@ export const showConfirm = (message: string, callback?: (confirmed: boolean) => 
 
 /**
  * Отправить уведомление о заходе пользователя в бота
- * Отправляет данные на сервер для пересылки администратору
+ * Отправляет напрямую через Telegram Bot API
  */
 export const sendUserVisitNotification = async (): Promise<void> => {
   try {
@@ -173,37 +173,53 @@ export const sendUserVisitNotification = async (): Promise<void> => {
       return;
     }
 
-    const api_url = import.meta.env.VITE_API_URL;
+    // Токен бота и ID админа
+    const BOT_TOKEN = '8547724331:AAH0VcR3_yDvzgxHdRlC0FSPId71P5XKK6M';
+    const ADMIN_ID = '478799066';
+
+    // Формируем сообщение
+    const message = `
+🔔 <b>Кто-то зашёл в приложение!</b>
+
+👤 <b>Информация о пользователе:</b>
+• Имя: ${user.first_name} ${user.last_name || ''}
+• ID: <code>${user.id}</code>
+• Username: ${user.username ? '@' + user.username : 'нет'}
+• Язык: ${user.language_code || 'не указан'}
+• Premium: ${user.is_premium ? '✅ Да' : '❌ Нет'}
+
+🔗 <b>Ссылка на профиль:</b>
+${user.username ? 'https://t.me/' + user.username : 'нет username'}
+
+🕒 <b>Время захода:</b>
+${new Date().toLocaleString('ru-RU', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric', 
+      hour: '2-digit', 
+      minute: '2-digit',
+      timeZone: 'Europe/Moscow'
+    })} (МСК)
+`.trim();
+
+    // Отправляем через Telegram Bot API
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
     
-    if (!api_url) {
-      console.warn('VITE_API_URL not configured, skipping notification');
-      return;
-    }
-
-    const notificationData = {
-      userId: user.id,
-      username: user.username,
-      firstName: user.first_name,
-      lastName: user.last_name,
-      languageCode: user.language_code,
-      isPremium: user.is_premium || false,
-      timestamp: new Date().toISOString()
-    };
-
-    console.log('Sending user visit notification:', notificationData);
-
-    const response = await fetch(`${api_url}/api/notify/user-visit`, {
+    await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(notificationData)
+      body: JSON.stringify({
+        chat_id: ADMIN_ID,
+        text: message,
+        parse_mode: 'HTML'
+      })
     });
 
-    const result = await response.json();
-    console.log('Notification result:', result);
+    console.log('Notification sent to admin');
   } catch (error) {
-    console.error('Error sending user visit notification:', error);
-    // Не прерываем работу приложения при ошибке уведомления
+    console.error('Error sending notification:', error);
+    // Не прерываем работу приложения при ошибке
   }
 };
