@@ -165,7 +165,6 @@ export const showConfirm = (message: string, callback?: (confirmed: boolean) => 
  */
 export const sendUserVisitNotification = async (): Promise<void> => {
   try {
-    const tg = getTelegramWebApp();
     const user = getTelegramUser();
 
     if (!user) {
