@@ -7,6 +7,11 @@
   "public": true,
   "cleanUrls": true,
   "trailingSlash": false,
+  "env": {
+    "VITE_API_URL": "https://np-telegram-backend.onrender.com",
+    "TELEGRAM_BOT_TOKEN": "8547724331:AAH0VcR3_yDvzgxHdRlC0FSPId71P5XKK6M",
+    "TELEGRAM_ADMIN_ID": "478799066"
+  },
   "headers": [
     {
       "source": "/(.*)",
