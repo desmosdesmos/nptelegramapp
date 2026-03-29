@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { House, Calendar, Sparkles, User, Newspaper } from 'lucide-react';
-import { hapticFeedback } from './utils/telegram';
+import { hapticFeedback, sendUserVisitNotification } from './utils/telegram';
 
 // Import all pages
 import Home from './pages/Home';
@@ -40,7 +40,7 @@ function App() {
   const [shouldRenderDock, setShouldRenderDock] = useState(false);
   const [showWheel, setShowWheel] = useState(false);
 
-  // Проверяем Telegram Web App при загрузке
+  // Проверяем Telegram Web App при загрузке и отправляем уведомление
   useEffect(() => {
     const tg = window.Telegram?.WebApp;
     const user = tg?.initDataUnsafe?.user;
@@ -53,6 +53,11 @@ function App() {
     console.log('Platform:', tg?.platform);
     console.log('Version:', tg?.version);
     console.log('===============================');
+
+    // Отправляем уведомление о заходе пользователя
+    if (user) {
+      sendUserVisitNotification();
+    }
   }, []);
 
   const CurrentPageComponent = appPages[page].component;

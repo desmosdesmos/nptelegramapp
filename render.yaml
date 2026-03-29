@@ -7,6 +7,12 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 20
+      - key: VITE_API_URL
+        value: https://np-telegram-backend.onrender.com
+      - key: TELEGRAM_BOT_TOKEN
+        value: 8547724331:AAH0VcR3_yDvzgxHdRlC0FSPId71P5XKK6M
+      - key: TELEGRAM_ADMIN_ID
+        value: "478799066"
     headers:
       - path: /*
         name: X-Frame-Options
